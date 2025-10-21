@@ -1,15 +1,37 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import localFont from "next/font/local";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const ceraPro = localFont({
+  src: [
+    {
+      path: "../public/cera-pro/Cera-Pro-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/cera-pro/Cera-Pro-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+  ],
+  variable: "--font-cera-pro",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const ceraStencil = localFont({
+  src: [
+    {
+      path: "../public/cera-stencil/Cera-Stencil-Regular-Demo.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/cera-stencil/Cera-Stencil-Bold-Demo.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-cera-stencil",
 });
 
 export const metadata: Metadata = {
@@ -23,12 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
+      <body className={`${ceraPro.className} antialiased`}>{children}</body>
     </html>
   );
 }

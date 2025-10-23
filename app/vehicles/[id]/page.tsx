@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import VehicleGallery from "@/components/VehicleGallery";
+import VehicleGallery from "@/components/Products/VehicleGallery";
 import { urlFor } from "@/sanity/lib/image";
-import ParameterSection from "@/components/Parameters";
+import ParameterSection from "@/components/Products/Parameters";
+import Footer from "@/components/General/Footer";
 
 export interface Parameter {
   name: string;
@@ -87,11 +88,19 @@ const VehicleDetailsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-primary text-white pt-24 pb-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary mx-auto mb-4"></div>
-          <p className="text-white/70">Loading vehicle details...</p>
-        </div>
+      <div className="text-center h-screen place-content-center py-20">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, ease: "linear", duration: 1 }}
+          className="rounded-full h-12 w-12 border-2 border-b-transparent border-t-transparent flex items-center justify-center border-secondary mx-auto mb-4"
+        >
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ repeat: Infinity, ease: "linear", duration: 0.5 }}
+            className="rounded-full h-9 w-9 border-2 border-b-transparent border-t-transparent"
+          />
+        </motion.div>
+        <p className="text-white/70">Loading vehicles details...</p>
       </div>
     );
   }
@@ -122,10 +131,6 @@ const VehicleDetailsPage = () => {
       param: vehicle.specifications?.keyParameters,
     },
     {
-      name: "Key Parameters",
-      param: vehicle.specifications?.keyParameters,
-    },
-    {
       name: "Body Parameters",
       param: vehicle.specifications?.bodyParameters,
     },
@@ -144,8 +149,8 @@ const VehicleDetailsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-primary text-white pt-24 pb-16 px-4 sm:px-8 lg:px-16">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-primary text-white pt-24 pb-8 ">
+      <div className="max-w-7xl px-4 sm:px-8 lg:px-16 pb-10 mx-auto">
         {/* Back Button */}
         <Link href="/products">
           <motion.button
@@ -264,13 +269,15 @@ const VehicleDetailsPage = () => {
             <h2 className="text-4xl font-bold font-family-cera-stencil mb-8">
               Specifications
             </h2>
-            {parameters.map((param, i) => (
-              <ParameterSection
-                key={i}
-                title={param.name}
-                parameters={param.param}
-              />
-            ))}
+            <div>
+              {parameters.map((param, i) => (
+                <ParameterSection
+                  key={i}
+                  title={param.name}
+                  parameters={param.param}
+                />
+              ))}
+            </div>
           </div>
         )}
         {/* Contact CTA */}
@@ -292,6 +299,7 @@ const VehicleDetailsPage = () => {
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

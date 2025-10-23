@@ -1,6 +1,6 @@
 "use client";
 import { ChevronDown } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,9 +13,15 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  const Cd = motion.create(ChevronDown);
+  const { scrollYProgress } = useScroll();
+  useMotionValueEvent(scrollYProgress, "change", (i) => {
+    if (i > 0.05 && pathname !== "/") setChangeBg(true);
+    else setChangeBg(false);
+    console.log(i);
+  });
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -65,7 +71,10 @@ const Header = () => {
   return (
     <div className="fixed top-0 w-full z-100">
       {/* Desktop Menu */}
-      <div className=" hidden sm:block text-white">
+      <motion.div
+        animate={{ backgroundColor: changeBg ? "#1a1a1a" : "#1a1a1a0" }}
+        className=" hidden sm:block text-white"
+      >
         <div className="flex justify-between px-12 py-4">
           <Link href={"/"}>
             <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
@@ -94,10 +103,9 @@ const Header = () => {
             >
               <button className="cursor-pointer flex items-center gap-1">
                 Products
-                <Cd
-                  animate={{ rotate: isDropdownOpen ? 180 : [180, 0] }}
-                  size={20}
-                />
+                <motion.span animate={{ rotate: isDropdownOpen ? 180 : 0 }}>
+                  <ChevronDown size={20} />
+                </motion.span>
               </button>
 
               {isDropdownOpen && (
@@ -142,10 +150,16 @@ const Header = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Menu */}
-      <div className="sm:hidden text-white">
+      <motion.div
+        animate={{
+          backgroundColor:
+            changeBg || isMobileMenuOpen ? "#1a1a1a" : "#1a1a1a0",
+        }}
+        className="sm:hidden text-white"
+      >
         <div className="flex justify-between items-center px-6 py-4">
           <Link href={"/"}>
             <div className="font-family-cera-stencil font-bold text-xl gap-1 flex items-center">
@@ -199,10 +213,11 @@ const Header = () => {
                 className="w-full flex justify-between items-center py-2 cursor-pointer hover:text-secondary transition-colors"
               >
                 <span>Products</span>
-                <Cd
+                <motion.span
                   animate={{ rotate: isMobileProductsOpen ? 180 : 0 }}
-                  size={20}
-                />
+                >
+                  <ChevronDown size={20} />
+                </motion.span>
               </button>
               <motion.div
                 initial={false}
@@ -254,7 +269,7 @@ const Header = () => {
             </Link>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   );
 };

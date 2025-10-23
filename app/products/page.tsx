@@ -1,5 +1,6 @@
 "use client";
-import VehicleCard from "@/components/VehicleCard";
+import Footer from "@/components/General/Footer";
+import VehicleCard from "@/components/Products/VehicleCard";
 import { Search, Filter, X, Car } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
@@ -24,6 +25,7 @@ const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState<string>(typeFromUrl || "");
   const [availableTypes, setAvailableTypes] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFilOpen, setIsFilOpen] = useState(false);
 
   useEffect(() => {
     // Fetch all vehicles
@@ -76,8 +78,8 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary text-white pt-24 pb-16 px-4 sm:px-8 lg:px-16">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-primary text-white pt-24 pb-16  lg:px-16">
+      <div className="max-w-7xl px-4 mb-12 sm:px-8 mx-auto">
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-5xl font-bold font-family-cera-stencil mb-4">
@@ -101,36 +103,61 @@ const ProductsPage = () => {
               className="w-full pl-12 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
             />
           </div>
-
-          {/* Type Filter */}
-          <div className="relative">
-            <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="pl-12 pr-10 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-secondary transition-colors appearance-none cursor-pointer min-w-[200px]"
+          <div className="flex gap-4">
+            {/* Type Filter */}
+            <div
+              onClick={() => setIsFilOpen(!isFilOpen)}
+              className="flex w-full cursor-pointer relative justify-center items-center p-3 rounded-lg bg-white/10 border border-white/20 text-white "
             >
-              <option value="" className="bg-primary">
-                All Types
-              </option>
-              {availableTypes.map((type) => (
-                <option key={type} value={type} className="bg-primary">
-                  {type}
-                </option>
-              ))}
-            </select>
+              <div className="  flex gap-2 justify-center items-center">
+                <Filter className="text-white/50 w-5 h-5" />
+                <div>
+                  <p>{selectedType || "All Types"}</p>
+                  <motion.ul
+                    initial={{ height: 0, borderWidth: 0 }}
+                    animate={{
+                      height: isFilOpen ? "auto" : "0",
+                      borderWidth: isFilOpen ? 1 : 0,
+                    }}
+                    className="absolute z-100 left-0 top-[110%] bg-primary w-full divide-y overflow-hidden divide-secondary border border-secondary rounded-lg"
+                  >
+                    <li
+                      className="p-2"
+                      onClick={() => {
+                        setSelectedType("");
+                        setIsFilOpen(false);
+                      }}
+                    >
+                      All Types
+                    </li>
+                    {availableTypes.map((type, i) => (
+                      <li
+                        key={i}
+                        className="p-2"
+                        onClick={() => {
+                          setSelectedType(type);
+                          setIsFilOpen(false);
+                        }}
+                      >
+                        {type}
+                      </li>
+                    ))}
+                  </motion.ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Clear Filters Button */}
+            {(searchQuery || selectedType) && (
+              <button
+                onClick={clearFilters}
+                className="px-4 py-3 w-full justify-center  rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
+              >
+                <X className="w-5 h-5" />
+                Clear
+              </button>
+            )}
           </div>
-
-          {/* Clear Filters Button */}
-          {(searchQuery || selectedType) && (
-            <button
-              onClick={clearFilters}
-              className="px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors flex items-center gap-2"
-            >
-              <X className="w-5 h-5" />
-              Clear
-            </button>
-          )}
         </div>
 
         {/* Active Filters Display */}
@@ -168,9 +195,17 @@ const ProductsPage = () => {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-20">
-            <motion.div animate={{rotate:360}} transition={{repeat:Infinity, ease:"linear" , duration:1}} className="rounded-full h-12 w-12 border-2 border-b-transparent border-t-transparent flex items-center justify-center border-secondary mx-auto mb-4">
-              <motion.div animate={{rotate:-360}} transition={{repeat:Infinity, ease:"linear" , duration:0.5}} className="rounded-full h-9 w-9 border-2 border-b-transparent border-t-transparent"/>
+          <div className="text-center h-screen py-20">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, ease: "linear", duration: 1 }}
+              className="rounded-full h-12 w-12 border-2 border-b-transparent border-t-transparent flex items-center justify-center border-secondary mx-auto mb-4"
+            >
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ repeat: Infinity, ease: "linear", duration: 0.5 }}
+                className="rounded-full h-9 w-9 border-2 border-b-transparent border-t-transparent"
+              />
             </motion.div>
             <p className="text-white/70">Loading vehicles...</p>
           </div>
@@ -201,13 +236,16 @@ const ProductsPage = () => {
 
         {/* Vehicle Grid */}
         {!isLoading && filteredVehicles.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredVehicles.map((vehicle) => (
-              <VehicleCard key={vehicle._id} vehicle={vehicle} />
-            ))}
+          <div className="min-h-screen">
+            <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredVehicles.map((vehicle) => (
+                <VehicleCard key={vehicle._id} vehicle={vehicle} />
+              ))}
+            </div>
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

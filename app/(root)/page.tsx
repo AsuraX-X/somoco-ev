@@ -1,7 +1,7 @@
 "use client";
+import Footer from "@/components/General/Footer";
 import Hero from "@/components/Home/Hero";
 import Section2 from "@/components/Home/Section2";
-import Section3 from "@/components/Home/Section3";
 import React, { RefObject, useEffect, useRef, useState } from "react";
 
 const SCROLL_LOCK_MS = 1400; // time to lock additional scrolls while smooth scrolling
@@ -252,7 +252,7 @@ const Home = () => {
     >
       <Hero containerRef={ref as RefObject<HTMLDivElement>} />
       <Section2 containerRef={ref as RefObject<HTMLDivElement>} />
-      <Section3 />
+      <Footer />
     </div>
   );
 };

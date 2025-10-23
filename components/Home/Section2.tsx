@@ -1,5 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform } from "motion/react";
+import Link from "next/link";
 import { RefObject, useRef } from "react";
 
 const Section2 = ({
@@ -38,21 +39,23 @@ const Section2 = ({
             toward a cleaner, smarter future,pioneering electric mobility in
             Ghana through innovation and sustainable performance.
           </p>
-          <motion.button
-            whileHover={{
-              color: "#ffffff",
-              backgroundColor: "#00c950",
-              fontWeight: "normal",
-            }}
-            whileTap={
-              typeof window !== "undefined" && window.innerWidth >= 768
-                ? { backgroundColor: "#00A63E" }
-                : {}
-            }
-            className="px-4 text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-fit"
-          >
-            Learn More
-          </motion.button>
+          <Link href={"/about-us"}>
+            <motion.button
+              whileHover={{
+                color: "#ffffff",
+                backgroundColor: "#00c950",
+                fontWeight: "normal",
+              }}
+              whileTap={
+                typeof window !== "undefined" && window.innerWidth >= 768
+                  ? { backgroundColor: "#00A63E" }
+                  : {}
+              }
+              className="px-4 text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-fit"
+            >
+              Learn More
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
     </div>

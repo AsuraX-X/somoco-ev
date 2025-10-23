@@ -1,5 +1,6 @@
 "use client";
 import { motion, useScroll, useTransform } from "motion/react";
+import Link from "next/link";
 import { RefObject, useRef } from "react";
 
 const Hero = ({
@@ -42,36 +43,41 @@ const Hero = ({
             performance come together to redefine the way we drive.
           </p>
           <div className="flex gap-2">
-            <motion.button
-              whileHover={{
-                color: "#ffffff",
-                backgroundColor: "#00c950",
-                fontWeight: "normal",
-              }}
-              whileTap={
-                typeof window !== "undefined" && window.innerWidth >= 768
-                  ? { backgroundColor: "#00A63E" }
-                  : {}
-              }
-              className="text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-45"
-            >
-              Our Products
-            </motion.button>
-            <motion.button
-              whileHover={{
-                color: "#ffffff",
-                backgroundColor: "#00c950",
-                fontWeight: "normal",
-              }}
-              whileTap={
-                typeof window !== "undefined" && window.innerWidth >= 768
-                  ? { backgroundColor: "#00A63E" }
-                  : {}
-              }
-              className="text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-45"
-            >
-              Learn More
-            </motion.button>
+            <Link href={"/products"}>
+              <motion.button
+                whileHover={{
+                  color: "#ffffff",
+
+                  backgroundColor: "#00c950",
+                  fontWeight: "normal",
+                }}
+                whileTap={
+                  typeof window !== "undefined" && window.innerWidth >= 768
+                    ? { backgroundColor: "#00A63E" }
+                    : {}
+                }
+                className="text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-40 md:w-45"
+              >
+                Our Products
+              </motion.button>
+            </Link>
+            <Link href={"/about-us"}>
+              <motion.button
+                whileHover={{
+                  color: "#ffffff",
+                  backgroundColor: "#00c950",
+                  fontWeight: "normal",
+                }}
+                whileTap={
+                  typeof window !== "undefined" && window.innerWidth >= 768
+                    ? { backgroundColor: "#00A63E" }
+                    : {}
+                }
+                className="text-xl font-bold py-2 rounded-full border border-secondary text-secondary w-40 md:w-45"
+              >
+                Learn More
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
       </motion.div>

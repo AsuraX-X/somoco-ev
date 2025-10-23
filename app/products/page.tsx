@@ -4,7 +4,7 @@ import VehicleCard from "@/components/Products/VehicleCard";
 import { Search, Filter, X, Car } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 interface Vehicle {
   _id: string;
@@ -15,7 +15,7 @@ interface Vehicle {
   images?: string[]; // Array of image URLs
 }
 
-const ProductsPage = () => {
+const ProductsPageContent = () => {
   const searchParams = useSearchParams();
   const typeFromUrl = searchParams.get("type");
 
@@ -249,5 +249,11 @@ const ProductsPage = () => {
     </div>
   );
 };
+
+const ProductsPage = () => (
+  <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+    <ProductsPageContent />
+  </Suspense>
+);
 
 export default ProductsPage;

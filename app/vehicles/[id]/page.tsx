@@ -30,7 +30,7 @@ interface Vehicle {
   name: string;
   type: string;
   description?: string;
-  images?: any[];
+  images?: string[];
   specifications?: Specifications;
 }
 

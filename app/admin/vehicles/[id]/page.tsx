@@ -73,79 +73,73 @@ export default function EditVehiclePage() {
     try {
       setLoading(true);
       const response = await fetch(`/api/vehicles/${vehicleId}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch vehicle");
-      }
-
-      interface FetchedVehicleData {
-        brand?: string;
-        name?: string;
-        type?: string;
-        description?: string;
-        specifications?: FetchedSpecifications;
-      }
-
-      interface FetchedSpecifications {
+      type FetchedParameter = Parameter & { _key?: string };
+      type FetchedSpecifications = {
         keyParameters?: FetchedParameter[];
         bodyParameters?: FetchedParameter[];
         engineParameters?: FetchedParameter[];
         motorParameters?: FetchedParameter[];
         wheelBrakeParameters?: FetchedParameter[];
         keyConfigurations?: FetchedParameter[];
-      }
+      };
+      type FetchedVehicleData = {
+        brand?: string;
+        name?: string;
+        type?: string;
+        description?: string;
+        specifications?: FetchedSpecifications;
+        images?: SanityImage[];
+      };
+      type FetchedResponse = {
+        data: FetchedVehicleData;
+        error?: string;
+      };
+      const data: FetchedResponse = await response.json();
 
-      interface FetchedParameter extends Parameter {
-        _key?: string;
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch vehicle");
       }
 
       setFormData({
-        brand: (data.data as FetchedVehicleData).brand || "",
-        name: (data.data as FetchedVehicleData).name || "",
-        type: (data.data as FetchedVehicleData).type || "",
-        description: (data.data as FetchedVehicleData).description || "",
-        specifications: (data.data as FetchedVehicleData).specifications
+        brand: data.data.brand || "",
+        name: data.data.name || "",
+        type: data.data.type || "",
+        description: data.data.description || "",
+        specifications: data.data.specifications
           ? {
-              keyParameters: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.keyParameters || []
-              ).map((p: FetchedParameter) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
+              keyParameters: (data.data.specifications.keyParameters || []).map(
+                (p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })
+              ),
               bodyParameters: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.bodyParameters || []
-              ).map((p: FetchedParameter) => ({
+                data.data.specifications.bodyParameters || []
+              ).map((p) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               engineParameters: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.engineParameters || []
-              ).map((p: FetchedParameter) => ({
+                data.data.specifications.engineParameters || []
+              ).map((p) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               motorParameters: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.motorParameters || []
-              ).map((p: FetchedParameter) => ({
+                data.data.specifications.motorParameters || []
+              ).map((p) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               wheelBrakeParameters: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.wheelBrakeParameters || []
-              ).map((p: FetchedParameter) => ({
+                data.data.specifications.wheelBrakeParameters || []
+              ).map((p) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               keyConfigurations: (
-                (data.data as FetchedVehicleData).specifications
-                  ?.keyConfigurations || []
-              ).map((p: FetchedParameter) => ({
+                data.data.specifications.keyConfigurations || []
+              ).map((p) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
@@ -163,13 +157,13 @@ export default function EditVehiclePage() {
       // Load existing images
       if (data.data.images && data.data.images.length > 0) {
         // Ensure all images have _key
-        const imagesWithKeys = data.data.images.map((img: SanityImage) => ({
+        const imagesWithKeys = data.data.images.map((img) => ({
           ...img,
           _key: img._key || generateKey(),
         }));
         setImages(imagesWithKeys);
         // Generate previews for existing images using Sanity CDN
-        const previews = data.data.images.map((img: SanityImage) => {
+        const previews = data.data.images.map((img) => {
           const ref = img.asset._ref;
           // Parse the Sanity asset reference (format: image-{id}-{dimensions}-{format})
           const parts = ref.split("-");

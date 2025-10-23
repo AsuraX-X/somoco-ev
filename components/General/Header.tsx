@@ -69,208 +69,218 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 w-full z-100">
-      {/* Desktop Menu */}
-      <motion.div
-        animate={{ backgroundColor: changeBg ? "#1a1a1a" : "#1a1a1a0" }}
-        className=" hidden sm:block text-white"
-      >
-        <div className="flex justify-between px-12 py-4">
-          <Link href={"/"}>
-            <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
-              <Image
-                unoptimized
-                src="/LogoIconAlt.svg"
-                height={40}
-                width={40}
-                alt="Somoco Logo"
-              />{" "}
-              <h1>SOMOCO EV</h1>
-            </div>
-          </Link>
-          <div className="flex gap-6 items-center">
-            {pathname !== "/" && (
-              <Link href={"/"}>
-                <button className="cursor-pointer">Home</button>
-              </Link>
-            )}
-
-            {/* Products Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button className="cursor-pointer flex items-center gap-1">
-                Products
-                <motion.span animate={{ rotate: isDropdownOpen ? 180 : 0 }}>
-                  <ChevronDown size={20} />
-                </motion.span>
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
-                  {isLoading ? (
-                    <div className="px-4 py-2 text-white/60">Loading...</div>
-                  ) : (
-                    <>
-                      <Link
-                        href="/products"
-                        className="block px-4 py-2 hover:bg-secondary/10 transition-colors border-b border-white/10"
-                      >
-                        All Products
-                      </Link>
-                      {vehicleTypes.length > 0 ? (
-                        vehicleTypes.map((type) => (
-                          <Link
-                            key={type}
-                            href={`/products?type=${encodeURIComponent(type)}`}
-                            className="block px-4 py-2 hover:bg-secondary/10 transition-colors"
-                          >
-                            {type}
-                          </Link>
-                        ))
-                      ) : (
-                        <div className="px-4 py-2 text-white/60">
-                          No product types available
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <Link href={"/about-us"}>
-              <button className="cursor-pointer">About Us</button>
-            </Link>
-
-            <Link href={"/contact"}>
-              <button className="cursor-pointer">Contact Us</button>
-            </Link>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Mobile Menu */}
-      <motion.div
-        animate={{
-          backgroundColor:
-            changeBg || isMobileMenuOpen ? "#1a1a1a" : "#1a1a1a0",
-        }}
-        className="sm:hidden text-white"
-      >
-        <div className="flex justify-between items-center px-6 py-4">
-          <Link href={"/"}>
-            <div className="font-family-cera-stencil font-bold text-xl gap-1 flex items-center">
-              <Image
-                unoptimized
-                src="/LogoIconAlt.svg"
-                height={32}
-                width={32}
-                alt="Somoco Logo"
-              />
-              <h1>SOMOCO EV</h1>
-            </div>
-          </Link>
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2"
-          >
-            <Image
-              unoptimized
-              src="/menu.svg"
-              height={28}
-              width={28}
-              alt="Menu"
-            />
-          </button>
-        </div>
-
-        {/* Mobile Menu Overlay */}
+    !pathname.includes("/admin") && (
+      <div className="fixed top-0 w-full z-100">
+        {/* Desktop Menu */}
         <motion.div
-          initial={false}
-          animate={{
-            height: isMobileMenuOpen ? "auto" : 0,
-            opacity: isMobileMenuOpen ? 1 : 0,
-          }}
-          transition={{ duration: 0.3 }}
-          className="overflow-hidden bg-primary/95 backdrop-blur-lg"
+          animate={{ backgroundColor: changeBg ? "#1a1a1a" : "#1a1a1a0" }}
+          className=" hidden sm:block text-white"
         >
-          <div className="px-6 py-4 space-y-4">
-            {pathname !== "/" && (
-              <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
-                  Home
-                </div>
-              </Link>
-            )}
+          <div className="flex justify-between px-12 py-4">
+            <Link href={"/"}>
+              <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
+                <Image
+                  unoptimized
+                  src="/LogoIconAlt.svg"
+                  height={40}
+                  width={40}
+                  alt="Somoco Logo"
+                />{" "}
+                <h1>SOMOCO EV</h1>
+              </div>
+            </Link>
+            <div className="flex gap-6 items-center">
+              {pathname !== "/" && (
+                <Link href={"/"}>
+                  <button className="cursor-pointer">Home</button>
+                </Link>
+              )}
 
-            {/* Mobile Products Dropdown */}
-            <div>
-              <button
-                onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                className="w-full flex justify-between items-center py-2 cursor-pointer hover:text-secondary transition-colors"
+              {/* Products Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
-                <span>Products</span>
-                <motion.span
-                  animate={{ rotate: isMobileProductsOpen ? 180 : 0 }}
+                <button className="cursor-pointer flex items-center gap-1">
+                  Products
+                  <motion.span animate={{ rotate: isDropdownOpen ? 180 : 0 }}>
+                    <ChevronDown size={20} />
+                  </motion.span>
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
+                    {isLoading ? (
+                      <div className="px-4 py-2 text-white/60">Loading...</div>
+                    ) : (
+                      <>
+                        <Link
+                          href="/products"
+                          className="block px-4 py-2 hover:bg-secondary/10 transition-colors border-b border-white/10"
+                        >
+                          All Products
+                        </Link>
+                        {vehicleTypes.length > 0 ? (
+                          vehicleTypes.map((type) => (
+                            <Link
+                              key={type}
+                              href={`/products?type=${encodeURIComponent(
+                                type
+                              )}`}
+                              className="block px-4 py-2 hover:bg-secondary/10 transition-colors"
+                            >
+                              {type}
+                            </Link>
+                          ))
+                        ) : (
+                          <div className="px-4 py-2 text-white/60">
+                            No product types available
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <Link href={"/about-us"}>
+                <button className="cursor-pointer">About Us</button>
+              </Link>
+
+              <Link href={"/contact"}>
+                <button className="cursor-pointer">Contact Us</button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Mobile Menu */}
+        <motion.div
+          animate={{
+            backgroundColor:
+              changeBg || isMobileMenuOpen ? "#1a1a1a" : "#1a1a1a0",
+          }}
+          className="sm:hidden text-white"
+        >
+          <div className="flex justify-between items-center px-6 py-4">
+            <Link href={"/"}>
+              <div className="font-family-cera-stencil font-bold text-xl gap-1 flex items-center">
+                <Image
+                  unoptimized
+                  src="/LogoIconAlt.svg"
+                  height={32}
+                  width={32}
+                  alt="Somoco Logo"
+                />
+                <h1>SOMOCO EV</h1>
+              </div>
+            </Link>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2"
+            >
+              <Image
+                unoptimized
+                src="/menu.svg"
+                height={28}
+                width={28}
+                alt="Menu"
+              />
+            </button>
+          </div>
+
+          {/* Mobile Menu Overlay */}
+          <motion.div
+            initial={false}
+            animate={{
+              height: isMobileMenuOpen ? "auto" : 0,
+              opacity: isMobileMenuOpen ? 1 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden bg-primary/95 backdrop-blur-lg"
+          >
+            <div className="px-6 py-4 space-y-4">
+              {pathname !== "/" && (
+                <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>
+                  <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
+                    Home
+                  </div>
+                </Link>
+              )}
+
+              {/* Mobile Products Dropdown */}
+              <div>
+                <button
+                  onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                  className="w-full flex justify-between items-center py-2 cursor-pointer hover:text-secondary transition-colors"
                 >
-                  <ChevronDown size={20} />
-                </motion.span>
-              </button>
-              <motion.div
-                initial={false}
-                animate={{
-                  height: isMobileProductsOpen ? "auto" : 0,
-                  opacity: isMobileProductsOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <div className="pl-4 pt-2 space-y-2">
-                  <Link
-                    href="/products"
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      setIsMobileProductsOpen(false);
-                    }}
-                    className="block py-2 text-white/80 hover:text-secondary transition-colors"
+                  <span>Products</span>
+                  <motion.span
+                    animate={{ rotate: isMobileProductsOpen ? 180 : 0 }}
                   >
-                    All Products
-                  </Link>
-                  {vehicleTypes.map((type) => (
+                    <ChevronDown size={20} />
+                  </motion.span>
+                </button>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: isMobileProductsOpen ? "auto" : 0,
+                    opacity: isMobileProductsOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="pl-4 pt-2 space-y-2">
                     <Link
-                      key={type}
-                      href={`/products?type=${encodeURIComponent(type)}`}
+                      href="/products"
                       onClick={() => {
                         setIsMobileMenuOpen(false);
                         setIsMobileProductsOpen(false);
                       }}
                       className="block py-2 text-white/80 hover:text-secondary transition-colors"
                     >
-                      {type}
+                      All Products
                     </Link>
-                  ))}
+                    {vehicleTypes.map((type) => (
+                      <Link
+                        key={type}
+                        href={`/products?type=${encodeURIComponent(type)}`}
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsMobileProductsOpen(false);
+                        }}
+                        className="block py-2 text-white/80 hover:text-secondary transition-colors"
+                      >
+                        {type}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+
+              <Link
+                href={"/about-us"}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
+                  About Us
                 </div>
-              </motion.div>
+              </Link>
+
+              <Link
+                href={"/contact"}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
+                  Contact Us
+                </div>
+              </Link>
             </div>
-
-            <Link href={"/about-us"} onClick={() => setIsMobileMenuOpen(false)}>
-              <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
-                About Us
-              </div>
-            </Link>
-
-            <Link href={"/contact"} onClick={() => setIsMobileMenuOpen(false)}>
-              <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
-                Contact Us
-              </div>
-            </Link>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    )
   );
 };
 

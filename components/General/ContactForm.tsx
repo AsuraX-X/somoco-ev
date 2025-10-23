@@ -1,33 +1,44 @@
 "use client";
-
 import { motion } from "motion/react";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-const ContactForm = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  region: string;
+  message: string;
+}
+
+const ContactForm: FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     name: "",
-    phone: "",
     email: "",
+    phone: "",
+    city: "",
+    region: "",
     message: "",
   });
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
   >("idle");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus("loading");
-    setErrorMessage("");
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
 
     try {
       const response = await fetch("/api/contact", {
@@ -38,93 +49,149 @@ const ContactForm = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to send message");
+      if (response.ok) {
+        setSubmitStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          city: "",
+          region: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus("error");
       }
-
-      setStatus("success");
-      setFormData({ name: "", phone: "", email: "", message: "" });
-
-      // Reset success message after 5 seconds
-      setTimeout(() => setStatus("idle"), 5000);
     } catch (error) {
-      setStatus("error");
-      setErrorMessage("Failed to send message. Please try again.");
-      console.error("Error sending contact form:", error);
+      console.log(error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-      <div className="flex flex-col gap-2">
-        <label htmlFor="name" className="text-white font-medium">
-          Name
+    <motion.form
+      onSubmit={handleSubmit}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="space-y-4"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="name" className="block mb-1 text-secondary font-medium">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            placeholder="e.g. John Doe"
+            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block mb-1 text-secondary font-medium">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="e.g. john@example.com"
+            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="phone" className="block mb-1 text-secondary font-medium">
+            Phone
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="e.g. 02000000000"
+            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="city" className="block mb-1 text-secondary font-medium">
+            City
+          </label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="e.g. Accra"
+            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="region" className="block mb-1 text-secondary font-medium">
+          Region
         </label>
         <input
           type="text"
-          id="name"
-          name="name"
-          value={formData.name}
+          id="region"
+          name="region"
+          value={formData.region}
           onChange={handleChange}
-          required
-          className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
-          placeholder="Your name"
+          placeholder="e.g. Greater Accra"
+          className="px-4 py-2 w-full rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="phone" className="text-white font-medium">
-          Phone
-        </label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
-          placeholder="Your phone number"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-white font-medium">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
-          placeholder="your.email@example.com"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label htmlFor="message" className="text-white font-medium">
+      <div>
+        <label htmlFor="message" className="block mb-1 text-secondary font-medium">
           Message
         </label>
         <textarea
           id="message"
           name="message"
+          rows={5}
           value={formData.message}
           onChange={handleChange}
           required
-          rows={5}
-          className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors resize-none"
-          placeholder="How can we help you?"
+          placeholder="Type your message here..."
+          className="px-4 w-full py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors resize-none"
         />
       </div>
 
+      {submitStatus === "success" && (
+        <div className="text-green-600 text-sm">
+          Thank you! Your message has been sent successfully.
+        </div>
+      )}
+
+      {submitStatus === "error" && (
+        <div className="text-red-600 text-sm">
+          Sorry, there was an error sending your message. Please try again.
+        </div>
+      )}
+
       <motion.button
         type="submit"
-        disabled={status === "loading"}
+        disabled={isSubmitting}
         whileHover={
-          status !== "loading"
+          !isSubmitting
             ? {
                 backgroundColor: "#00c950",
                 scale: 1.02,
@@ -132,38 +199,18 @@ const ContactForm = () => {
             : {}
         }
         whileTap={
-          status !== "loading"
+          !isSubmitting
             ? {
                 backgroundColor: "#00a63e",
                 scale: 0.98,
               }
             : {}
         }
-        className="px-6 py-3 rounded-full bg-secondary text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+        className="px-6 py-3 w-full rounded-full bg-secondary text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
-        {status === "loading" ? "Sending..." : "Send Message"}
+        {isSubmitting ? "Sending..." : "Send Message"}
       </motion.button>
-
-      {status === "success" && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-secondary text-center font-medium"
-        >
-          Message sent successfully! We'll get back to you soon.
-        </motion.p>
-      )}
-
-      {status === "error" && (
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-red-500 text-center font-medium"
-        >
-          {errorMessage}
-        </motion.p>
-      )}
-    </form>
+    </motion.form>
   );
 };
 

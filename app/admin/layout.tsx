@@ -33,7 +33,7 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1a1a]">
+    <div className="min-h-screen bg-primary">
       {/* Header */}
       <header className="bg-[#252525] border-b border-[#333]">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -51,7 +51,7 @@ export default function AdminLayout({
               </button>
               <Link
                 href="/"
-                className="px-4 py-2 text-sm text-gray-300 border border-[#333] rounded hover:bg-[#1a1a1a] transition-colors"
+                className="px-4 py-2 text-sm text-gray-300 border border-[#333] rounded hover:bg-primary transition-colors"
               >
                 ← Back to Home
               </Link>

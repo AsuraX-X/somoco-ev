@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { sendResendPasswordResetEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import fs from "fs";
 import path from "path";
-import { sendPasswordResetEmail } from "@/lib/email";
 
 function generatePassword(len = 16) {
   return randomBytes(Math.ceil((len * 3) / 4))
@@ -47,16 +47,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verify SMTP is configured
-    if (
-      !process.env.SMTP_HOST ||
-      !process.env.SMTP_USER ||
-      !process.env.SMTP_PASS
-    ) {
+    // Verify Resend API key is configured
+    if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
         {
           error:
-            "Email service not configured. Please set SMTP credentials in .env.local",
+            "Resend API key not configured. Please set RESEND_API_KEY in .env.local",
         },
         { status: 500 }
       );
@@ -71,8 +67,19 @@ export async function POST(req: NextRequest) {
     updateEnvFile("ADMIN_PASSWORD_HASH_B64", hashB64);
     updateEnvFile("ADMIN_PASSWORD_HASH", `'${hash}'`);
 
-    // Send email with new password
-    await sendPasswordResetEmail(adminEmail, newPassword);
+    // Send email with new password using Resend
+    try {
+      await sendResendPasswordResetEmail({
+        to: adminEmail,
+        newPassword,
+      });
+    } catch (error) {
+      console.error("Error sending password reset email:", error);
+      return NextResponse.json(
+        { error: "Failed to send password reset email" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,

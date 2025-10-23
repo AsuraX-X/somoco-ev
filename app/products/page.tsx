@@ -78,7 +78,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary text-white pt-24 pb-16  lg:px-16">
+    <div className="min-h-screen bg-primary text-white pt-24 lg:px-16">
       <div className="max-w-7xl px-4 mb-12 sm:px-8 mx-auto">
         {/* Header */}
         <div className="mb-12">

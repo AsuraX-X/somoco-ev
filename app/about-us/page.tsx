@@ -9,9 +9,8 @@ const AboutUs = () => {
   const [company, setCompany] = useState("moh");
 
   return (
-    <div className="overflow-hidden mb-10">
+    <div>
       <div
-        data-header-color="blue"
         className="w-full h-80 text-white font-family-cera-stencil text-6xl font-bold flex items-center justify-center bg-secondary"
       >
         <h1>About Us</h1>

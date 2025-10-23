@@ -269,7 +269,7 @@ const Somoco = () => {
           className="object-cover"
           unoptimized
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex items-end">
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/50 to-transparent flex items-end">
           <div className="text-white px-8 md:px-16 pb-12 space-y-4">
             <h2 className="font-family-cera-stencil text-3xl md:text-5xl font-bold leading-tight">
               Driving Ghana into a Cleaner, Smarter, and More Sustainable

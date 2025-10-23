@@ -175,7 +175,7 @@ export default function VehiclesPage() {
                 <div className="flex gap-2 ml-4">
                   <Link
                     href={`/admin/vehicles/${vehicle._id}`}
-                    className="px-4 py-2 bg-[#1a1a1a] text-white text-sm rounded border border-[#333] hover:border-green-500 transition-colors"
+                    className="px-4 py-2 bg-primary text-white text-sm rounded border border-[#333] hover:border-green-500 transition-colors"
                   >
                     Edit
                   </Link>
@@ -186,7 +186,7 @@ export default function VehiclesPage() {
                         `${vehicle.brand} ${vehicle.name}`
                       )
                     }
-                    className="px-4 py-2 bg-[#1a1a1a] text-red-400 text-sm rounded border border-[#333] hover:border-red-500 transition-colors"
+                    className="px-4 py-2 bg-primary text-red-400 text-sm rounded border border-[#333] hover:border-red-500 transition-colors"
                   >
                     Delete
                   </button>

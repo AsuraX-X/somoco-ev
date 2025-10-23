@@ -324,7 +324,7 @@ export default function EditVehiclePage() {
     title: string;
     section: keyof VehicleFormData["specifications"];
   }) => (
-    <div className="border border-[#333] rounded bg-[#1a1a1a] p-3">
+    <div className="border border-[#333] rounded bg-primary p-3">
       <button
         type="button"
         onClick={() =>
@@ -450,7 +450,7 @@ export default function EditVehiclePage() {
                   required
                   value={formData.brand}
                   onChange={(e) => handleInputChange("brand", e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                  className="w-full px-3 py-2 bg-primary border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
                   placeholder="e.g., Tesla, BYD, NIO"
                 />
               </div>
@@ -464,7 +464,7 @@ export default function EditVehiclePage() {
                   required
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                  className="w-full px-3 py-2 bg-primary border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
                   placeholder="e.g., Model 3, Seal, ET7"
                 />
               </div>
@@ -477,7 +477,7 @@ export default function EditVehiclePage() {
                   type="text"
                   value={formData.type}
                   onChange={(e) => handleInputChange("type", e.target.value)}
-                  className="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                  className="w-full px-3 py-2 bg-primary border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
                   placeholder="e.g., Sedan, SUV, Hatchback"
                 />
               </div>
@@ -491,7 +491,7 @@ export default function EditVehiclePage() {
                   onChange={(e) =>
                     handleInputChange("description", e.target.value)
                   }
-                  className="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 resize-none"
+                  className="w-full px-3 py-2 bg-primary border border-[#333] rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500 resize-none"
                   rows={3}
                   placeholder="Brief description of the vehicle"
                 />
@@ -514,7 +514,7 @@ export default function EditVehiclePage() {
                   multiple
                   onChange={handleImageUpload}
                   disabled={uploading}
-                  className="w-full px-3 py-2 bg-[#1a1a1a] border border-[#333] rounded text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2 bg-primary border border-[#333] rounded text-white text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-green-500 file:text-white hover:file:bg-green-600 file:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 {uploading && (
                   <p className="text-sm text-gray-400 mt-2">
@@ -548,7 +548,7 @@ export default function EditVehiclePage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#1a1a1a] border border-[#333] rounded p-6 text-center">
+                <div className="bg-primary border border-[#333] rounded p-6 text-center">
                   <p className="text-gray-400 text-sm">
                     No images yet. Upload some above.
                   </p>
@@ -602,7 +602,7 @@ export default function EditVehiclePage() {
             <button
               type="button"
               onClick={() => router.push("/admin/vehicles")}
-              className="px-6 py-2.5 border border-[#333] text-gray-300 rounded hover:bg-[#1a1a1a] transition-colors"
+              className="px-6 py-2.5 border border-[#333] text-gray-300 rounded hover:bg-primary transition-colors"
             >
               Cancel
             </button>

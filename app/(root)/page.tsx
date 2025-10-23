@@ -247,9 +247,6 @@ const Home = () => {
       ref={ref}
       className="h-screen overflow-y-auto relative"
       style={{ scrollBehavior: "auto" }}
-      // prevent keyboard scroll on the container
-      onKeyDown={(e) => e.preventDefault()}
-      tabIndex={-1}
     >
       <Hero containerRef={ref as RefObject<HTMLDivElement>} />
       <Section2 containerRef={ref as RefObject<HTMLDivElement>} />

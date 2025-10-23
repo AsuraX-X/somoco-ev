@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const id = pathname.split("/").pop();
   try {
     const vehicle = await client.fetch(`*[_type == "event" && _id == $id][0]`, {
-      id: params.id,
+      id,
     });
 
     if (!vehicle) {

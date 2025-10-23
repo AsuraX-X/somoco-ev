@@ -1,16 +1,85 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, MotionValue } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
-import { Plus } from "lucide-react";
 
 interface VehicleGalleryProps {
-  images: any[];
+  images: string[];
   brand: string;
   name: string;
   setCurrentImageIndex: (index: number) => void;
   setIsFullscreen: (isFullscreen: boolean) => void;
 }
+
+interface VehicleCardProps {
+  image: string;
+  index: number;
+  total: number;
+  brand: string;
+  name: string;
+  scrollX: MotionValue<number>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  onClick: () => void;
+}
+
+const Img = motion.create(Image);
+
+const VehicleCard: React.FC<VehicleCardProps> = ({
+  image,
+  index,
+  total,
+  brand,
+  name,
+  scrollX,
+  containerRef,
+  onClick,
+}) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const imgUrl = urlFor(image).width(1200).height(800).url();
+
+  const xShift = useTransform(scrollX, () => {
+    const container = containerRef.current;
+    const card = cardRef.current;
+    if (!container || !card) return 0;
+
+    const containerCenter =
+      container.scrollLeft + container.offsetWidth / 2;
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+
+    const distance = cardCenter - containerCenter;
+    const maxShift = 80;
+    const normalized = Math.max(-1, Math.min(1, distance / 500));
+    return -normalized * maxShift;
+  });
+
+  return (
+    <div
+      ref={cardRef}
+      className="relative shrink-0 w-[500px] h-[400px] rounded-xl overflow-hidden group cursor-pointer"
+      onClick={onClick}
+    >
+      <motion.div
+        style={{ x: xShift }}
+        className="absolute inset-0 will-change-transform"
+      >
+        <div className="relative w-[140%] rounded-2xl h-full scale-75 sm:scale-100 -left-[30%]">
+          <Img
+            src={imgUrl}
+            alt={`${brand} ${name} - Image ${index + 1}`}
+            width={0}
+            height={0}
+            className="h-full w-full object-cover"
+            unoptimized
+          />
+        </div>
+      </motion.div>
+
+      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-bold">
+        {(index % total) + 1} / {total}
+      </div>
+    </div>
+  );
+};
 
 const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   images,
@@ -23,16 +92,13 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   const { scrollX } = useScroll({ container: containerRef });
   const [scrollWidth, setScrollWidth] = useState(0);
 
-  // We double the images to fill both sides for looping illusion
   const doubled = [...images, ...images];
 
-  // Measure total scrollable width for reset logic
   useEffect(() => {
     const el = containerRef.current;
     if (el) setScrollWidth(el.scrollWidth);
   }, [images]);
 
-  // Infinite wrap: when scrolling too far, teleport back seamlessly
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -50,65 +116,27 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
     return () => el.removeEventListener("scroll", handleScroll);
   }, [scrollWidth]);
 
-  const Img = motion.create(Image);
-
   return (
     <div
       ref={containerRef}
       className="w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative"
     >
-      {doubled.map((image, index) => {
-        const cardRef = useRef<HTMLDivElement>(null);
-        const imgUrl = urlFor(image).width(1200).height(800).url();
-
-        const xShift = useTransform(scrollX, (scroll) => {
-          const container = containerRef.current;
-          const card = cardRef.current;
-          if (!container || !card) return 0;
-
-          const containerCenter =
-            container.scrollLeft + container.offsetWidth / 2;
-          const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-
-          const distance = cardCenter - containerCenter;
-          const maxShift = 80;
-          const normalized = Math.max(-1, Math.min(1, distance / 500));
-          return -normalized * maxShift;
-        });
-
-        return (
-          <div
-            key={`${index}-${imgUrl}`}
-            ref={cardRef}
-            className="relative shrink-0 w-[500px] h-100 sm:h-[400px] rounded-xl overflow-hidden group cursor-pointer"
-            onClick={() => {
-              setCurrentImageIndex(index % images.length);
-              setIsFullscreen(true);
-            }}
-          >
-            <motion.div
-              style={{ x: xShift }}
-              className="absolute inset-0 will-change-transform"
-            >
-              <div className="relative w-[140%] rounded-2xl h-full scale-75 sm:scale-100 -left-[30%]">
-                <Img
-                  src={imgUrl}
-                  alt={`${brand} ${name} - Image ${index + 1}`}
-                  width={0}
-                  height={0}
-                  className="h-full w-full object-cover"
-                  unoptimized
-                />
-              </div>
-            </motion.div>
-
-            {/* Image index badge */}
-            <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-bold">
-              {(index % images.length) + 1} / {images.length}
-            </div>
-          </div>
-        );
-      })}
+      {doubled.map((image, index) => (
+        <VehicleCard
+          key={`${index}-${image}`}
+          image={image}
+          index={index}
+          total={images.length}
+          brand={brand}
+          name={name}
+          scrollX={scrollX}
+          containerRef={containerRef}
+          onClick={() => {
+            setCurrentImageIndex(index % images.length);
+            setIsFullscreen(true);
+          }}
+        />
+      ))}
     </div>
   );
 };

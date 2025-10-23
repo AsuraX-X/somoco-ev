@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,6 +36,8 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err) {
+      console.error(err);
+      
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -165,12 +168,12 @@ export default function LoginPage() {
         </div>
 
         <div className="mt-4 text-center">
-          <a
+          <Link
             href="/"
             className="text-sm text-gray-400 hover:text-white transition-colors"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

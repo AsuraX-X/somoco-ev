@@ -14,6 +14,50 @@ const Home = () => {
   const lastScrollTimeRef = useRef<number>(0);
   const DEBOUNCE_MS = 100; // Minimum time between scroll attempts
 
+  const scrollToIndex = (
+    container: HTMLDivElement,
+    sections: HTMLElement[],
+    index: number
+  ) => {
+    if (index === activeIndex) return;
+    const target = sections[index];
+    if (!target) return;
+
+    isAnimatingRef.current = true;
+    setActiveIndex(index);
+
+    // Custom smooth scroll with longer duration
+    const start = container.scrollTop;
+    const end = target.offsetTop;
+    const distance = end - start;
+    const duration = 1200; // milliseconds for the scroll animation
+    let startTime: number | null = null;
+
+    const easeInOutCubic = (t: number): number => {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+
+    const animateScroll = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = easeInOutCubic(progress);
+
+      container.scrollTop = start + distance * easeProgress;
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+
+    // unlock after a short delay (matches smooth scroll duration)
+    setTimeout(() => {
+      isAnimatingRef.current = false;
+    }, SCROLL_LOCK_MS);
+  };
+
   useEffect(() => {
     const container = ref.current;
     if (!container) return;
@@ -189,57 +233,14 @@ const Home = () => {
 
     // Cleanup
     return () => {
-      container.removeEventListener("wheel", onWheel as any);
-      container.removeEventListener("touchstart", onTouchStart as any);
-      container.removeEventListener("touchmove", onTouchMove as any);
-      container.removeEventListener("touchend", onTouchEnd as any);
+      container.removeEventListener("wheel", onWheel);
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
+      container.removeEventListener("touchend", onTouchEnd);
     };
-  }, [activeIndex]);
+  }, [activeIndex, scrollToIndex]);
 
   // helper to perform the scroll
-  const scrollToIndex = (
-    container: HTMLDivElement,
-    sections: HTMLElement[],
-    index: number
-  ) => {
-    if (index === activeIndex) return;
-    const target = sections[index];
-    if (!target) return;
-
-    isAnimatingRef.current = true;
-    setActiveIndex(index);
-
-    // Custom smooth scroll with longer duration
-    const start = container.scrollTop;
-    const end = target.offsetTop;
-    const distance = end - start;
-    const duration = 1200; // milliseconds for the scroll animation
-    let startTime: number | null = null;
-
-    const easeInOutCubic = (t: number): number => {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    };
-
-    const animateScroll = (currentTime: number) => {
-      if (startTime === null) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = easeInOutCubic(progress);
-
-      container.scrollTop = start + distance * easeProgress;
-
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      }
-    };
-
-    requestAnimationFrame(animateScroll);
-
-    // unlock after a short delay (matches smooth scroll duration)
-    setTimeout(() => {
-      isAnimatingRef.current = false;
-    }, SCROLL_LOCK_MS);
-  };
 
   return (
     <div

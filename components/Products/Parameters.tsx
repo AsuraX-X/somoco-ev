@@ -11,8 +11,6 @@ const ParameterSection = ({
   title: string;
   parameters?: Parameter[];
 }) => {
-  if (!parameters || parameters.length === 0) return null;
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -33,7 +31,7 @@ const ParameterSection = ({
         animate={{ height: isOpen ? "auto" : 0 }}
         className="flex flex-col divide-y divide-secondary border overflow-hidden border-secondary rounded-sm"
       >
-        {parameters.map((param, index) => (
+        {parameters?.map((param, index) => (
           <div key={index} className="bg-white/5 p-4">
             <p>
               <span className="text-white/70 text-sm mb-1">{param.name}: </span>

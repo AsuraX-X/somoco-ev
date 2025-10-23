@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Parameter {
   name: string;
@@ -504,9 +505,9 @@ export default function AdminPage() {
           <p className="text-sm text-gray-400">
             Note: To upload images, create the vehicle first, then edit it in
             the{" "}
-            <a href="/studio" className="text-green-500 hover:text-green-400">
+            <Link href="/studio" className="text-green-500 hover:text-green-400">
               Sanity Studio
-            </a>
+            </Link>
             .
           </p>
         </div>

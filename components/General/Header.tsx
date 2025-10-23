@@ -51,11 +51,22 @@ const Header = () => {
     const fetchVehicleTypes = async () => {
       try {
         const response = await fetch("/api/vehicles");
-        const result = await response.json();
 
         // Extract unique types from vehicles
-        const types = [
-          ...new Set(result.data.map((v: any) => v.type).filter(Boolean)),
+        interface Vehicle {
+          type: string;
+          // Add other properties if needed
+        }
+
+        interface VehiclesApiResponse {
+          data: Vehicle[];
+          // Add other properties if needed
+        }
+
+        const result: VehiclesApiResponse = await response.json();
+
+        const types: string[] = [
+          ...new Set(result.data.map((v: Vehicle) => v.type).filter(Boolean)),
         ];
         setVehicleTypes(types as string[]);
       } catch (error) {

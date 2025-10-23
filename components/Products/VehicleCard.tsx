@@ -11,7 +11,7 @@ interface VehicleCardProps {
     name: string;
     type: string;
     description?: string;
-    images?: any[];
+    images?: string[];
   };
 }
 

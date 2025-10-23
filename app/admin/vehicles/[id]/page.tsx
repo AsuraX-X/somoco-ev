@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 
 interface Parameter {
   name: string;
@@ -68,21 +69,6 @@ export default function EditVehiclePage() {
     },
   });
 
-  const [images, setImages] = useState<SanityImage[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-
-  const [activeSection, setActiveSection] = useState<
-    keyof VehicleFormData["specifications"] | null
-  >(null);
-  const [currentParam, setCurrentParam] = useState<Parameter>({
-    name: "",
-    value: "",
-  });
-
-  useEffect(() => {
-    fetchVehicle();
-  }, [vehicleId]);
-
   const fetchVehicle = async () => {
     try {
       setLoading(true);
@@ -93,46 +79,73 @@ export default function EditVehiclePage() {
         throw new Error(data.error || "Failed to fetch vehicle");
       }
 
+      interface FetchedVehicleData {
+        brand?: string;
+        name?: string;
+        type?: string;
+        description?: string;
+        specifications?: FetchedSpecifications;
+      }
+
+      interface FetchedSpecifications {
+        keyParameters?: FetchedParameter[];
+        bodyParameters?: FetchedParameter[];
+        engineParameters?: FetchedParameter[];
+        motorParameters?: FetchedParameter[];
+        wheelBrakeParameters?: FetchedParameter[];
+        keyConfigurations?: FetchedParameter[];
+      }
+
+      interface FetchedParameter extends Parameter {
+        _key?: string;
+      }
+
       setFormData({
-        brand: data.data.brand || "",
-        name: data.data.name || "",
-        type: data.data.type || "",
-        description: data.data.description || "",
-        specifications: data.data.specifications
+        brand: (data.data as FetchedVehicleData).brand || "",
+        name: (data.data as FetchedVehicleData).name || "",
+        type: (data.data as FetchedVehicleData).type || "",
+        description: (data.data as FetchedVehicleData).description || "",
+        specifications: (data.data as FetchedVehicleData).specifications
           ? {
-              keyParameters: (data.data.specifications.keyParameters || []).map(
-                (p: any) => ({
-                  ...p,
-                  _key: p._key || generateKey(),
-                })
-              ),
+              keyParameters: (
+                (data.data as FetchedVehicleData).specifications
+                  ?.keyParameters || []
+              ).map((p: FetchedParameter) => ({
+                ...p,
+                _key: p._key || generateKey(),
+              })),
               bodyParameters: (
-                data.data.specifications.bodyParameters || []
-              ).map((p: any) => ({
+                (data.data as FetchedVehicleData).specifications
+                  ?.bodyParameters || []
+              ).map((p: FetchedParameter) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               engineParameters: (
-                data.data.specifications.engineParameters || []
-              ).map((p: any) => ({
+                (data.data as FetchedVehicleData).specifications
+                  ?.engineParameters || []
+              ).map((p: FetchedParameter) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               motorParameters: (
-                data.data.specifications.motorParameters || []
-              ).map((p: any) => ({
+                (data.data as FetchedVehicleData).specifications
+                  ?.motorParameters || []
+              ).map((p: FetchedParameter) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               wheelBrakeParameters: (
-                data.data.specifications.wheelBrakeParameters || []
-              ).map((p: any) => ({
+                (data.data as FetchedVehicleData).specifications
+                  ?.wheelBrakeParameters || []
+              ).map((p: FetchedParameter) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
               keyConfigurations: (
-                data.data.specifications.keyConfigurations || []
-              ).map((p: any) => ({
+                (data.data as FetchedVehicleData).specifications
+                  ?.keyConfigurations || []
+              ).map((p: FetchedParameter) => ({
                 ...p,
                 _key: p._key || generateKey(),
               })),
@@ -177,6 +190,21 @@ export default function EditVehiclePage() {
       setLoading(false);
     }
   };
+
+  const [images, setImages] = useState<SanityImage[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  const [activeSection, setActiveSection] = useState<
+    keyof VehicleFormData["specifications"] | null
+  >(null);
+  const [currentParam, setCurrentParam] = useState<Parameter>({
+    name: "",
+    value: "",
+  });
+
+  useEffect(() => {
+    fetchVehicle();
+  }, [vehicleId, fetchVehicle]);
 
   const handleInputChange = (field: keyof VehicleFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -531,9 +559,11 @@ export default function EditVehiclePage() {
                   <div className="grid grid-cols-3 gap-3">
                     {imagePreviews.map((preview, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={preview}
                           alt={`Image ${index + 1}`}
+                          width={0}
+                          height={0}
                           className="w-full h-32 object-cover rounded border border-[#333]"
                         />
                         <button

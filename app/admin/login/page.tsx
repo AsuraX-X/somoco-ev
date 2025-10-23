@@ -1,11 +1,11 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [username, setUsername] = useState("");
@@ -37,7 +37,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error(err);
-      
+
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -179,3 +179,11 @@ export default function LoginPage() {
     </div>
   );
 }
+
+const LoginPage = () => (
+  <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+    <LoginPageContent />
+  </Suspense>
+);
+
+export default LoginPage;

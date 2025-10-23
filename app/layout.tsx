@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import Header from "@/components/General/Header";
 
 const ceraPro = localFont({
   src: [
@@ -46,7 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
-      <body className={`${ceraPro.className} antialiased`}>{children}</body>
+      <body className={`${ceraPro.className} antialiased`}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

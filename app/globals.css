@@ -5,11 +5,18 @@
   --font-family-cera-stencil: var(--font-cera-stencil);
   --color-primary: #1a1a1a;
   --color-secondary: #00c950;
+  --color-secondary-dark: #00a63e;
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Default background */
+body {
+  background-color: var(--color-primary);
+  color: white;
 }
 
 /* Hide scrollbars */
@@ -20,4 +27,14 @@ html {
 
 *::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
+}
+
+/* Utility class for hiding scrollbars */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

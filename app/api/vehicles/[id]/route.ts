@@ -26,10 +26,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const id = pathname.split("/").pop();
+  if (!id || typeof id !== "string") {
+    return NextResponse.json({ error: "Invalid vehicle ID" }, { status: 400 });
+  }
   try {
     const body = await request.json();
 
@@ -42,7 +44,7 @@ export async function PUT(
     }
 
     const result = await client
-      .patch(params.id)
+      .patch(id)
       .set({
         brand: body.brand,
         name: body.name,
@@ -77,12 +79,14 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const id = pathname.split("/").pop();
+  if (!id || typeof id !== "string") {
+    return NextResponse.json({ error: "Invalid vehicle ID" }, { status: 400 });
+  }
   try {
-    await client.delete(params.id);
+    await client.delete(id);
 
     return NextResponse.json({
       success: true,

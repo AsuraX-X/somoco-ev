@@ -10,9 +10,7 @@ const AboutUs = () => {
 
   return (
     <div>
-      <div
-        className="w-full h-80 text-white font-family-cera-stencil text-6xl font-bold flex items-center justify-center bg-secondary"
-      >
+      <div className="w-full h-80 text-white font-family-cera-stencil text-6xl font-bold flex items-center justify-center bg-secondary">
         <h1>About Us</h1>
       </div>
       <div className="flex items-center justify-center text-xl sm:gap-6 font-family-cera-stencil py-6">
@@ -64,9 +62,7 @@ const AboutUs = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <div>
-        <Footer />
-      </div>
+      <div></div>
     </div>
   );
 };

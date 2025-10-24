@@ -299,7 +299,6 @@ const VehicleDetailsPage = () => {
           </Link>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

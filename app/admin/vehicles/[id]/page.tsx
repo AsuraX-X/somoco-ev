@@ -198,7 +198,7 @@ export default function EditVehiclePage() {
 
   useEffect(() => {
     fetchVehicle();
-  }, [vehicleId, fetchVehicle]);
+  }, [vehicleId]);
 
   const handleInputChange = (field: keyof VehicleFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

@@ -4,8 +4,8 @@
   --font-family-cera-pro: var(--font-cera-pro);
   --font-family-cera-stencil: var(--font-cera-stencil);
   --color-primary: #1a1a1a;
-  --color-secondary: #00c950;
-  --color-secondary-dark: #00a63e;
+  --color-secondary: #ffffff;
+  --color-secondary-dark: #cecece;
 }
 
 /* Smooth scrolling */

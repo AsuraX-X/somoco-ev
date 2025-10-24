@@ -1,10 +1,16 @@
 "use client";
-import { ChevronDown } from "lucide-react";
-import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { ChevronDown, X } from "lucide-react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import ContactForm from "./ContactForm";
 
 const Header = () => {
   const pathname = usePathname();
@@ -15,6 +21,7 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const [contactUs, setContactUs] = useState(false);
 
   const { scrollYProgress } = useScroll();
   useMotionValueEvent(scrollYProgress, "change", (i) => {
@@ -88,7 +95,7 @@ const Header = () => {
           className=" hidden sm:block text-white"
         >
           <div className="flex justify-between px-12 py-4">
-            <Link href={"/"}>
+            <Link className="flex-1" href={"/"}>
               <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
                 <Image
                   unoptimized
@@ -100,28 +107,29 @@ const Header = () => {
                 <h1>SOMOCO EV</h1>
               </div>
             </Link>
-            <div className="flex gap-6 items-center">
+            <div className="flex flex-1 justify-center items-center">
               {pathname !== "/" && (
-                <Link href={"/"}>
+                <Link className="w-25 flex items-center justify-center" href={"/"}>
                   <button className="cursor-pointer">Home</button>
                 </Link>
               )}
 
               {/* Products Dropdown */}
+
               <div
-                className="relative"
+                className="relative w-25 flex justify-center items-center"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 <button className="cursor-pointer flex items-center gap-1">
-                  Products
+                  Discover
                   <motion.span animate={{ rotate: isDropdownOpen ? 180 : 0 }}>
                     <ChevronDown size={20} />
                   </motion.span>
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
+                  <div className="absolute top-full mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
                     {isLoading ? (
                       <div className="px-4 py-2 text-white/60">Loading...</div>
                     ) : (
@@ -155,13 +163,24 @@ const Header = () => {
                 )}
               </div>
 
-              <Link href={"/about-us"}>
+              <Link className="flex justify-center items-center w-25" href={"/about-us"}>
                 <button className="cursor-pointer">About Us</button>
               </Link>
-
-              <Link href={"/contact"}>
-                <button className="cursor-pointer">Contact Us</button>
-              </Link>
+            </div>
+            <div className="flex-1 flex justify-end items-center">
+              <motion.button
+                whileHover={{
+                  backgroundColor: "#ffffff",
+                  color: "#000000",
+                }}
+                whileTap={{
+                  backgroundColor: "#cecece",
+                }}
+                className="border-secondary cursor-pointer border rounded-full px-4 py-2"
+                onClick={() => setContactUs(true)}
+              >
+                Contact Us
+              </motion.button>
             </div>
           </div>
         </motion.div>
@@ -226,7 +245,7 @@ const Header = () => {
                   onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
                   className="w-full flex justify-between items-center py-2 cursor-pointer hover:text-secondary transition-colors"
                 >
-                  <span>Products</span>
+                  <span>Discover</span>
                   <motion.span
                     animate={{ rotate: isMobileProductsOpen ? 180 : 0 }}
                   >
@@ -278,18 +297,31 @@ const Header = () => {
                   About Us
                 </div>
               </Link>
-
-              <Link
-                href={"/contact"}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
-                  Contact Us
-                </div>
-              </Link>
             </div>
           </motion.div>
         </motion.div>
+        <AnimatePresence>
+          {contactUs && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed h-screen w-full flex flex-col items-center justify-center z-100 top-0 backdrop-blur-2xl"
+            >
+              <motion.button
+                whileHover={{ backgroundColor: "#ffffff", color: "#000000" }}
+                onClick={() => setContactUs(false)}
+                className="absolute p-2 rounded-full border border-secondary top-8 cursor-pointer right-10"
+              >
+                <X />
+              </motion.button>
+              <h1 className="font-family-cera-stencil text-4xl font-bold mb-10">
+                Contact Us
+              </h1>
+              <ContactForm />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     )
   );

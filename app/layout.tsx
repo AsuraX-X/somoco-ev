@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 import Header from "@/components/General/Header";
+import Footer from "@/components/General/Footer";
 
 const ceraPro = localFont({
   src: [
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body className={`${ceraPro.className} antialiased`}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

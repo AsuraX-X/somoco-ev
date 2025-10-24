@@ -23,15 +23,19 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
         .url()
     : "/placeholder-vehicle.jpg";
 
+  // Get first three key parameters if available
+  const keyParams: { name: string; value: string }[] =
+    (vehicle as any).specifications?.keyParameters?.slice(0, 3) || [];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-secondary/50 transition-all duration-300"
+      className="bg-white/5 rounded-xl overflow-hidden transition-all duration-300"
     >
-      <Link href={`/vehicles/${vehicle._id}`}>
-        <div className="relative h-64 w-full bg-white/10">
+      <div className="relative h-64 w-full bg-white/10">
+        <Link href={`/vehicles/${vehicle._id}`}>
           <Image
             src={imageUrl}
             alt={`${vehicle.brand} ${vehicle.name}`}
@@ -39,37 +43,76 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
             className="object-cover"
             unoptimized={imageUrl.includes("placeholder")}
           />
-          {vehicle.type && (
-            <div className="absolute top-4 right-4 bg-secondary px-3 py-1 rounded-full text-white text-sm font-bold">
-              {vehicle.type}
-            </div>
-          )}
-        </div>
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-white font-family-cera-stencil mb-2">
-            {vehicle.brand} {vehicle.name}
-          </h3>
-          {vehicle.description && (
-            <p className="text-white/70 text-sm line-clamp-2 mb-4">
-              {vehicle.description}
-            </p>
-          )}
+        </Link>
+        {vehicle.type && (
+          <div className="absolute top-4 right-4 bg-secondary px-3 py-1 rounded-full text-black text-sm font-bold">
+            {vehicle.type}
+          </div>
+        )}
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-white font-family-cera-stencil mb-2">
+          {vehicle.brand} {vehicle.name}
+        </h3>
+        {vehicle.description && (
+          <p className="text-white/70 text-sm line-clamp-2 mb-2">
+            {vehicle.description}
+          </p>
+        )}
+        {/* Key Parameters */}
+        {keyParams.length > 0 && (
+          <div className="mb-4">
+            <ul className="text-white/80 text-xs space-y-1">
+              {keyParams.map((param, idx) => (
+                <li key={idx}>
+                  <span className="font-semibold text-secondary">
+                    {param.name}:
+                  </span>{" "}
+                  {param.value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div className="flex gap-2">
           <motion.button
             whileHover={{
-              backgroundColor: "#00c950",
-              color: "#ffffff",
+              backgroundColor: "#ffffff",
+              color: "#000000",
             }}
             whileTap={{
-              backgroundColor: "#00a63e",
+              backgroundColor: "#cecece",
               scale: 0.95,
             }}
             transition={{ ease: "linear", duration: 0.1 }}
-            className="w-full py-2 rounded-full border-2 border-secondary text-secondary font-bold transition-colors"
+            className="w-full flex justify-center items-center py-2 rounded-full border border-secondary text-secondary font-bold transition-colors"
           >
-            View Details
+            <Link className="w-full h-full" href={`/vehicles/${vehicle._id}`}>
+              View Details
+            </Link>
+          </motion.button>
+
+          <motion.button
+            whileHover={{
+              backgroundColor: "#ffffff",
+              color: "#000000",
+            }}
+            whileTap={{
+              backgroundColor: "#cecece",
+              scale: 0.95,
+            }}
+            transition={{ ease: "linear", duration: 0.1 }}
+            className="w-full flex justify-center items-center py-2 rounded-full border border-secondary text-secondary font-bold transition-colors"
+          >
+            <Link
+              className="w-full h-full"
+              href={`/products/compare?first=${vehicle._id}`}
+            >
+              Compare
+            </Link>
           </motion.button>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 };

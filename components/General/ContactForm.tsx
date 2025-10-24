@@ -71,16 +71,13 @@ const ContactForm: FC = () => {
   };
 
   return (
-    <motion.form
-      onSubmit={handleSubmit}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="space-y-4"
-    >
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="name" className="block mb-1 text-secondary font-medium">
+          <label
+            htmlFor="name"
+            className="block mb-1 text-secondary font-medium"
+          >
             Name
           </label>
           <input
@@ -96,7 +93,10 @@ const ContactForm: FC = () => {
         </div>
 
         <div>
-          <label htmlFor="email" className="block mb-1 text-secondary font-medium">
+          <label
+            htmlFor="email"
+            className="block mb-1 text-secondary font-medium"
+          >
             Email
           </label>
           <input
@@ -114,7 +114,10 @@ const ContactForm: FC = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="phone" className="block mb-1 text-secondary font-medium">
+          <label
+            htmlFor="phone"
+            className="block mb-1 text-secondary font-medium"
+          >
             Phone
           </label>
           <input
@@ -129,7 +132,10 @@ const ContactForm: FC = () => {
         </div>
 
         <div>
-          <label htmlFor="city" className="block mb-1 text-secondary font-medium">
+          <label
+            htmlFor="city"
+            className="block mb-1 text-secondary font-medium"
+          >
             City
           </label>
           <input
@@ -145,7 +151,10 @@ const ContactForm: FC = () => {
       </div>
 
       <div>
-        <label htmlFor="region" className="block mb-1 text-secondary font-medium">
+        <label
+          htmlFor="region"
+          className="block mb-1 text-secondary font-medium"
+        >
           Region
         </label>
         <input
@@ -160,7 +169,10 @@ const ContactForm: FC = () => {
       </div>
 
       <div>
-        <label htmlFor="message" className="block mb-1 text-secondary font-medium">
+        <label
+          htmlFor="message"
+          className="block mb-1 text-secondary font-medium"
+        >
           Message
         </label>
         <textarea
@@ -193,7 +205,6 @@ const ContactForm: FC = () => {
         whileHover={
           !isSubmitting
             ? {
-                backgroundColor: "#00c950",
                 scale: 1.02,
               }
             : {}
@@ -201,16 +212,16 @@ const ContactForm: FC = () => {
         whileTap={
           !isSubmitting
             ? {
-                backgroundColor: "#00a63e",
+                backgroundColor: "#cecece",
                 scale: 0.98,
               }
             : {}
         }
-        className="px-6 py-3 w-full rounded-full bg-secondary text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+        className="px-6 py-3 cursor-pointer w-full rounded-full bg-secondary text-black font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
       >
         {isSubmitting ? "Sending..." : "Send Message"}
       </motion.button>
-    </motion.form>
+    </form>
   );
 };
 

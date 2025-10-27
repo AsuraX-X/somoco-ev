@@ -79,17 +79,21 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
     url: () => string;
   }
 
+  // Fallback image component (named to satisfy react/display-name lint rule)
+  const FallbackImage: React.FC<Partial<ImageProps>> = (props) => {
+    const rawSrc = props.src as string | StaticImageData | undefined;
+    const srcStr = typeof rawSrc === "string" ? rawSrc : rawSrc?.src || "";
+    return React.createElement("img", {
+      src: srcStr,
+      alt: (props.alt as string) || "",
+      style: { width: "100%", height: "100%", objectFit: "cover" },
+      className: props.className,
+    });
+  };
+  FallbackImage.displayName = "VehicleSelectModal.FallbackImage";
+
   const [Image, setImage] = useState<React.ComponentType<ImageProps>>(
-    () => (props: Partial<ImageProps>) => {
-      const rawSrc = props.src as string | StaticImageData | undefined;
-      const srcStr = typeof rawSrc === "string" ? rawSrc : rawSrc?.src || "";
-      return React.createElement("img", {
-        src: srcStr,
-        alt: (props.alt as string) || "",
-        style: { width: "100%", height: "100%", objectFit: "cover" },
-        className: props.className,
-      });
-    }
+    () => FallbackImage
   );
   const [urlFor, setUrlFor] = useState<
     (s: SanityImageSource) => SanityImageUrlBuilder

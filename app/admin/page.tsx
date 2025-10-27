@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Parameter {
   name: string;
@@ -423,9 +424,11 @@ export default function AdminPage() {
                   <div className="grid grid-cols-3 gap-3">
                     {imagePreviews.map((preview, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={preview}
                           alt={`Preview ${index + 1}`}
+                          width={0}
+                          height={0}
                           className="w-full h-32 object-cover rounded border border-[#333]"
                         />
                         <button
@@ -505,7 +508,10 @@ export default function AdminPage() {
           <p className="text-sm text-gray-400">
             Note: To upload images, create the vehicle first, then edit it in
             the{" "}
-            <Link href="/studio" className="text-green-500 hover:text-green-400">
+            <Link
+              href="/studio"
+              className="text-green-500 hover:text-green-400"
+            >
               Sanity Studio
             </Link>
             .

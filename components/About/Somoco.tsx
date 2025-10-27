@@ -54,7 +54,12 @@ const Somoco = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Image src={"/sustain.jpg"} className="object-cover" fill alt="Career image" />
+            <Image
+              src={"/sustain.jpg"}
+              className="object-cover"
+              fill
+              alt="Career image"
+            />
           </motion.div>
         </div>
         <motion.div
@@ -64,7 +69,9 @@ const Somoco = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-xl sm:text-3xl font-family-cera-stencil">Sustainability</h1>
+          <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
+            Sustainability
+          </h1>
           <p className="text-base sm:text-xl">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
             Necessitatibus iusto expedita accusamus, soluta labore culpa
@@ -72,7 +79,11 @@ const Somoco = () => {
             doloremque esse sint iusto, excepturi unde.
           </p>
           <motion.button
-            whileHover={{ backgroundColor: "#ffffff", color: "#000000", scale: 1.02 }}
+            whileHover={{
+              backgroundColor: "#ffffff",
+              color: "#000000",
+              scale: 1.02,
+            }}
             whileTap={{ scale: 0.98 }}
             className="w-fit border px-6 rounded-full py-4"
           >
@@ -88,7 +99,9 @@ const Somoco = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="text-xl sm:text-3xl font-family-cera-stencil">Careers</h1>
+          <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
+            Careers
+          </h1>
           <p className="text-base sm:text-xl">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
             Necessitatibus iusto expedita accusamus, soluta labore culpa
@@ -96,7 +109,11 @@ const Somoco = () => {
             doloremque esse sint iusto, excepturi unde.
           </p>
           <motion.button
-            whileHover={{ backgroundColor: "#ffffff", color: "#000000", scale: 1.02 }}
+            whileHover={{
+              backgroundColor: "#ffffff",
+              color: "#000000",
+              scale: 1.02,
+            }}
             whileTap={{ scale: 0.98 }}
             className="w-fit border px-6 rounded-full py-4"
           >
@@ -111,7 +128,12 @@ const Somoco = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <Image src={"/career.jpg"} className="object-cover" fill alt="Sunstainability image" />
+            <Image
+              src={"/career.jpg"}
+              className="object-cover"
+              fill
+              alt="Sunstainability image"
+            />
           </motion.div>
         </div>
       </div>

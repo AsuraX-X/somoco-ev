@@ -79,8 +79,8 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
     url: () => string;
   }
 
-  const [Image, setImage] = useState<React.ComponentType<ImageProps>>(() =>
-    (props: Partial<ImageProps>) => {
+  const [Image, setImage] = useState<React.ComponentType<ImageProps>>(
+    () => (props: Partial<ImageProps>) => {
       const rawSrc = props.src as string | StaticImageData | undefined;
       const srcStr = typeof rawSrc === "string" ? rawSrc : rawSrc?.src || "";
       return React.createElement("img", {
@@ -287,14 +287,16 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                           {/* Show first three key parameters */}
                           {keyParams.length > 0 && (
                             <ul className="text-white/80 text-xs space-y-1 mb-2">
-                              {keyParams.slice(0, 3).map((param, idx: number) => (
-                                <li key={idx}>
-                                  <span className="font-semibold text-secondary">
-                                    {param.name}:
-                                  </span>{" "}
-                                  {param.value}
-                                </li>
-                              ))}
+                              {keyParams
+                                .slice(0, 3)
+                                .map((param, idx: number) => (
+                                  <li key={idx}>
+                                    <span className="font-semibold text-secondary">
+                                      {param.name}:
+                                    </span>{" "}
+                                    {param.value}
+                                  </li>
+                                ))}
                             </ul>
                           )}
                         </button>

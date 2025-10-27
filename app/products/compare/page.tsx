@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { ArrowLeft } from "lucide-react";
 import dynamic from "next/dynamic";
 const VehicleSelectModal = dynamic(
   () => import("@/components/Products/VehicleSelectModal"),
@@ -90,101 +92,146 @@ export default function ComparePage() {
     router.replace(`/products/compare?${params.toString()}`);
   };
 
+  const handleClear = (which: "first" | "second") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(which);
+    router.replace(`/products/compare?${params.toString()}`);
+  };
+
   return (
     <div className="min-h-screen bg-primary text-white pt-24 pb-8">
       <div className="max-w-7xl px-4 sm:px-8 lg:px-16 pb-10 mx-auto">
-        <h1 className="text-4xl font-bold font-family-cera-stencil mb-8 text-center">
-          Compare Vehicles
-        </h1>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <Link href="/products">
+              <motion.button
+                whileHover={{ x: -4 }}
+                className="flex items-center gap-2 text-white/80 hover:text-secondary"
+              >
+                <ArrowLeft size={18} /> Back to Products
+              </motion.button>
+            </Link>
+          </div>
+          <h1 className="text-4xl font-bold font-family-cera-stencil">
+            Compare Vehicles
+          </h1>
+          <div className="w-24" />
+        </div>
         <div className="flex flex-col lg:flex-row gap-8 justify-center">
           {/* Vehicle Selectors */}
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Select First Vehicle</h2>
-            <button
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white mb-6"
+            <h2 className="text-xl font-bold mb-4">First Vehicle</h2>
+            <motion.button
               onClick={() => setShowFirstModal(true)}
+              whileHover={{ scale: 1.02 }}
+              className="w-full p-3 rounded-lg bg-white/6 border border-white/10 text-white mb-4 text-left"
             >
               {firstVehicle
                 ? `${firstVehicle.brand} ${firstVehicle.name}`
                 : "Select Vehicle"}
-            </button>
+            </motion.button>
+
             {firstVehicle && (
-              <div className="bg-white/5 rounded-xl p-4 mb-4">
-                <div className="relative h-48 w-full mb-4">
+              <div className="bg-white/5 rounded-xl p-4 mb-4 shadow-sm">
+                <div className="relative h-44 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
                       firstVehicle.images?.[0]
                         ? urlFor(firstVehicle.images[0])
-                            .width(400)
-                            .height(300)
+                            .width(800)
+                            .height(600)
                             .url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${firstVehicle.brand} ${firstVehicle.name}`}
                     fill
-                    className="object-cover rounded"
+                    className="object-cover"
                     unoptimized={true}
                   />
                 </div>
-                <h3 className="text-lg font-bold mb-2">
-                  {firstVehicle.brand} {firstVehicle.name}
-                </h3>
-                <p className="text-white/70 text-sm mb-2">
-                  {firstVehicle.description}
-                </p>
+                <div className="flex flex-col items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold">
+                      {firstVehicle.brand} {firstVehicle.name}
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      {firstVehicle.description}
+                    </p>
+                  </div>
+                  <div className="flex w-full gap-4 mt-4">
+                    <button
+                      onClick={() => handleClear("first")}
+                      className="w-full flex items-center justify-center border rounded-full py-2 "
+                    >
+                      Clear
+                    </button>
+                    <Link
+                      href={`/vehicles/${firstVehicle._id}`}
+                      className="w-full flex items-center justify-center border rounded-full py-2 "
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
-            <VehicleSelectModal
-              vehicles={vehicles}
-              open={showFirstModal}
-              onClose={() => setShowFirstModal(false)}
-              onSelect={(id: string) => handleSelect("first", id)}
-              title="Select First Vehicle"
-            />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Select Second Vehicle</h2>
-            <button
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white mb-6"
+            <h2 className="text-xl font-bold mb-4">Second Vehicle</h2>
+            <motion.button
               onClick={() => setShowSecondModal(true)}
+              whileHover={{ scale: 1.02 }}
+              className="w-full p-3 rounded-lg bg-white/6 border border-white/10 text-white mb-4 text-left"
             >
               {secondVehicle
                 ? `${secondVehicle.brand} ${secondVehicle.name}`
                 : "Select Vehicle"}
-            </button>
+            </motion.button>
+
             {secondVehicle && (
-              <div className="bg-white/5 rounded-xl p-4 mb-4">
-                <div className="relative h-48 w-full mb-4">
+              <div className="bg-white/5 rounded-xl p-4 mb-4 shadow-sm">
+                <div className="relative h-44 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
                       secondVehicle.images?.[0]
                         ? urlFor(secondVehicle.images[0])
-                            .width(400)
-                            .height(300)
+                            .width(800)
+                            .height(600)
                             .url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${secondVehicle.brand} ${secondVehicle.name}`}
                     fill
-                    className="object-cover rounded"
+                    className="object-cover"
                     unoptimized={true}
                   />
                 </div>
-                <h3 className="text-lg font-bold mb-2">
-                  {secondVehicle.brand} {secondVehicle.name}
-                </h3>
-                <p className="text-white/70 text-sm mb-2">
-                  {secondVehicle.description}
-                </p>
+                <div className="flex flex-col items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold">
+                      {secondVehicle.brand} {secondVehicle.name}
+                    </h3>
+                    <p className="text-white/70 text-sm">
+                      {secondVehicle.description}
+                    </p>
+                  </div>
+                  <div className="flex w-full gap-4 mt-4">
+                    <button
+                      onClick={() => handleClear("second")}
+                      className="w-full flex items-center justify-center border rounded-full py-2 "
+                    >
+                      Clear
+                    </button>
+                    <Link
+                      href={`/vehicles/${secondVehicle._id}`}
+                      className="w-full flex items-center justify-center border rounded-full py-2 "
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
               </div>
             )}
-            <VehicleSelectModal
-              vehicles={vehicles}
-              open={showSecondModal}
-              onClose={() => setShowSecondModal(false)}
-              onSelect={(id: string) => handleSelect("second", id)}
-              title="Select Second Vehicle"
-            />
           </div>
         </div>
         {/* Comparison Table */}
@@ -194,7 +241,7 @@ export default function ComparePage() {
               Parameters Comparison
             </h2>
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse bg-white/5 rounded-xl overflow-hidden">
                 <thead>
                   <tr>
                     <th className="p-3 bg-secondary/20 text-secondary font-bold rounded-tl-xl">
@@ -233,16 +280,19 @@ export default function ComparePage() {
                           </td>
                         </tr>
                         {[...Array(maxLen)].map((_, idx) => (
-                          <tr key={section.key + idx}>
-                            <td className="p-3 border-b border-white/10 text-xs">
+                          <tr
+                            key={section.key + idx}
+                            className="even:bg-white/3"
+                          >
+                            <td className="p-3 border-b border-white/10 text-xs align-top">
                               {firstParams[idx]?.name ||
                                 secondParams[idx]?.name ||
                                 "-"}
                             </td>
-                            <td className="p-3 border-b border-white/10 text-xs">
+                            <td className="p-3 border-b border-white/10 text-xs align-top">
                               {firstParams[idx]?.value || "-"}
                             </td>
-                            <td className="p-3 border-b border-white/10 text-xs">
+                            <td className="p-3 border-b border-white/10 text-xs align-top">
                               {secondParams[idx]?.value || "-"}
                             </td>
                           </tr>

@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import ContactForm from "./ContactForm";
+import { useContactModal } from "./ContactModalProvider";
 
 const Header = () => {
   const pathname = usePathname();
@@ -21,7 +21,7 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const [contactUs, setContactUs] = useState(false);
+  const { open: openContact } = useContactModal();
 
   const { scrollYProgress } = useScroll();
   useMotionValueEvent(scrollYProgress, "change", (i) => {
@@ -29,6 +29,13 @@ const Header = () => {
     else setChangeBg(false);
     console.log(i);
   });
+
+  // Close dropdowns/menus when the path changes
+  useEffect(() => {
+    setIsDropdownOpen(false);
+    setIsMobileMenuOpen(false);
+    setIsMobileProductsOpen(false);
+  }, [pathname]);
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -109,7 +116,10 @@ const Header = () => {
             </Link>
             <div className="flex flex-1 justify-center items-center">
               {pathname !== "/" && (
-                <Link className="w-25 flex items-center justify-center" href={"/"}>
+                <Link
+                  className="w-25 flex items-center justify-center"
+                  href={"/"}
+                >
                   <button className="cursor-pointer">Home</button>
                 </Link>
               )}
@@ -163,7 +173,10 @@ const Header = () => {
                 )}
               </div>
 
-              <Link className="flex justify-center items-center w-25" href={"/about-us"}>
+              <Link
+                className="flex justify-center items-center w-25"
+                href={"/about-us"}
+              >
                 <button className="cursor-pointer">About Us</button>
               </Link>
             </div>
@@ -177,7 +190,7 @@ const Header = () => {
                   backgroundColor: "#cecece",
                 }}
                 className="border-secondary cursor-pointer border rounded-full px-4 py-2"
-                onClick={() => setContactUs(true)}
+                onClick={() => openContact()}
               >
                 Contact Us
               </motion.button>
@@ -230,7 +243,7 @@ const Header = () => {
             transition={{ duration: 0.3 }}
             className="overflow-hidden bg-primary/95 backdrop-blur-lg"
           >
-            <div className="px-6 py-4 space-y-4">
+            <div className="px-6 py-4 space-y-2">
               {pathname !== "/" && (
                 <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>
                   <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
@@ -243,7 +256,7 @@ const Header = () => {
               <div>
                 <button
                   onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                  className="w-full flex justify-between items-center py-2 cursor-pointer hover:text-secondary transition-colors"
+                  className="w-full flex justify-between items-center cursor-pointer hover:text-secondary transition-colors"
                 >
                   <span>Discover</span>
                   <motion.span
@@ -261,7 +274,7 @@ const Header = () => {
                   transition={{ duration: 0.2 }}
                   className="overflow-hidden"
                 >
-                  <div className="pl-4 pt-2 space-y-2">
+                  <div className="pl-4 pt-1 space-y-2">
                     <Link
                       href="/products"
                       onClick={() => {
@@ -293,35 +306,26 @@ const Header = () => {
                 href={"/about-us"}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
+                <div className="cursor-pointer hover:text-secondary transition-colors">
                   About Us
                 </div>
               </Link>
+
+              <div className="pt-2">
+                <button
+                  className="w-full text-left cursor-pointer"
+                  onClick={() => {
+                    openContact();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Contact Us
+                </button>
+              </div>
             </div>
           </motion.div>
         </motion.div>
-        <AnimatePresence>
-          {contactUs && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed h-screen w-full flex flex-col items-center justify-center z-100 top-0 backdrop-blur-2xl"
-            >
-              <motion.button
-                whileHover={{ backgroundColor: "#ffffff", color: "#000000" }}
-                onClick={() => setContactUs(false)}
-                className="absolute p-2 rounded-full border border-secondary top-8 cursor-pointer right-10"
-              >
-                <X />
-              </motion.button>
-              <h1 className="font-family-cera-stencil text-4xl font-bold mb-10">
-                Contact Us
-              </h1>
-              <ContactForm />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Contact overlay is provided by ContactModalProvider */}
       </div>
     )
   );

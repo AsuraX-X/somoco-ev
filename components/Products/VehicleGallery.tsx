@@ -42,8 +42,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     const card = cardRef.current;
     if (!container || !card) return 0;
 
-    const containerCenter =
-      container.scrollLeft + container.offsetWidth / 2;
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
     const cardCenter = card.offsetLeft + card.offsetWidth / 2;
 
     const distance = cardCenter - containerCenter;
@@ -55,14 +54,14 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className="relative shrink-0 w-[500px] h-[400px] rounded-xl overflow-hidden group cursor-pointer"
+      className="relative shrink-0 w-[80vw] sm:w-[500px] h-[56vw] sm:h-[400px] rounded-xl overflow-hidden group cursor-pointer snap-center"
       onClick={onClick}
     >
       <motion.div
         style={{ x: xShift }}
         className="absolute inset-0 will-change-transform"
       >
-        <div className="relative w-[140%] rounded-2xl h-full scale-75 sm:scale-100 -left-[30%]">
+        <div className="relative h-full w-full sm:w-[140%] sm:-left-[30%] rounded-2xl">
           <Img
             src={imgUrl}
             alt={`${brand} ${name} - Image ${index + 1}`}
@@ -91,8 +90,9 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollX } = useScroll({ container: containerRef });
   const [scrollWidth, setScrollWidth] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const doubled = [...images, ...images];
+  const doubled = isMobile ? images : [...images, ...images];
 
   useEffect(() => {
     const el = containerRef.current;
@@ -100,6 +100,17 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   }, [images]);
 
   useEffect(() => {
+    // detect mobile and update state
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    // only attach infinite-scroll reset when not on mobile
+    if (isMobile) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -114,12 +125,14 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 
     el.addEventListener("scroll", handleScroll, { passive: true });
     return () => el.removeEventListener("scroll", handleScroll);
-  }, [scrollWidth]);
+  }, [scrollWidth, isMobile]);
 
   return (
     <div
       ref={containerRef}
-      className="w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative"
+      className={`w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative px-4 sm:px-0 ${
+        isMobile ? "snap-x snap-mandatory" : ""
+      }`}
     >
       {doubled.map((image, index) => (
         <VehicleCard

@@ -3,6 +3,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import Header from "@/components/General/Header";
 import Footer from "@/components/General/Footer";
+import ContactModalProvider from "@/components/General/ContactModalProvider";
 
 const ceraPro = localFont({
   src: [
@@ -49,9 +50,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
       <body className={`${ceraPro.className} antialiased`}>
-        <Header />
-        {children}
-        <Footer />
+        <ContactModalProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ContactModalProvider>
       </body>
     </html>
   );

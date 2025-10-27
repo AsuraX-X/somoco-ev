@@ -88,7 +88,7 @@ const ContactForm: FC = () => {
             onChange={handleChange}
             required
             placeholder="e.g. John Doe"
-            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+            className="px-4 py-2 w-full  rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
           />
         </div>
 
@@ -107,7 +107,7 @@ const ContactForm: FC = () => {
             onChange={handleChange}
             required
             placeholder="e.g. john@example.com"
-            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+            className="px-4 py-2 w-full rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
           />
         </div>
       </div>
@@ -127,7 +127,7 @@ const ContactForm: FC = () => {
             value={formData.phone}
             onChange={handleChange}
             placeholder="e.g. 02000000000"
-            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+            className="px-4 py-2 w-full rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
           />
         </div>
 
@@ -145,7 +145,7 @@ const ContactForm: FC = () => {
             value={formData.city}
             onChange={handleChange}
             placeholder="e.g. Accra"
-            className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
+            className="px-4 py-2 w-full rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-secondary transition-colors"
           />
         </div>
       </div>
@@ -178,7 +178,7 @@ const ContactForm: FC = () => {
         <textarea
           id="message"
           name="message"
-          rows={5}
+          rows={3}
           value={formData.message}
           onChange={handleChange}
           required

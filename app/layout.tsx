@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import Header from "@/components/General/Header";
 import Footer from "@/components/General/Footer";
 import ContactModalProvider from "@/components/General/ContactModalProvider";
+import LenisScrollProvider from "@/components/General/LenisProvider";
 
 const ceraPro = localFont({
   src: [
@@ -50,11 +51,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
       <body className={`${ceraPro.className} antialiased`}>
-        <ContactModalProvider>
-          <Header />
-          {children}
-          <Footer />
-        </ContactModalProvider>
+        <LenisScrollProvider>
+          <ContactModalProvider>
+            <Header />
+            {children}
+            <Footer />
+          </ContactModalProvider>
+        </LenisScrollProvider>
       </body>
     </html>
   );

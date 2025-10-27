@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import type { ImageProps, StaticImageData } from "next/image";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { Search, X, Plus } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -10,6 +12,9 @@ interface Vehicle {
   type: string;
   description?: string;
   images?: string[];
+  specifications?: {
+    keyParameters?: { name: string; value: string }[];
+  };
 }
 
 interface VehicleSelectModalProps {
@@ -65,12 +70,54 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
     if (!groupedByType[type]) groupedByType[type] = [];
     groupedByType[type].push(v);
   });
+  // Lazy import for next/image and urlFor
+  // Lazy dynamic import without require - provide safe fallbacks until loaded
+  // Define a narrow type for the sanity image builder result we use
+  interface SanityImageUrlBuilder {
+    width: (n: number) => SanityImageUrlBuilder;
+    height: (n: number) => SanityImageUrlBuilder;
+    url: () => string;
+  }
+
+  const [Image, setImage] = useState<React.ComponentType<ImageProps>>(() =>
+    (props: Partial<ImageProps>) => {
+      const rawSrc = props.src as string | StaticImageData | undefined;
+      const srcStr = typeof rawSrc === "string" ? rawSrc : rawSrc?.src || "";
+      return React.createElement("img", {
+        src: srcStr,
+        alt: (props.alt as string) || "",
+        style: { width: "100%", height: "100%", objectFit: "cover" },
+        className: props.className,
+      });
+    }
+  );
+  const [urlFor, setUrlFor] = useState<
+    (s: SanityImageSource) => SanityImageUrlBuilder
+  >((s) => ({
+    width: () => ({} as SanityImageUrlBuilder),
+    height: () => ({} as SanityImageUrlBuilder),
+    url: () => String(s) || "",
+  }));
+
+  React.useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const imageMod = await import("next/image");
+        const sanityMod = await import("@/sanity/lib/image");
+        if (!mounted) return;
+        setImage(() => imageMod.default);
+        setUrlFor(() => sanityMod.urlFor);
+      } catch {
+        // keep fallbacks if imports fail
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (!open) return null;
-
-  // Lazy import for next/image and urlFor
-  const Image = require("next/image").default;
-  const { urlFor } = require("@/sanity/lib/image");
 
   return (
     <AnimatePresence>
@@ -207,41 +254,40 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                     {type}
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {vehicles.map((v) => (
-                      <button
-                        key={v._id}
-                        className="bg-white/5 rounded-lg p-4 flex flex-col items-start hover:bg-secondary/10 transition-colors border border-white/10 text-left"
-                        onClick={() => {
-                          onSelect(v._id);
-                          onClose();
-                        }}
-                      >
-                        <div className="relative w-full h-32 mb-2">
-                          <Image
-                            src={
-                              v.images?.[0]
-                                ? urlFor(v.images[0])
-                                    .width(300)
-                                    .height(200)
-                                    .url()
-                                : "/placeholder-vehicle.jpg"
-                            }
-                            alt={`${v.brand} ${v.name}`}
-                            fill
-                            className="object-cover rounded"
-                            unoptimized={true}
-                          />
-                        </div>
-                        <span className="font-bold text-white mb-1">
-                          {v.brand} {v.name}
-                        </span>
-                        {/* Show first three key parameters */}
-                        {(v as any).specifications?.keyParameters?.length >
-                          0 && (
-                          <ul className="text-white/80 text-xs space-y-1 mb-2">
-                            {(v as any).specifications.keyParameters
-                              .slice(0, 3)
-                              .map((param: any, idx: number) => (
+                    {vehicles.map((v) => {
+                      const keyParams = v.specifications?.keyParameters ?? [];
+                      return (
+                        <button
+                          key={v._id}
+                          className="bg-white/5 rounded-lg p-4 flex flex-col items-start hover:bg-secondary/10 transition-colors border border-white/10 text-left"
+                          onClick={() => {
+                            onSelect(v._id);
+                            onClose();
+                          }}
+                        >
+                          <div className="relative w-full h-32 mb-2">
+                            <Image
+                              src={
+                                v.images?.[0]
+                                  ? (urlFor(v.images[0])
+                                      .width(300)
+                                      .height(200)
+                                      .url() as unknown as string)
+                                  : "/placeholder-vehicle.jpg"
+                              }
+                              alt={`${v.brand} ${v.name}`}
+                              fill
+                              className="object-cover rounded"
+                              unoptimized={true}
+                            />
+                          </div>
+                          <span className="font-bold text-white mb-1">
+                            {v.brand} {v.name}
+                          </span>
+                          {/* Show first three key parameters */}
+                          {keyParams.length > 0 && (
+                            <ul className="text-white/80 text-xs space-y-1 mb-2">
+                              {keyParams.slice(0, 3).map((param, idx: number) => (
                                 <li key={idx}>
                                   <span className="font-semibold text-secondary">
                                     {param.name}:
@@ -249,10 +295,11 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                                   {param.value}
                                 </li>
                               ))}
-                          </ul>
-                        )}
-                      </button>
-                    ))}
+                            </ul>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               ))

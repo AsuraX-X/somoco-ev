@@ -4,17 +4,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 
-interface VehicleCardProps {
-  vehicle: {
-    _id: string;
-    brand: string;
-    name: string;
-    type: string;
-    description?: string;
-    images?: string[];
-  };
+interface KeyParameter {
+  name: string;
+  value: string;
 }
 
+type Specifications = {
+  keyParameters?: KeyParameter[];
+} & Record<string, unknown>;
+
+interface Vehicle {
+  _id: string;
+  brand: string;
+  name: string;
+  type: string;
+  description?: string;
+  images?: string[];
+  specifications?: Specifications;
+}
+
+interface VehicleCardProps {
+  vehicle: Vehicle;
+}
 const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   const imageUrl = vehicle.images?.[vehicle.images.length - 1]
     ? urlFor(vehicle.images[vehicle.images.length - 1])
@@ -25,7 +36,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
 
   // Get first three key parameters if available
   const keyParams: { name: string; value: string }[] =
-    (vehicle as any).specifications?.keyParameters?.slice(0, 3) || [];
+    vehicle.specifications?.keyParameters?.slice(0, 3) || [];
 
   return (
     <motion.div

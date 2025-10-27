@@ -175,6 +175,13 @@ export default function ComparePage() {
                 </div>
               </div>
             )}
+            <VehicleSelectModal
+              vehicles={vehicles}
+              open={showFirstModal}
+              onClose={() => setShowFirstModal(false)}
+              onSelect={(id: string) => handleSelect("first", id)}
+              title="Select First Vehicle"
+            />
           </div>
           <div className="flex-1">
             <h2 className="text-xl font-bold mb-4">Second Vehicle</h2>
@@ -232,6 +239,13 @@ export default function ComparePage() {
                 </div>
               </div>
             )}
+            <VehicleSelectModal
+              vehicles={vehicles}
+              open={showSecondModal}
+              onClose={() => setShowSecondModal(false)}
+              onSelect={(id: string) => handleSelect("second", id)}
+              title="Select Second Vehicle"
+            />
           </div>
         </div>
         {/* Comparison Table */}

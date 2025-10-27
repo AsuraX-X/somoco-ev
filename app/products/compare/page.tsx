@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { ArrowLeft } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -45,7 +45,7 @@ const parameterSections = [
   { name: "Key Configurations", key: "keyConfigurations" },
 ];
 
-export default function ComparePage() {
+function ComparePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const firstId = searchParams.get("first") || "";
@@ -323,3 +323,11 @@ export default function ComparePage() {
     </div>
   );
 }
+
+const ComparePage = () => (
+  <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+    <ComparePageContent />
+  </Suspense>
+);
+
+export default ComparePage;

@@ -3,9 +3,20 @@ import { Facebook, Instagram, Linkedin, Mail, Phone } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useContactModal } from "./ContactModalProvider";
+import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const { open } = useContactModal();
+  const pathname = usePathname();
+
+  // Hide footer on studio and admin routes
+  if (
+    !pathname ||
+    pathname.startsWith("/studio") ||
+    pathname.includes("/admin")
+  ) {
+    return null;
+  }
 
   return (
     <footer className="bg-white/3 border-t border-white/5 text-white">

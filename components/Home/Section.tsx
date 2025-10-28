@@ -21,11 +21,11 @@ const Section = ({
           backgroundImage: `url(${carImage})`,
         }}
       >
-        <div className="w-full h-full bg-black/40 flex flex-col justify-end px-4 sm:px-16 py-10">
-          <h1 className="text-4xl sm:text-6xl font-bold font-family-cera-stencil">
+        <div className="w-full h-full bg-black/40 flex flex-col items-center sm:items-start justify-end px-4 sm:px-16 py-10">
+          <h1 className="text-4xl sm:text-6xl mb-10 font-bold font-family-cera-stencil">
             {carName}
           </h1>
-          <div className="flex divide-x">
+          <div className="flex text-center sm:text-left  divide-x">
             <p className="text-xl pr-5">
               <span className="text-xs">
                 {spec1} <br />

@@ -92,7 +92,10 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   const [scrollWidth, setScrollWidth] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
-  const doubled = isMobile ? images : [...images, ...images];
+  // display order: reverse the provided images array for the gallery view
+  const ordered = React.useMemo(() => [...images].reverse(), [images]);
+
+  const doubled = isMobile ? ordered : [...ordered, ...ordered];
 
   useEffect(() => {
     const el = containerRef.current;
@@ -139,13 +142,18 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
           key={`${index}-${image}`}
           image={image}
           index={index}
-          total={images.length}
+          total={ordered.length}
           brand={brand}
           name={name}
           scrollX={scrollX}
           containerRef={containerRef}
           onClick={() => {
-            setCurrentImageIndex(index % images.length);
+            // map the clicked (possibly doubled & reversed) index back to the original images array
+            const len = images.length || ordered.length;
+            if (len === 0) return;
+            const orderedIndex = index % ordered.length;
+            const originalIndex = Math.max(0, len - 1 - orderedIndex);
+            setCurrentImageIndex(originalIndex);
             setIsFullscreen(true);
           }}
         />

@@ -132,8 +132,8 @@ function ComparePageContent() {
             </motion.button>
 
             {firstVehicle && (
-              <div className="bg-white/5 rounded-xl p-4 mb-4 shadow-sm">
-                <div className="relative h-44 w-full mb-4 rounded overflow-hidden">
+              <div className="bg-white/5 flex flex-col rounded-xl h-110 p-4 mb-4">
+                <div className="relative flex-1 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
                       firstVehicle.images?.[0]
@@ -149,7 +149,7 @@ function ComparePageContent() {
                     unoptimized={true}
                   />
                 </div>
-                <div className="flex flex-col items-center justify-between">
+                <div className="flex flex-col justify-between  flex-1">
                   <div>
                     <h3 className="text-lg font-bold">
                       {firstVehicle.brand} {firstVehicle.name}
@@ -196,8 +196,8 @@ function ComparePageContent() {
             </motion.button>
 
             {secondVehicle && (
-              <div className="bg-white/5 rounded-xl p-4 mb-4 shadow-sm">
-                <div className="relative h-44 w-full mb-4 rounded overflow-hidden">
+              <div className="bg-white/5 flex flex-col rounded-xl h-110 p-4 mb-4">
+                <div className="relative flex-1 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
                       secondVehicle.images?.[0]
@@ -213,7 +213,7 @@ function ComparePageContent() {
                     unoptimized={true}
                   />
                 </div>
-                <div className="flex flex-col items-center justify-between">
+                <div className="flex flex-col justify-between  flex-1">
                   <div>
                     <h3 className="text-lg font-bold">
                       {secondVehicle.brand} {secondVehicle.name}
@@ -279,10 +279,31 @@ function ComparePageContent() {
                       secondVehicle.specifications?.[
                         section.key as keyof Specifications
                       ] || [];
-                    const maxLen = Math.max(
-                      firstParams.length,
-                      secondParams.length
-                    );
+                    // only show a section if at least one vehicle has any parameters in it
+                    if ((firstParams.length || secondParams.length) === 0) {
+                      return null;
+                    }
+                    // Merge parameter rows by name so differing parameter orders/names are aligned
+                    const normalize = (s?: string) =>
+                      (s || "").toLowerCase().trim();
+
+                    const seen = new Set<string>();
+                    const orderedNames: string[] = [];
+
+                    const addNames = (params: Parameter[] = []) => {
+                      params.forEach((p) => {
+                        const key = normalize(p.name);
+                        if (key && !seen.has(key)) {
+                          seen.add(key);
+                          orderedNames.push(p.name || key);
+                        }
+                      });
+                    };
+
+                    // prefer first vehicle's name order, then include unique names from second
+                    addNames(firstParams);
+                    addNames(secondParams);
+
                     return (
                       <React.Fragment key={section.key}>
                         <tr>
@@ -293,24 +314,38 @@ function ComparePageContent() {
                             {section.name}
                           </td>
                         </tr>
-                        {[...Array(maxLen)].map((_, idx) => (
-                          <tr
-                            key={section.key + idx}
-                            className="even:bg-white/3"
-                          >
-                            <td className="p-3 border-b border-white/10 text-xs align-top">
-                              {firstParams[idx]?.name ||
-                                secondParams[idx]?.name ||
-                                "-"}
-                            </td>
-                            <td className="p-3 border-b border-white/10 text-xs align-top">
-                              {firstParams[idx]?.value || "-"}
-                            </td>
-                            <td className="p-3 border-b border-white/10 text-xs align-top">
-                              {secondParams[idx]?.value || "-"}
-                            </td>
-                          </tr>
-                        ))}
+                        {orderedNames.map((paramName, idx) => {
+                          const key = normalize(paramName);
+                          const firstMatch = firstParams.find(
+                            (p) => normalize(p.name) === key
+                          );
+                          const secondMatch = secondParams.find(
+                            (p) => normalize(p.name) === key
+                          );
+
+                          // skip rows where both vehicles have no value
+                          if (!firstMatch?.value && !secondMatch?.value)
+                            return null;
+
+                          return (
+                            <tr
+                              key={section.key + idx}
+                              className="even:bg-white/3"
+                            >
+                              <td className="p-3 border-b border-white/10 text-xs align-top">
+                                {firstMatch?.name ||
+                                  secondMatch?.name ||
+                                  paramName}
+                              </td>
+                              <td className="p-3 border-b border-white/10 text-xs align-top">
+                                {firstMatch?.value || "-"}
+                              </td>
+                              <td className="p-3 border-b border-white/10 text-xs align-top">
+                                {secondMatch?.value || "-"}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </React.Fragment>
                     );
                   })}

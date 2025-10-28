@@ -165,7 +165,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                     name="type"
                     checked={selectedType === ""}
                     onChange={() => setSelectedType("")}
-                    className="accent-secondary"
+                    className="accent-secondary size-4"
                   />
                   <span>All Models</span>
                 </label>
@@ -179,7 +179,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       name="type"
                       checked={selectedType === type}
                       onChange={() => setSelectedType(type)}
-                      className="accent-secondary"
+                      className="accent-secondary size-4"
                     />
                     <span>{type}</span>
                   </label>
@@ -209,7 +209,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                     name="brand"
                     checked={selectedBrand === ""}
                     onChange={() => setSelectedBrand("")}
-                    className="accent-secondary"
+                    className="accent-secondary size-4"
                   />
                   <span>All Brands</span>
                 </label>
@@ -223,7 +223,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       name="brand"
                       checked={selectedBrand === brand}
                       onChange={() => setSelectedBrand(brand)}
-                      className="accent-secondary"
+                      className="accent-secondary size-4"
                     />
                     <span>{brand}</span>
                   </label>

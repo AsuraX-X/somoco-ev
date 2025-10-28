@@ -158,7 +158,10 @@ const VehicleDetailsPage = () => {
         <div className="w-full">
           <div className="relative w-full h-80 md:h-[480px] mb-8 overflow-hidden">
             <Image
-              src={urlFor(vehicle.images[0]).width(2000).height(900).url()}
+              src={urlFor(vehicle.images[vehicle.images.length - 1])
+                .width(2000)
+                .height(900)
+                .url()}
               alt={`${vehicle.brand} ${vehicle.name}`}
               fill
               className="object-cover"

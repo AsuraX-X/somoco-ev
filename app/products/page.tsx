@@ -128,7 +128,7 @@ const ProductsPageContent = () => {
                   name="type"
                   checked={selectedType === ""}
                   onChange={() => setSelectedType("")}
-                  className="accent-secondary"
+                  className=" accent-secondary  size-4 "
                 />
                 <span>All Models</span>
               </label>
@@ -142,7 +142,7 @@ const ProductsPageContent = () => {
                     name="type"
                     checked={selectedType === type}
                     onChange={() => setSelectedType(type)}
-                    className="accent-secondary"
+                    className="accent-secondary  size-4"
                   />
                   <span>{type}</span>
                 </label>
@@ -172,7 +172,7 @@ const ProductsPageContent = () => {
                   name="brand"
                   checked={selectedBrand === ""}
                   onChange={() => setSelectedBrand("")}
-                  className="accent-secondary"
+                  className="accent-secondary size-4"
                 />
                 <span>All Brands</span>
               </label>
@@ -186,7 +186,7 @@ const ProductsPageContent = () => {
                     name="brand"
                     checked={selectedBrand === brand}
                     onChange={() => setSelectedBrand(brand)}
-                    className="accent-secondary"
+                    className="accent-secondary size-4"
                   />
                   <span>{brand}</span>
                 </label>

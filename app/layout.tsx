@@ -51,13 +51,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
       <body className={`${ceraPro.className} antialiased`}>
-        <LenisScrollProvider>
+        {/* <LenisScrollProvider> */}
           <ContactModalProvider>
             <Header />
             {children}
             <Footer />
           </ContactModalProvider>
-        </LenisScrollProvider>
+        {/* </LenisScrollProvider> */}
       </body>
     </html>
   );

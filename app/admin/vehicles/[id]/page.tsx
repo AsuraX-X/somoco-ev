@@ -191,10 +191,6 @@ export default function EditVehiclePage() {
   const [activeSection, setActiveSection] = useState<
     keyof VehicleFormData["specifications"] | null
   >(null);
-  const [currentParam, setCurrentParam] = useState<Parameter>({
-    name: "",
-    value: "",
-  });
 
   useEffect(() => {
     fetchVehicle();
@@ -204,8 +200,12 @@ export default function EditVehiclePage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const addParameter = (section: keyof VehicleFormData["specifications"]) => {
-    if (!currentParam.name || !currentParam.value) {
+  const addParameter = (
+    section: keyof VehicleFormData["specifications"],
+    param?: Parameter
+  ) => {
+    const toAdd = param ?? { name: "", value: "" };
+    if (!toAdd.name || !toAdd.value) {
       alert("Please fill in both parameter name and value");
       return;
     }
@@ -217,13 +217,12 @@ export default function EditVehiclePage() {
         [section]: [
           ...prev.specifications[section],
           {
-            ...currentParam,
+            ...toAdd,
             _key: generateKey(), // Add unique key for Sanity
           },
         ],
       },
     }));
-    setCurrentParam({ name: "", value: "" });
   };
 
   const removeParameter = (
@@ -347,80 +346,183 @@ export default function EditVehiclePage() {
     section: keyof VehicleFormData["specifications"];
   }) => (
     <div className="border border-[#333] rounded bg-primary p-3">
-      <button
-        type="button"
-        onClick={() =>
-          setActiveSection(activeSection === section ? null : section)
-        }
-        className="w-full flex justify-between items-center font-medium text-sm text-white"
-      >
-        <span>
-          {title} ({formData.specifications[section].length})
-        </span>
-        <span className="text-green-500">
-          {activeSection === section ? "−" : "+"}
-        </span>
-      </button>
-
-      {activeSection === section && (
-        <div className="mt-3 space-y-2">
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="text"
-              placeholder="Parameter name"
-              value={currentParam.name}
-              onChange={(e) =>
-                setCurrentParam((prev) => ({ ...prev, name: e.target.value }))
-              }
-              className="px-3 py-2 bg-[#252525] border border-[#333] rounded text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-500"
-            />
-            <input
-              type="text"
-              placeholder="Value"
-              value={currentParam.value}
-              onChange={(e) =>
-                setCurrentParam((prev) => ({ ...prev, value: e.target.value }))
-              }
-              className="px-3 py-2 bg-[#252525] border border-[#333] rounded text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-500"
-            />
-          </div>
-          <button
-            type="button"
-            onClick={() => addParameter(section)}
-            className="w-full bg-green-500 text-white py-2 rounded text-sm font-medium hover:bg-green-600 transition-colors"
-          >
-            Add Parameter
-          </button>
-
-          {formData.specifications[section].length > 0 && (
-            <div className="mt-3 space-y-1.5">
-              <p className="font-medium text-xs text-gray-400">
-                Current parameters:
-              </p>
-              {formData.specifications[section].map((param, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center bg-[#252525] p-2 rounded border border-[#333]"
-                >
-                  <span className="text-sm text-gray-300">
-                    <strong className="text-white">{param.name}:</strong>{" "}
-                    {param.value}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeParameter(section, index)}
-                    className="text-red-400 hover:text-red-300 text-xs"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      {/** local state per-section to avoid shared input clobbering */}
+      <SpecificationInner title={title} section={section} />
     </div>
   );
+
+  const SpecificationInner = ({
+    title,
+    section,
+  }: {
+    title: string;
+    section: keyof VehicleFormData["specifications"];
+  }) => {
+    const [localParam, setLocalParam] = useState<Parameter>({
+      name: "",
+      value: "",
+    });
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editParam, setEditParam] = useState<Parameter>({
+      name: "",
+      value: "",
+    });
+
+    const updateParameter = (index: number, updated: Parameter) => {
+      setFormData((prev) => ({
+        ...prev,
+        specifications: {
+          ...prev.specifications,
+          [section]: prev.specifications[section].map((p, i) =>
+            i === index ? { ...p, name: updated.name, value: updated.value } : p
+          ),
+        },
+      }));
+      setEditingIndex(null);
+    };
+
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() =>
+            setActiveSection(activeSection === section ? null : section)
+          }
+          className="w-full flex justify-between items-center font-medium text-sm text-white"
+        >
+          <span>
+            {title} ({formData.specifications[section].length})
+          </span>
+          <span className="text-green-500">
+            {activeSection === section ? "−" : "+"}
+          </span>
+        </button>
+
+        {activeSection === section && (
+          <div className="mt-3 space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="text"
+                placeholder="Parameter name"
+                value={localParam.name}
+                onChange={(e) =>
+                  setLocalParam((p) => ({ ...p, name: e.target.value }))
+                }
+                className="px-3 py-2 bg-[#252525] border border-[#333] rounded text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-500"
+              />
+              <input
+                type="text"
+                placeholder="Value"
+                value={localParam.value}
+                onChange={(e) =>
+                  setLocalParam((p) => ({ ...p, value: e.target.value }))
+                }
+                className="px-3 py-2 bg-[#252525] border border-[#333] rounded text-white text-sm placeholder-gray-500 focus:outline-none focus:border-green-500"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                addParameter(section, localParam);
+                setLocalParam({ name: "", value: "" });
+              }}
+              className="w-full bg-green-500 text-white py-2 rounded text-sm font-medium hover:bg-green-600 transition-colors"
+            >
+              Add Parameter
+            </button>
+
+            {formData.specifications[section].length > 0 && (
+              <div className="mt-3 space-y-1.5">
+                <p className="font-medium text-xs text-gray-400">
+                  Current parameters:
+                </p>
+                {formData.specifications[section].map((param, index) => (
+                  <div
+                    key={`${index}-${param.name}`}
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#252525] p-2 rounded border border-[#333]"
+                  >
+                    {editingIndex === index ? (
+                      <div className="w-full grid grid-cols-2 gap-2 mb-2 sm:mb-0 sm:w-auto">
+                        <input
+                          value={editParam.name}
+                          onChange={(e) =>
+                            setEditParam((p) => ({
+                              ...p,
+                              name: e.target.value,
+                            }))
+                          }
+                          className="px-2 py-1 bg-[#1f1f1f] border border-[#333] rounded text-white text-sm"
+                        />
+                        <input
+                          value={editParam.value}
+                          onChange={(e) =>
+                            setEditParam((p) => ({
+                              ...p,
+                              value: e.target.value,
+                            }))
+                          }
+                          className="px-2 py-1 bg-[#1f1f1f] border border-[#333] rounded text-white text-sm"
+                        />
+                      </div>
+                    ) : (
+                      <span className="text-sm text-gray-300">
+                        <strong className="text-white">{param.name}:</strong>{" "}
+                        {param.value}
+                      </span>
+                    )}
+
+                    <div className="flex gap-2 mt-2 sm:mt-0">
+                      {editingIndex === index ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => updateParameter(index, editParam)}
+                            className="text-green-400 hover:text-green-300 text-xs"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingIndex(null)}
+                            className="text-gray-400 hover:text-gray-300 text-xs"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingIndex(index);
+                              setEditParam({
+                                name: param.name,
+                                value: param.value,
+                              });
+                            }}
+                            className="text-yellow-400 hover:text-yellow-300 text-xs"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeParameter(section, index)}
+                            className="text-red-400 hover:text-red-300 text-xs"
+                          >
+                            Remove
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </>
+    );
+  };
 
   if (loading) {
     return (

@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendResendPasswordResetEmail } from "@/lib/email";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
-import fs from "fs";
-import path from "path";
+import { client } from "@/sanity/lib/client";
 
 function generatePassword(len = 16) {
   return randomBytes(Math.ceil((len * 3) / 4))
@@ -11,21 +10,7 @@ function generatePassword(len = 16) {
     .slice(0, len);
 }
 
-function updateEnvFile(key: string, value: string) {
-  const envPath = path.resolve(process.cwd(), ".env.local");
-  let envContent = fs.readFileSync(envPath, "utf8");
-
-  const re = new RegExp(`^${key}=.*$`, "m");
-  const line = `${key}=${value}`;
-
-  if (re.test(envContent)) {
-    envContent = envContent.replace(re, line);
-  } else {
-    envContent = envContent.trimEnd() + `\n${line}\n`;
-  }
-
-  fs.writeFileSync(envPath, envContent, "utf8");
-}
+// No local .env writes: we persist admin password hash only to Sanity.
 
 export async function POST(req: NextRequest) {
   try {
@@ -63,9 +48,44 @@ export async function POST(req: NextRequest) {
     const hash = await bcrypt.hash(newPassword, 10);
     const hashB64 = Buffer.from(hash, "utf8").toString("base64");
 
-    // Update .env.local file
-    updateEnvFile("ADMIN_PASSWORD_HASH_B64", hashB64);
-    updateEnvFile("ADMIN_PASSWORD_HASH", `'${hash}'`);
+    // Require SANITY_API_TOKEN so the new hash can be persisted. We no longer
+    // support writing to a local .env file; the admin password hash must be
+    // stored in Sanity. If the token is missing, fail fast to avoid emailing
+    // a password that can't be persisted.
+    const canWriteToSanity = !!process.env.SANITY_API_TOKEN;
+    if (!canWriteToSanity) {
+      console.error(
+        "Cannot reset admin password: SANITY_API_TOKEN is not configured."
+      );
+      return NextResponse.json(
+        {
+          error:
+            "Cannot reset admin password because SANITY_API_TOKEN is not configured. Configure a write token and retry, or rotate the password via your deployment provider.",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Store the hash in Sanity using a fixed document id. If this fails we
+    // return an error — we do not write local .env files anymore.
+    try {
+      await client.createOrReplace({
+        _id: "adminCredentials",
+        _type: "adminCredentials",
+        passwordHash: hash,
+        passwordHashB64: hashB64,
+        updatedAt: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Failed to save admin credentials to Sanity:", err);
+      return NextResponse.json(
+        {
+          error:
+            "Failed to save admin credentials to Sanity. Ensure SANITY_API_TOKEN has write permissions and the dataset exists.",
+        },
+        { status: 500 }
+      );
+    }
 
     // Send email with new password using Resend
     try {
@@ -84,7 +104,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message:
-        "A new password has been generated and sent to your email. Please restart the server for the changes to take effect.",
+        "A new password has been generated and sent to the admin email. The password hash was saved to Sanity (document id: 'adminCredentials').",
     });
   } catch (error) {
     console.error("Password reset error:", error);

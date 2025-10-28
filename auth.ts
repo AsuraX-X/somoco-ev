@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { client } from "@/sanity/lib/client";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -16,13 +17,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        // Load admin credentials from env
-        const adminUsername = process.env.ADMIN_USERNAME;
-        const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH_B64
-          ? Buffer.from(process.env.ADMIN_PASSWORD_HASH_B64, "base64").toString(
-              "utf8"
-            )
-          : process.env.ADMIN_PASSWORD_HASH;
+        // Load admin credentials from Sanity if available, otherwise fallback to env
+        let adminUsername = process.env.ADMIN_USERNAME;
+        let adminPasswordHash: string | undefined;
+
+        try {
+          // Attempt to read the adminCredentials doc from Sanity (requires SANITY_API_TOKEN for private reads)
+          const doc = await client.fetch(
+            `*[_id == "adminCredentials"][0]{passwordHash, passwordHashB64}`
+          );
+          if (doc) {
+            adminPasswordHash = doc.passwordHashB64
+              ? Buffer.from(doc.passwordHashB64, "base64").toString("utf8")
+              : doc.passwordHash;
+            // Optionally override username if stored in Sanity in the future
+            // adminUsername = doc.username ?? adminUsername;
+          }
+        } catch (err) {
+          // If Sanity read fails, fall back to env vars silently
+          // (no-op)
+        }
+
+        // If Sanity did not provide a hash, try env vars
+        if (!adminPasswordHash) {
+          adminPasswordHash = process.env.ADMIN_PASSWORD_HASH_B64
+            ? Buffer.from(
+                process.env.ADMIN_PASSWORD_HASH_B64,
+                "base64"
+              ).toString("utf8")
+            : process.env.ADMIN_PASSWORD_HASH;
+        }
 
         if (!adminUsername || !adminPasswordHash) {
           return null;

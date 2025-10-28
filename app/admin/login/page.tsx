@@ -13,7 +13,7 @@ function LoginPageContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
-  const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +52,7 @@ function LoginPageContent() {
 
     setResetLoading(true);
     setError("");
-    setResetSuccess(false);
+    setResetMessage(null);
 
     try {
       const response = await fetch("/api/auth/reset-password", {
@@ -66,7 +66,9 @@ function LoginPageContent() {
       if (!response.ok) {
         setError(data.error || "Failed to reset password");
       } else {
-        setResetSuccess(true);
+        setResetMessage(
+          data.message || "Password reset requested. Check your email."
+        );
         setError("");
       }
     } catch (err) {
@@ -95,13 +97,10 @@ function LoginPageContent() {
             </div>
           )}
 
-          {resetSuccess && (
+          {resetMessage && (
             <div className="mb-6 p-3 bg-green-500/10 border border-green-500/30 rounded text-green-400 text-sm">
-              <p className="font-medium mb-1">Password reset successful!</p>
-              <p className="text-xs">
-                A new password has been sent to your email. Please check your
-                inbox and restart the server.
-              </p>
+              <p className="font-medium mb-1">Password reset</p>
+              <p className="text-xs">{resetMessage}</p>
             </div>
           )}
 

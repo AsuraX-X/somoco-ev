@@ -69,122 +69,6 @@ export default function EditVehiclePage() {
     },
   });
 
-  const fetchVehicle = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/vehicles/${vehicleId}`);
-      type FetchedParameter = Parameter & { _key?: string };
-      type FetchedSpecifications = {
-        keyParameters?: FetchedParameter[];
-        bodyParameters?: FetchedParameter[];
-        engineParameters?: FetchedParameter[];
-        motorParameters?: FetchedParameter[];
-        wheelBrakeParameters?: FetchedParameter[];
-        keyConfigurations?: FetchedParameter[];
-      };
-      type FetchedVehicleData = {
-        brand?: string;
-        name?: string;
-        type?: string;
-        description?: string;
-        specifications?: FetchedSpecifications;
-        images?: SanityImage[];
-      };
-      type FetchedResponse = {
-        data: FetchedVehicleData;
-        error?: string;
-      };
-      const data: FetchedResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to fetch vehicle");
-      }
-
-      setFormData({
-        brand: data.data.brand || "",
-        name: data.data.name || "",
-        type: data.data.type || "",
-        description: data.data.description || "",
-        specifications: data.data.specifications
-          ? {
-              keyParameters: (data.data.specifications.keyParameters || []).map(
-                (p) => ({
-                  ...p,
-                  _key: p._key || generateKey(),
-                })
-              ),
-              bodyParameters: (
-                data.data.specifications.bodyParameters || []
-              ).map((p) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
-              engineParameters: (
-                data.data.specifications.engineParameters || []
-              ).map((p) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
-              motorParameters: (
-                data.data.specifications.motorParameters || []
-              ).map((p) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
-              wheelBrakeParameters: (
-                data.data.specifications.wheelBrakeParameters || []
-              ).map((p) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
-              keyConfigurations: (
-                data.data.specifications.keyConfigurations || []
-              ).map((p) => ({
-                ...p,
-                _key: p._key || generateKey(),
-              })),
-            }
-          : {
-              keyParameters: [],
-              bodyParameters: [],
-              engineParameters: [],
-              motorParameters: [],
-              wheelBrakeParameters: [],
-              keyConfigurations: [],
-            },
-      });
-
-      // Load existing images
-      if (data.data.images && data.data.images.length > 0) {
-        // Ensure all images have _key
-        const imagesWithKeys = data.data.images.map((img) => ({
-          ...img,
-          _key: img._key || generateKey(),
-        }));
-        setImages(imagesWithKeys);
-        // Generate previews for existing images using Sanity CDN
-        const previews = data.data.images.map((img) => {
-          const ref = img.asset._ref;
-          // Parse the Sanity asset reference (format: image-{id}-{dimensions}-{format})
-          const parts = ref.split("-");
-          const id = parts[1];
-          const format = parts[parts.length - 1];
-          const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-          const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
-          return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${parts[2]}.${format}`;
-        });
-        setImagePreviews(previews);
-      }
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text: error instanceof Error ? error.message : "Failed to load vehicle",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const [images, setImages] = useState<SanityImage[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
@@ -193,7 +77,124 @@ export default function EditVehiclePage() {
   >(null);
 
   useEffect(() => {
-    fetchVehicle();
+    const fetchVehicle = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/vehicles/${vehicleId}`);
+        type FetchedParameter = Parameter & { _key?: string };
+        type FetchedSpecifications = {
+          keyParameters?: FetchedParameter[];
+          bodyParameters?: FetchedParameter[];
+          engineParameters?: FetchedParameter[];
+          motorParameters?: FetchedParameter[];
+          wheelBrakeParameters?: FetchedParameter[];
+          keyConfigurations?: FetchedParameter[];
+        };
+        type FetchedVehicleData = {
+          brand?: string;
+          name?: string;
+          type?: string;
+          description?: string;
+          specifications?: FetchedSpecifications;
+          images?: SanityImage[];
+        };
+        type FetchedResponse = {
+          data: FetchedVehicleData;
+          error?: string;
+        };
+        const data: FetchedResponse = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to fetch vehicle");
+        }
+
+        setFormData({
+          brand: data.data.brand || "",
+          name: data.data.name || "",
+          type: data.data.type || "",
+          description: data.data.description || "",
+          specifications: data.data.specifications
+            ? {
+                keyParameters: (
+                  data.data.specifications.keyParameters || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+                bodyParameters: (
+                  data.data.specifications.bodyParameters || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+                engineParameters: (
+                  data.data.specifications.engineParameters || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+                motorParameters: (
+                  data.data.specifications.motorParameters || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+                wheelBrakeParameters: (
+                  data.data.specifications.wheelBrakeParameters || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+                keyConfigurations: (
+                  data.data.specifications.keyConfigurations || []
+                ).map((p) => ({
+                  ...p,
+                  _key: p._key || generateKey(),
+                })),
+              }
+            : {
+                keyParameters: [],
+                bodyParameters: [],
+                engineParameters: [],
+                motorParameters: [],
+                wheelBrakeParameters: [],
+                keyConfigurations: [],
+              },
+        });
+
+        // Load existing images
+        if (data.data.images && data.data.images.length > 0) {
+          // Ensure all images have _key
+          const imagesWithKeys = data.data.images.map((img) => ({
+            ...img,
+            _key: img._key || generateKey(),
+          }));
+          setImages(imagesWithKeys);
+          // Generate previews for existing images using Sanity CDN
+          const previews = data.data.images.map((img) => {
+            const ref = img.asset._ref;
+            // Parse the Sanity asset reference (format: image-{id}-{dimensions}-{format})
+            const parts = ref.split("-");
+            const id = parts[1];
+            const format = parts[parts.length - 1];
+            const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+            const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+            return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${parts[2]}.${format}`;
+          });
+          setImagePreviews(previews);
+        }
+      } catch (error) {
+        setMessage({
+          type: "error",
+          text:
+            error instanceof Error ? error.message : "Failed to load vehicle",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (vehicleId) fetchVehicle();
   }, [vehicleId]);
 
   const handleInputChange = (field: keyof VehicleFormData, value: string) => {

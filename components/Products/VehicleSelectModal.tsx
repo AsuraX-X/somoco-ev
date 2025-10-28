@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import type { ImageProps, StaticImageData } from "next/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { Search, X, Plus } from "lucide-react";
@@ -36,6 +36,27 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [isBrandOpen, setIsBrandOpen] = useState(false);
+  const listRef = useRef<HTMLDivElement | null>(null);
+
+
+  // Prevent Lenis from hijacking wheel events when the modal's internal list can scroll.
+  // If the list is scrollable in the wheel direction, stop propagation so the inner
+  // container receives the scroll and the page-level Lenis instance doesn't take over.
+  const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    const el = listRef.current;
+    if (!el) return;
+    const delta = e.deltaY;
+    const atTop = el.scrollTop === 0;
+    const atBottom =
+      Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+
+    // If scrolling up and we are not at the top, or scrolling down and not at bottom,
+    // stop propagation so the modal handles the scroll.
+    if ((delta < 0 && !atTop) || (delta > 0 && !atBottom)) {
+      e.stopPropagation();
+      // let the browser perform the scroll on this element
+    }
+  }, []);
 
   // Extract unique types and brands
   const availableTypes = Array.from(
@@ -246,7 +267,11 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
             )}
           </aside>
           {/* Vehicle List */}
-          <div className="flex-1 p-4 sm:p-6 overflow-y-auto relative">
+          <div
+            ref={listRef}
+            onWheel={onWheel}
+            className="flex-1 p-4 sm:p-6 overflow-y-auto relative"
+          >
             {Object.keys(groupedByType).length === 0 ? (
               <div className="text-center py-20 text-white/70 text-base">
                 No vehicles found. Try adjusting your search or filters.

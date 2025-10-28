@@ -54,7 +54,6 @@ function ComparePageContent() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [firstVehicle, setFirstVehicle] = useState<Vehicle | null>(null);
   const [secondVehicle, setSecondVehicle] = useState<Vehicle | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showFirstModal, setShowFirstModal] = useState(false);
   const [showSecondModal, setShowSecondModal] = useState(false);
 
@@ -76,12 +75,10 @@ function ComparePageContent() {
       const result = await res.json();
       return result.success ? result.data : null;
     };
-    setLoading(true);
     Promise.all([fetchVehicle(firstId), fetchVehicle(secondId)]).then(
       ([first, second]) => {
         setFirstVehicle(first);
         setSecondVehicle(second);
-        setLoading(false);
       }
     );
   }, [firstId, secondId]);

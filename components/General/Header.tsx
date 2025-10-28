@@ -1,11 +1,6 @@
 "use client";
-import { ChevronDown, X } from "lucide-react";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "motion/react";
+import { ChevronDown } from "lucide-react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,7 +22,6 @@ const Header = () => {
   useMotionValueEvent(scrollYProgress, "change", (i) => {
     if (i > 0.05 && pathname !== "/") setChangeBg(true);
     else setChangeBg(false);
-    console.log(i);
   });
 
   // Close dropdowns/menus when the path changes
@@ -181,6 +175,12 @@ const Header = () => {
 
             <Link
               className="flex justify-center items-center w-25"
+              href={"/aftersales"}
+            >
+              <button className="cursor-pointer">Aftersales</button>
+            </Link>
+            <Link
+              className="flex justify-center items-center w-25"
               href={"/about-us"}
             >
               <button className="cursor-pointer">About Us</button>
@@ -247,19 +247,19 @@ const Header = () => {
             opacity: isMobileMenuOpen ? 1 : 0,
           }}
           transition={{ duration: 0.3 }}
-          className="overflow-hidden bg-primary/95 backdrop-blur-lg"
+          className="overflow-hidden"
         >
-          <div className="px-6 py-4 space-y-2">
-            {pathname !== "/" && (
-              <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="py-2 cursor-pointer hover:text-secondary transition-colors">
-                  Home
-                </div>
-              </Link>
-            )}
-
-            {/* Mobile Products Dropdown */}
-            <div>
+          <div className="px-6 py-4 border-b divide-y">
+            <div className="py-2">
+              {pathname !== "/" && (
+                <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>
+                  <div className="cursor-pointer hover:text-secondary transition-colors">
+                    Home
+                  </div>
+                </Link>
+              )}
+            </div>
+            <div className="py-2">
               <button
                 onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
                 className="w-full flex justify-between items-center cursor-pointer hover:text-secondary transition-colors"
@@ -307,14 +307,27 @@ const Header = () => {
                 </div>
               </motion.div>
             </div>
-
-            <Link href={"/about-us"} onClick={() => setIsMobileMenuOpen(false)}>
-              <div className="cursor-pointer hover:text-secondary transition-colors">
-                About Us
-              </div>
-            </Link>
-
-            <div className="pt-2">
+            <div className="py-2">
+              <Link
+                href={"/aftersales"}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="cursor-pointer hover:text-secondary transition-colors">
+                  Aftersales
+                </div>
+              </Link>
+            </div>
+            <div className="py-2">
+              <Link
+                href={"/about-us"}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <div className="cursor-pointer hover:text-secondary transition-colors">
+                  About Us
+                </div>
+              </Link>
+            </div>
+            <div className="py-2">
               <button
                 className="w-full text-left cursor-pointer"
                 onClick={() => {

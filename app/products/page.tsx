@@ -1,7 +1,6 @@
 "use client";
-import Footer from "@/components/General/Footer";
 import VehicleCard from "@/components/Products/VehicleCard";
-import { Search, Filter, X, Car, Plus } from "lucide-react";
+import { Search, X, Car, Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";

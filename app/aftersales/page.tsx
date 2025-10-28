@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import React from "react";
 
-const AboutUs = () => {
+const Aftersales = () => {
   return (
     <div>
       <div className=" w-full mx-auto">
@@ -143,4 +143,4 @@ const AboutUs = () => {
   );
 };
 
-export default AboutUs;
+export default Aftersales;

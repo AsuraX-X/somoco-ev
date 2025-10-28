@@ -1,14 +1,13 @@
 "use client";
 import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { motion, useScroll } from "motion/react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
 import { urlFor } from "@/sanity/lib/image";
 import ParameterSection from "@/components/Products/Parameters";
-import Footer from "@/components/General/Footer";
 import { useContactModal } from "@/components/General/ContactModalProvider";
 
 export interface Parameter {
@@ -37,7 +36,6 @@ interface Vehicle {
 
 const VehicleDetailsPage = () => {
   const params = useParams();
-  const router = useRouter();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -123,11 +121,6 @@ const VehicleDetailsPage = () => {
     );
   }
 
-  const currentImage = vehicle.images?.[currentImageIndex];
-  const imageUrl = currentImage
-    ? urlFor(currentImage).width(1200).height(800).url()
-    : "/placeholder-vehicle.jpg";
-
   const parameters = [
     {
       name: "Key Parameters",
@@ -206,7 +199,7 @@ const VehicleDetailsPage = () => {
         </div>
         {/* Image Gallery - Scrollable with Parallax */}
         {/* Key parameters + secondary image section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-center">
+        <div className="grid grid-cols-1 max-w-5xl mx-auto lg:grid-cols-2 gap-8 mb-8 items-center">
           <div>
             <div className="space-y-3">
               {vehicle.specifications?.keyParameters &&
@@ -216,7 +209,7 @@ const VehicleDetailsPage = () => {
                     key={i}
                     className="flex flex-col items-start p-4 rounded-xl"
                   >
-                    <div className="text-white text-3xl">{p.value}</div>
+                    <div className="text-white text-6xl">{p.value}</div>
                     <div className="text-secondary font-bold">{p.name}</div>
                   </div>
                 ))
@@ -243,21 +236,20 @@ const VehicleDetailsPage = () => {
               <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
             </div>
           </div>
-        </div>
-        {/* Technical Specs button */}
-        <div className="w-full mb-8">
-          <motion.button
-            onClick={() => setIsSpecsOpen(true)}
-            whileHover={{
-              scale: 1.02,
-              backgroundColor: "#ffffff",
-              color: "#000000",
-            }}
-            whileTap={{ scale: 0.98, backgroundColor: "#cecece" }}
-            className="px-6 py-3 rounded-full text-secondary border border-secondary font-bold "
-          >
-            Technical Specs
-          </motion.button>
+          <div className="w-full mb-8">
+            <motion.button
+              onClick={() => setIsSpecsOpen(true)}
+              whileHover={{
+                scale: 1.02,
+                backgroundColor: "#ffffff",
+                color: "#000000",
+              }}
+              whileTap={{ scale: 0.98, backgroundColor: "#cecece" }}
+              className="px-6 py-3 rounded-full text-secondary border border-secondary font-bold "
+            >
+              Technical Specs
+            </motion.button>
+          </div>
         </div>
         <VehicleGallery
           images={vehicle.images || []}
@@ -378,7 +370,6 @@ const VehicleDetailsPage = () => {
             </div>
           </motion.div>
         )}{" "}
-        {/* Specifications moved to modal opened by Technical Specs button */}
         {/* Contact CTA */}
         <div className="mt-12 bg-white/5 rounded-2xl p-8">
           <h3 className="text-3xl font-bold font-family-cera-stencil mb-4">

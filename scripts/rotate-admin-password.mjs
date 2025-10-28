@@ -35,6 +35,7 @@ async function main() {
   try {
     envContent = fs.readFileSync(envPath, "utf8");
   } catch (e) {
+    console.error(e)
     console.error(`Could not read ${envPath}. Create it first.`);
     process.exit(1);
   }

@@ -135,7 +135,7 @@ const Header = () => {
             <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
               <Image
                 unoptimized
-                src="/LogoIconAlt.svg"
+                src="/logo.svg"
                 height={40}
                 width={40}
                 alt="Somoco Logo"
@@ -245,7 +245,7 @@ const Header = () => {
             <div className="font-family-cera-stencil font-bold text-xl gap-1 flex items-center">
               <Image
                 unoptimized
-                src="/LogoIconAlt.svg"
+                src="/logo.svg"
                 height={32}
                 width={32}
                 alt="Somoco Logo"

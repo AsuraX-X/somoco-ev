@@ -1,9 +1,52 @@
 "use client";
+
+type PaginationProps = {
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+};
+
+function PaginationControls({
+  totalItems,
+  itemsPerPage,
+  currentPage,
+  onPageChange,
+}: PaginationProps) {
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+
+  const handlePrev = () => onPageChange(Math.max(1, currentPage - 1));
+  const handleNext = () => onPageChange(Math.min(totalPages, currentPage + 1));
+
+  return (
+    <div className="w-full flex items-center justify-end py-4">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+          className="px-3 py-2 rounded bg-white/6 disabled:opacity-40"
+        >
+          Prev
+        </button>
+        <div className="text-sm text-white/80">
+          {currentPage} / {totalPages}
+        </div>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className="px-3 py-2 rounded bg-white/6 disabled:opacity-40"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
 import VehicleCard from "@/components/Products/VehicleCard";
 import { Search, X, Car, Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, useRef } from "react";
 
 interface Vehicle {
   _id: string;
@@ -20,6 +63,7 @@ const ProductsPageContent = () => {
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string>(typeFromUrl || "");
   const [selectedBrand, setSelectedBrand] = useState<string>("");
@@ -34,7 +78,13 @@ const ProductsPageContent = () => {
       try {
         const response = await fetch("/api/vehicles");
         const result = await response.json();
-        const vehicleData = result.data || [];
+        let vehicleData = result.data || [];
+        // Sort vehicles alphabetically by name (case-insensitive)
+        vehicleData = vehicleData.sort((a: Vehicle, b: Vehicle) =>
+          String(a.brand).localeCompare(String(b.brand), undefined, {
+            sensitivity: "base",
+          })
+        );
         setVehicles(vehicleData);
 
         // Extract unique types
@@ -80,7 +130,24 @@ const ProductsPageContent = () => {
     }
 
     setFilteredVehicles(filtered);
+    // Reset to first page whenever filters or the underlying list change
+    setCurrentPage(1);
   }, [searchQuery, selectedType, selectedBrand, vehicles]);
+
+  // Scroll the main content into view when the page changes
+  const mainRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    // delay to allow layout to update, then scroll
+    const id = setTimeout(() => {
+      if (mainRef.current) {
+        mainRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 50);
+
+    return () => clearTimeout(id);
+  }, [currentPage]);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -282,14 +349,32 @@ const ProductsPageContent = () => {
             </div>
           )}
 
-          {/* Vehicle Grid */}
+          {/* Vehicle Grid with Pagination */}
           {!isLoading && filteredVehicles.length > 0 && (
             <div className="min-h-screen">
+              {/* Pagination controls - top */}
+              <PaginationControls
+                totalItems={filteredVehicles.length}
+                itemsPerPage={10}
+                currentPage={currentPage}
+                onPageChange={(p) => setCurrentPage(p)}
+              />
+
               <div className="grid grid-cols-1  md:grid-cols-2 lg: gap-6">
-                {filteredVehicles.map((vehicle) => (
-                  <VehicleCard key={vehicle._id} vehicle={vehicle} />
-                ))}
+                {filteredVehicles
+                  .slice((currentPage - 1) * 10, currentPage * 10)
+                  .map((vehicle) => (
+                    <VehicleCard key={vehicle._id} vehicle={vehicle} />
+                  ))}
               </div>
+
+              {/* Pagination controls - bottom */}
+              <PaginationControls
+                totalItems={filteredVehicles.length}
+                itemsPerPage={10}
+                currentPage={currentPage}
+                onPageChange={(p) => setCurrentPage(p)}
+              />
             </div>
           )}
         </main>

@@ -1,5 +1,5 @@
 "use client";
-import { Parameter } from "@/app/vehicles/[id]/page";
+import { Parameter } from "@/types/vehicle";
 import { Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";

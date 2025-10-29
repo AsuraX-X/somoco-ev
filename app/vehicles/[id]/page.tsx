@@ -7,12 +7,12 @@ import type { Metadata } from "next";
  * Dynamically generate per-vehicle metadata for better SEO.
  * Falls back to a sensible default when the vehicle can't be fetched.
  */
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const id = params.id;
+export async function generateMetadata(props: unknown): Promise<Metadata> {
+  let id: string | undefined = undefined;
+  if (typeof props === "object" && props !== null && "params" in props) {
+    const p = props as { params?: { id?: string } };
+    id = p.params?.id;
+  }
 
   try {
     const vehicle = await client.fetch(

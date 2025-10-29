@@ -146,7 +146,7 @@ const Header = () => {
           <div className="flex flex-1 justify-center items-center">
             {pathname !== "/" && (
               <Link
-                className="w-25 flex items-center justify-center"
+                className="w-30 flex items-center justify-center"
                 href={"/"}
               >
                 <button className="cursor-pointer">Home</button>
@@ -156,7 +156,7 @@ const Header = () => {
             {/* Products Dropdown */}
 
             <div
-              className="relative w-25 flex justify-center items-center"
+              className="relative w-30 flex justify-center items-center"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -201,13 +201,13 @@ const Header = () => {
             </div>
 
             <Link
-              className="flex justify-center items-center w-25"
+              className="flex justify-center items-center w-30"
               href={"/aftersales"}
             >
-              <button className="cursor-pointer">Aftersales</button>
+              <button className="cursor-pointer">Aftersales Care</button>
             </Link>
             <Link
-              className="flex justify-center items-center w-25"
+              className="flex justify-center items-center w-30"
               href={"/about-us"}
             >
               <button className="cursor-pointer">About Us</button>
@@ -342,7 +342,7 @@ const Header = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <div className="cursor-pointer hover:text-secondary transition-colors">
-                  Aftersales
+                  Aftersales Care
                 </div>
               </Link>
             </div>

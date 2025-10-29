@@ -1,39 +1,45 @@
 import Section from "@/components/Home/Section";
 
+export const metadata = {
+  title: "SOMOCO EV — Home",
+  description:
+    "SOMOCO EV — Electric vehicles, products and company information.",
+};
+
 const Home = () => {
   return (
     <div>
       <Section
         carName="BYD Seagull"
-        carImage="/seagull.jpg"
+        carImage="/seagull.webp"
         spec1="EPA EST. RANGE"
         spec1Value="Up to 405 Km"
         spec2="POWER"
         spec2Value="Up to 55 kw"
       />
       <Section
-        carName="Changan Deepal S07"
-        carImage="/cdp.jpg"
+        carName="Xpeng G6"
+        carImage="/xpeng.jpg"
         spec1="EPA EST. RANGE"
-        spec1Value="Up to 475 Km"
-        spec2="POWER"
-        spec2Value="Up to 160 kw"
+        spec1Value="Up to 427 Km"
+        spec2="0–100 km/h (AWD)"
+        spec2Value="In 4.13 s"
       />
       <Section
-        carName="Zeeker 001"
-        carImage="/zeeker.avif"
+        carName="NIO ONVO L90"
+        carImage="/l90.jpg"
         spec1="EPA EST. RANGE"
-        spec1Value="Up to 620 Km"
+        spec1Value="Up to 570 Km"
         spec2="POWER"
-        spec2Value="Up to 400 kw"
+        spec2Value="Up to 440 kw"
       />
       <Section
-        carName="BYD Song Plus"
-        carImage="/songplus.jpg"
+        carName="Tesla Model Y"
+        carImage="/tesla.jpg"
         spec1="EPA EST. RANGE"
-        spec1Value="Up to 505 Km"
-        spec2="HORSE POWER"
-        spec2Value="Up to 218 Ps"
+        spec1Value="Up to 321 Km"
+        spec2="POWER"
+        spec2Value="Up to 331kw"
       />
       <Section
         carName=""

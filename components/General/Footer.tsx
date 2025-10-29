@@ -65,7 +65,7 @@ const Footer = () => {
                 Contact
               </button>
               <Link href="/" className="hover:text-white">
-                Aftersales
+                Aftersales Care
               </Link>
             </nav>
           </div>

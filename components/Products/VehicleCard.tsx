@@ -4,24 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
 
-interface KeyParameter {
-  name: string;
-  value: string;
-}
-
-type Specifications = {
-  keyParameters?: KeyParameter[];
-} & Record<string, unknown>;
-
-interface Vehicle {
-  _id: string;
-  brand: string;
-  name: string;
-  type: string;
-  description?: string;
-  images?: string[];
-  specifications?: Specifications;
-}
+import type { Vehicle } from "@/types/vehicle";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -40,7 +23,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/5 rounded-xl overflow-hidden transition-all duration-300"
+      className="bg-white/5 min-w-100 rounded-xl overflow-hidden transition-all duration-300"
     >
       <div className="relative h-64 w-full bg-white/10">
         <Link href={`/vehicles/${vehicle._id}`}>

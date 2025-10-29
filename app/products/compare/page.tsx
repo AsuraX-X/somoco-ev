@@ -253,7 +253,7 @@ function ComparePageContent() {
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse bg-white/5 rounded-xl overflow-hidden">
-                  <tbody>
+                <tbody>
                   {parameterSections.map((section) => {
                     const firstParams =
                       firstVehicle.specifications?.[

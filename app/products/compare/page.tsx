@@ -253,20 +253,7 @@ function ComparePageContent() {
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse bg-white/5 rounded-xl overflow-hidden">
-                <thead>
-                  <tr>
-                    <th className="p-3 bg-secondary/20 text-secondary font-bold rounded-tl-xl">
-                      Parameter
-                    </th>
-                    <th className="p-3 bg-secondary/10 text-white font-bold">
-                      {firstVehicle.brand} {firstVehicle.name}
-                    </th>
-                    <th className="p-3 bg-secondary/10 text-white font-bold rounded-tr-xl">
-                      {secondVehicle.brand} {secondVehicle.name}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+                  <tbody>
                   {parameterSections.map((section) => {
                     const firstParams =
                       firstVehicle.specifications?.[
@@ -303,12 +290,16 @@ function ComparePageContent() {
 
                     return (
                       <React.Fragment key={section.key}>
+                        {/* Section header row: show section title + vehicle names */}
                         <tr>
-                          <td
-                            className="p-3 font-bold bg-white/10 text-secondary"
-                            colSpan={3}
-                          >
+                          <td className="p-3 font-bold bg-white/10 text-secondary">
                             {section.name}
+                          </td>
+                          <td className="p-3 bg-secondary/10 text-white font-bold">
+                            {firstVehicle.brand} {firstVehicle.name}
+                          </td>
+                          <td className="p-3 bg-secondary/10 text-white font-bold">
+                            {secondVehicle.brand} {secondVehicle.name}
                           </td>
                         </tr>
                         {orderedNames.map((paramName, idx) => {

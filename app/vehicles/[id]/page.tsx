@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
 import { urlFor } from "@/sanity/lib/image";
 import ParameterSection from "@/components/Products/Parameters";
@@ -42,6 +42,24 @@ const VehicleDetailsPage = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const { open: openContact } = useContactModal();
+
+  // Ref + wheel handler for the specs modal so inner scrolling is handled
+  // locally and not hijacked by any page-level smooth scroller (e.g. Lenis).
+  const specsRef = useRef<HTMLDivElement | null>(null);
+
+  const onSpecsWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    const el = specsRef.current;
+    if (!el) return;
+    const delta = e.deltaY;
+    const atTop = el.scrollTop === 0;
+    const atBottom = Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+
+    // If we're scrolling inside the panel (not trying to bubble to the page),
+    // stop propagation so the panel handles the scroll.
+    if ((delta < 0 && !atTop) || (delta > 0 && !atBottom)) {
+      e.stopPropagation();
+    }
+  }, []);
 
   useEffect(() => {
     const fetchVehicle = async () => {
@@ -268,6 +286,8 @@ const VehicleDetailsPage = () => {
             onClick={() => setIsSpecsOpen(false)}
           >
             <div
+              ref={specsRef}
+              onWheel={onSpecsWheel}
               className="relative w-full max-w-4xl h-full overflow-auto bg-primary/95  border-l border-white/10 p-8"
               onClick={(e) => e.stopPropagation()}
             >
@@ -369,7 +389,7 @@ const VehicleDetailsPage = () => {
               )}
             </div>
           </motion.div>
-        )}{" "}
+        )}
         {/* Contact CTA */}
         <div className="mt-12 bg-white/5 rounded-2xl p-8">
           <h3 className="text-3xl font-bold font-family-cera-stencil mb-4">

@@ -24,7 +24,7 @@ const Aftersales = () => {
           <div className="absolute inset-0 bg-black/20 flex items-center">
             <div className="text-white mx-auto max-w-4xl px-4 text-center">
               <h1 className="text-4xl sm:text-6xl font-family-cera-stencil">
-                Company
+                Aftersales
               </h1>
             </div>
           </div>
@@ -71,7 +71,7 @@ const Aftersales = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
-              Sustainability
+              Lorem ipsum
             </h1>
             <p className="text-base sm:text-xl">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -101,7 +101,7 @@ const Aftersales = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
-              Careers
+              Lorem ipsum
             </h1>
             <p className="text-base sm:text-xl">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.

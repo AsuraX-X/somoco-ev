@@ -4,6 +4,14 @@ const Home = () => {
   return (
     <div>
       <Section
+        carName="BYD Seagull"
+        carImage="/seagull.jpg"
+        spec1="EPA EST. RANGE"
+        spec1Value="Up to 405 Km"
+        spec2="POWER"
+        spec2Value="Up to 55 kw"
+      />
+      <Section
         carName="Changan Deepal S07"
         carImage="/cdp.jpg"
         spec1="EPA EST. RANGE"

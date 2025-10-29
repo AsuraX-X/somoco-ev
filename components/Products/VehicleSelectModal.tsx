@@ -38,7 +38,6 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   const [isBrandOpen, setIsBrandOpen] = useState(false);
   const listRef = useRef<HTMLDivElement | null>(null);
 
-
   // Prevent Lenis from hijacking wheel events when the modal's internal list can scroll.
   // If the list is scrollable in the wheel direction, stop propagation so the inner
   // container receives the scroll and the page-level Lenis instance doesn't take over.
@@ -186,7 +185,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                     name="type"
                     checked={selectedType === ""}
                     onChange={() => setSelectedType("")}
-                    className="accent-secondary size-4"
+                    className="accent-primary/70 size-4"
                   />
                   <span>All Models</span>
                 </label>
@@ -200,7 +199,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       name="type"
                       checked={selectedType === type}
                       onChange={() => setSelectedType(type)}
-                      className="accent-secondary size-4"
+                      className="accent-primary/70 size-4"
                     />
                     <span>{type}</span>
                   </label>
@@ -230,7 +229,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                     name="brand"
                     checked={selectedBrand === ""}
                     onChange={() => setSelectedBrand("")}
-                    className="accent-secondary size-4"
+                    className="accent-primary/70 size-4"
                   />
                   <span>All Brands</span>
                 </label>
@@ -244,7 +243,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       name="brand"
                       checked={selectedBrand === brand}
                       onChange={() => setSelectedBrand(brand)}
-                      className="accent-secondary size-4"
+                      className="accent-primary/70 size-4"
                     />
                     <span>{brand}</span>
                   </label>

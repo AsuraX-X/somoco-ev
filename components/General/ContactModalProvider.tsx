@@ -42,7 +42,7 @@ export const ContactModalProvider: React.FC<{ children: React.ReactNode }> = ({
             onClick={close}
           >
             <div
-              className="relative w-full max-w-3xl bg-primary/95 h-full sm:h-fit sm:rounded-2xl border border-white/10 p-6 sm:mx-4"
+              className="relative w-full max-w-3xl bg-primary/95 h-full flex flex-col justify-center sm:h-fit sm:rounded-2xl border border-white/10 p-6 sm:mx-4"
               onClick={(e) => e.stopPropagation()}
             >
               <button

@@ -6,7 +6,7 @@ import React from "react";
 const AboutUs = () => {
   return (
     <div>
-      <div className=" w-full mx-auto">
+      <div className=" w-full mx-auto overflow-x-hidden">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}

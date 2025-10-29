@@ -4,7 +4,7 @@ import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useContactModal } from "./ContactModalProvider";
 
 const Header = () => {
@@ -17,10 +17,12 @@ const Header = () => {
   const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const { open: openContact } = useContactModal();
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
 
   const { scrollYProgress } = useScroll();
   useMotionValueEvent(scrollYProgress, "change", (i) => {
-    if (i > 0.05 && pathname !== "/") setChangeBg(true);
+    if (i > 0 && pathname !== "/") setChangeBg(true);
     else setChangeBg(false);
   });
 
@@ -53,6 +55,31 @@ const Header = () => {
       }
     };
   }, []);
+
+  // Close mobile menu when clicking/tapping outside of it
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      const menuEl = mobileMenuRef.current;
+      const toggleEl = mobileToggleRef.current;
+      const target = e.target as Node | null;
+      if (!menuEl) return;
+      if (target && (menuEl.contains(target) || toggleEl?.contains(target))) {
+        // click inside menu or on the toggle button - ignore
+        return;
+      }
+      setIsMobileMenuOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener("touchstart", handleOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener("touchstart", handleOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     // Fetch unique vehicle types from the database
@@ -194,6 +221,7 @@ const Header = () => {
               }}
               whileTap={{
                 backgroundColor: "#cecece",
+                color: "#000000",
               }}
               className="border-secondary cursor-pointer border rounded-full px-4 py-2"
               onClick={() => openContact()}
@@ -226,6 +254,7 @@ const Header = () => {
             </div>
           </Link>
           <button
+            ref={mobileToggleRef}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2"
           >
@@ -249,7 +278,7 @@ const Header = () => {
           transition={{ duration: 0.3 }}
           className="overflow-hidden"
         >
-          <div className="px-6 py-4 border-b divide-y">
+          <div ref={mobileMenuRef} className="px-6 py-4 border-b divide-y">
             <div className="py-2">
               {pathname !== "/" && (
                 <Link href={"/"} onClick={() => setIsMobileMenuOpen(false)}>

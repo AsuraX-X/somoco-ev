@@ -90,6 +90,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
             }}
             whileTap={{
               backgroundColor: "#cecece",
+              color: "#000000",
               scale: 0.95,
             }}
             transition={{ ease: "linear", duration: 0.1 }}
@@ -107,6 +108,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
             }}
             whileTap={{
               backgroundColor: "#cecece",
+              color: "#000000",
               scale: 0.95,
             }}
             transition={{ ease: "linear", duration: 0.1 }}

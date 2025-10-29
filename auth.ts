@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         // Load admin credentials from Sanity if available, otherwise fallback to env
-        let adminUsername = process.env.ADMIN_USERNAME;
+        const adminUsername = process.env.ADMIN_USERNAME;
         let adminPasswordHash: string | undefined;
 
         try {
@@ -34,6 +34,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // adminUsername = doc.username ?? adminUsername;
           }
         } catch (err) {
+          console.error(err);
+
           // If Sanity read fails, fall back to env vars silently
           // (no-op)
         }

@@ -127,7 +127,7 @@ const ProductsPageContent = () => {
                   name="type"
                   checked={selectedType === ""}
                   onChange={() => setSelectedType("")}
-                  className=" accent-secondary  size-4 "
+                  className=" accent-primary/70  size-4 "
                 />
                 <span>All Models</span>
               </label>
@@ -141,7 +141,7 @@ const ProductsPageContent = () => {
                     name="type"
                     checked={selectedType === type}
                     onChange={() => setSelectedType(type)}
-                    className="accent-secondary  size-4"
+                    className="accent-primary/70  size-4"
                   />
                   <span>{type}</span>
                 </label>
@@ -171,7 +171,7 @@ const ProductsPageContent = () => {
                   name="brand"
                   checked={selectedBrand === ""}
                   onChange={() => setSelectedBrand("")}
-                  className="accent-secondary size-4"
+                  className="accent-primary/70 size-4"
                 />
                 <span>All Brands</span>
               </label>
@@ -185,7 +185,7 @@ const ProductsPageContent = () => {
                     name="brand"
                     checked={selectedBrand === brand}
                     onChange={() => setSelectedBrand(brand)}
-                    className="accent-secondary size-4"
+                    className="accent-primary/70 size-4"
                   />
                   <span>{brand}</span>
                 </label>
@@ -244,11 +244,6 @@ const ProductsPageContent = () => {
               )}
             </div>
           )}
-
-          {/* Results Count */}
-          <div className="mb-6 text-white/70">
-            Showing {filteredVehicles.length} of {vehicles.length} vehicles
-          </div>
 
           {/* Loading State */}
           {isLoading && (

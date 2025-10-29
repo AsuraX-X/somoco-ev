@@ -98,29 +98,31 @@ function ComparePageContent() {
   return (
     <div className="min-h-screen bg-primary text-white pt-24 pb-8">
       <div className="max-w-7xl px-4 sm:px-8 lg:px-16 pb-10 mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <Link href="/products">
-              <motion.button
-                whileHover={{ x: -4 }}
-                className="flex items-center gap-2 text-white/80 hover:text-secondary"
-              >
-                <ArrowLeft size={18} /> Back to Products
-              </motion.button>
-            </Link>
-          </div>
-          <h1 className="text-4xl font-bold font-family-cera-stencil">
-            Compare Vehicles
-          </h1>
-          <div className="w-24" />
+        <div>
+          <Link href="/products">
+            <motion.button
+              whileHover={{ x: -5 }}
+              whileTap={{ opacity: 0.8 }}
+              className="flex items-center gap-2 mb-4 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
+            >
+              <ArrowLeft size={18} />
+              <span className="text-sm">Back</span>
+            </motion.button>
+          </Link>
         </div>
+        <h1 className="text-4xl w-full text-center mb-4 sm:mb-12 font-bold font-family-cera-stencil">
+          Compare Vehicles
+        </h1>
         <div className="flex flex-col lg:flex-row gap-8 justify-center">
           {/* Vehicle Selectors */}
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">First Vehicle</h2>
+            <h2 className="text-xl text-center font-bold mb-4">
+              First Vehicle
+            </h2>
             <motion.button
               onClick={() => setShowFirstModal(true)}
               whileHover={{ scale: 1.02 }}
+              whileTap={{ opacity: 0.8 }}
               className="w-full p-3 rounded-lg bg-white/6 border border-white/10 text-white mb-4 text-left"
             >
               {firstVehicle
@@ -181,10 +183,13 @@ function ComparePageContent() {
             />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">Second Vehicle</h2>
+            <h2 className="text-xl text-center font-bold mb-4">
+              Second Vehicle
+            </h2>
             <motion.button
               onClick={() => setShowSecondModal(true)}
               whileHover={{ scale: 1.02 }}
+              whileTap={{ opacity: 0.8 }}
               className="w-full p-3 rounded-lg bg-white/6 border border-white/10 text-white mb-4 text-left"
             >
               {secondVehicle

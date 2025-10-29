@@ -435,7 +435,7 @@ const VehicleDetailsPage = () => {
               More {vehicle?.type} vehicles you might like
             </h3>
 
-            <div className="flex h-130 overflow-x-scroll gap-6">
+            <div className="flex h-130 overflow-x-scroll gap-4">
               {recommendations.map((rec) => (
                 <VehicleCard key={rec._id} vehicle={rec} />
               ))}

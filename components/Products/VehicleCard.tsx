@@ -23,7 +23,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/5 min-w-100 rounded-xl overflow-hidden transition-all duration-300"
+      className="bg-white/5 min-w-90 sm:min-w-100 rounded-xl overflow-hidden transition-all duration-300"
     >
       <div className="relative h-64 w-full bg-white/10">
         <Link href={`/vehicles/${vehicle._id}`}>

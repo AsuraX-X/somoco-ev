@@ -52,7 +52,8 @@ const VehicleDetailsPage = () => {
     if (!el) return;
     const delta = e.deltaY;
     const atTop = el.scrollTop === 0;
-    const atBottom = Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+    const atBottom =
+      Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
 
     // If we're scrolling inside the panel (not trying to bubble to the page),
     // stop propagation so the panel handles the scroll.

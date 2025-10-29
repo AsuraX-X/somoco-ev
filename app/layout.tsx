@@ -42,6 +42,12 @@ export const metadata: Metadata = {
   title: "Somoco EV",
   description:
     "Somoco EV Ghana, your trusted source for electric vehicles, genuine parts, and expert aftersales service across Ghana.Discover our models, compare specifications, and get personalized support for pricing, delivery, and more.",
+  manifest: "/favicon_io/site.webmanifest",
+  icons: {
+    icon: "/favicon_io/favicon.ico",
+    shortcut: "/favicon_io/favicon-16x16.png",
+    apple: "/favicon_io/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({

@@ -13,7 +13,7 @@ const AfterSalesContent = () => {
         className="relative h-[60vh] md:h-screen overflow-hidden"
       >
         <Image
-          src="https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20%281%20of%201%29-5.jpg?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470"
+          src="/service.png"
           alt="People Meeting"
           fill
           className="object-cover"

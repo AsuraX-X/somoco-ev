@@ -13,7 +13,7 @@ const AboutUsContent = () => {
         className="relative h-[60vh] md:h-screen overflow-hidden"
       >
         <Image
-          src="https://images.unsplash.com/39/lIZrwvbeRuuzqOoWJUEn_Photoaday_CSD%20%281%20of%201%29-5.jpg?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1470"
+          src="/company.png"
           alt="People Meeting"
           fill
           className="object-cover"
@@ -37,21 +37,15 @@ const AboutUsContent = () => {
         <p className="text-2xl sm:text-4xl font-family-cera-stencil">
           Somoco Ghana Limited{" "}
         </p>
-        <p className="text-sm sm:text-base">
-          Somoco Ghana Limited bringsover ten years of expertise as a leader in
+        <p className="  text-sm sm:text-base">
+          Somoco Ghana Limited brings over ten years of expertise as a leader in
           Ghana's mobility sector. We have built our reputation a sa credible
           partner by delivering an end-to-end mobility ecosystem, encompassing
-          local assembly, distribution, and robust aftersalesservice.
+          local assembly, distribution, and robust aftersales service.
         </p>
-        <p className="text-sm sm:text-base">
+        <p className="  text-sm sm:text-base">
           Our focus is on practical, eco-friendly transportation solutions
           engineered for Ghana's specific urban and territorial challenges.
-        </p>
-        <p className="text-sm sm:text-base">
-          Through our Somoco EV division, we are advancing the nation's
-          sustainable future by integrating international EV technology with
-          local operations, making electric mobility a viable and efficient
-          choice for individuals and businesses.
         </p>
       </motion.div>
       <div className="grid grid-cols-1 bg-white/5 min-h-[60vh] md:h-screen sm:grid-cols-2">
@@ -64,10 +58,10 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/sustain.jpg"}
+              src={"/sustain.png"}
               className="object-cover"
               fill
-              alt="Career image"
+              alt="Sustain image"
             />
           </motion.div>
         </div>
@@ -140,10 +134,10 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/career.jpg"}
+              src={"/careerI.png"}
               className="object-cover"
               fill
-              alt="Sunstainability image"
+              alt="Career image"
             />
           </motion.div>
         </div>

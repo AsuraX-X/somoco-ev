@@ -28,23 +28,22 @@ const Footer = () => {
               SOMOCO EV
             </h3>
             <p className="text-sm text-white/70 max-w-sm">
-              Official Somoco electric vehicles distributor — sales, service and
-              charging solutions across the region.
+              Distribution, Sales and Aftersales Care.
             </p>
             <div className="flex items-center gap-4 mt-2">
               <a
-                href="tel:+233540105129"
+                href="tel:+233540105131"
                 className="flex items-center gap-2 text-white/80 hover:text-white"
               >
                 <Phone size={18} />{" "}
-                <span className="text-sm">+233 540 105 129</span>
+                <span className="text-sm">+233 540 105 131</span>
               </a>
               <a
-                href="mailto:cs@somotex.com"
+                href="mailto:marketing1@somotex.com"
                 className="flex items-center gap-2 text-white/80 hover:text-white"
               >
                 <Mail size={18} />{" "}
-                <span className="text-sm">cs@somotex.com</span>
+                <span className="text-sm">marketing1@somotex.com</span>
               </a>
             </div>
           </div>

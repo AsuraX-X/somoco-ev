@@ -22,7 +22,7 @@ const AboutUsContent = () => {
         <div className="absolute inset-0 bg-black/20 flex items-center">
           <div className="text-white mx-auto max-w-4xl px-4 text-center">
             <h1 className="text-4xl sm:text-6xl font-family-cera-stencil">
-              Company
+              Who Are We?
             </h1>
           </div>
         </div>
@@ -75,7 +75,7 @@ const AboutUsContent = () => {
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
             Sustainability
           </h1>
-          <p className="text-base sm:text-xl">
+          <p>
             Our dedication extends beyond launching electric vehicles. By
             merging global EV technology with local assembly, we drastically cut
             the carbon impact of both logistics and manufacturing. This local
@@ -106,7 +106,7 @@ const AboutUsContent = () => {
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
             Careers
           </h1>
-          <p className="text-base sm:text-xl">
+          <p>
             We're leading Ghana's transition to electric mobility, and your
             expertise can make the difference. Whether you're innovating
             technology, building partnerships, or reducing emissions, you'll

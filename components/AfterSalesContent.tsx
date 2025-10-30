@@ -80,7 +80,7 @@ const AfterSalesContent = () => {
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
             Battery and Charging
           </h1>
-          <p className="text-base sm:text-xl">
+          <p>
             We believe your electric vehicle isa long-term investment in a
             sustainable future. Your battery's health is greatly influenced by
             how you charge it. Think of it like a smartphone –small, regular
@@ -115,7 +115,7 @@ const AfterSalesContent = () => {
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
             Comprehensive Maintenance & Care
           </h1>
-          <p className="text-base sm:text-xl">
+          <p>
             Routine maintenance ensures your EV operates at its best. Our
             certified technicians use authentic partsand adhere to manufacturer
             guide lines to service your sedan or SUV, guaranteeing reliability

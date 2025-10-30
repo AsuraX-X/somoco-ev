@@ -186,7 +186,6 @@ const ProductsPageContent = () => {
     if (searchDebounceRef.current)
       window.clearTimeout(searchDebounceRef.current);
     // debounce 400ms
-    // @ts-ignore - window.setTimeout returns number
     searchDebounceRef.current = window.setTimeout(() => {
       syncToUrlAndStorage({
         q: searchQuery,

@@ -38,7 +38,9 @@ const ceraStencil = localFont({
   variable: "--font-cera-stencil",
 });
 
-export const metadataBase = new URL("https://somoco-ev.vercel.app");
+// Use an environment variable in case the site runs on a different origin (local/dev/staging/prod).
+// NEXT_PUBLIC_SITE_URL should be set in production to your canonical URL (e.g. https://somoco-ev.vercel.app)
+export const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://somoco-ev.vercel.app");
 
 export const metadata: Metadata = {
   title: "Somoco EV",
@@ -50,6 +52,8 @@ export const metadata: Metadata = {
     shortcut: "/favicon_io/favicon-16x16.png",
     apple: "/favicon_io/apple-touch-icon.png",
   },
+  // Ensure metadata resolves relative image URLs against the canonical site origin
+  metadataBase: metadataBase,
   openGraph: {
     title: "Somoco EV",
     description:

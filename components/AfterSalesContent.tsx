@@ -34,14 +34,23 @@ const AfterSalesContent = () => {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-2xl sm:text-4xl font-family-cera-stencil">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis
+        <p className="text-sm sm:text-base">
+          With our dedicated Aftersales Care, we ensure your electric vehicle
+          maintains optimal performance throughout its lifetime, safeguarding
+          your investment and empowering your drive.
         </p>
         <p className="text-sm sm:text-base">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut,
-          laboriosam. Totam perferendis non nisi debitis rem dolores et
-          obcaecati praesentium voluptas pariatur, nesciunt mollitia temporibus
-          dolorum numquam, itaque quas cupiditate.
+          We understand that your EV is essential to your daily life or business
+          operations. Our robust Aftersales Care eco-system is built on three
+          pillars: Quality, Reliability, and Trust. With over a decade in
+          Ghana's automobile industry, we know vehicles inside and out, and
+          we're here to keep yours running smoothly for years to come.
+        </p>
+        <p className="text-sm sm:text-base">
+          Our dedicated support team is just a call away. Get immediate
+          assistance, troubleshooting guidance, and expert advice whenever you
+          need it. Schedule your service today and experience the Somoco
+          difference.
         </p>
       </motion.div>
       <div className="grid grid-cols-1 bg-white/5 min-h-[60vh] md:h-screen sm:grid-cols-2">
@@ -57,7 +66,7 @@ const AfterSalesContent = () => {
               src={"/sustain.jpg"}
               className="object-cover"
               fill
-              alt="Career image"
+              alt="Battery and Charging image"
             />
           </motion.div>
         </div>
@@ -69,13 +78,18 @@ const AfterSalesContent = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
-            Lorem ipsum
+            Battery and Charging
           </h1>
           <p className="text-base sm:text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus iusto expedita accusamus, soluta labore culpa
-            similique, nam aut eius consequatur, eveniet minima. Ullam earum
-            doloremque esse sint iusto, excepturi unde.
+            We believe your electric vehicle isa long-term investment in a
+            sustainable future. Your battery's health is greatly influenced by
+            how you charge it. Think of it like a smartphone –small, regular
+            top-ups are better than constantly draining it to zero. You EV comes
+            with advanced Battery Management System (BMS) technology that
+            actively works to protect and optimize your battery. By partnering
+            these smart systems with simple charging habits, you maximize your
+            range, protect your investment, and ensure a reliable drive for
+            years to come.
           </p>
           <motion.button
             whileHover={{
@@ -99,13 +113,15 @@ const AfterSalesContent = () => {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-xl sm:text-3xl font-family-cera-stencil">
-            Lorem ipsum
+            Comprehensive Maintenance & Care
           </h1>
           <p className="text-base sm:text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus iusto expedita accusamus, soluta labore culpa
-            similique, nam aut eius consequatur, eveniet minima. Ullam earum
-            doloremque esse sint iusto, excepturi unde.
+            Routine maintenance ensures your EV operates at its best. Our
+            certified technicians use authentic partsand adhere to manufacturer
+            guide lines to service your sedan or SUV, guaranteeing reliability
+            and durability. We offer Battery health diagnostics and monitoring,
+            Optimization of charging systems, Battery replacement and upgrade
+            services and Professional guidance on prolonging battery life.
           </p>
           <motion.button
             whileHover={{
@@ -128,10 +144,10 @@ const AfterSalesContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/career.jpg"}
+              src={"/aftersales.jpg"}
               className="object-cover"
               fill
-              alt="Sunstainability image"
+              alt="Comprehensive Maintenance & Care image"
             />
           </motion.div>
         </div>

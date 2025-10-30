@@ -305,7 +305,7 @@ const VehicleDetailsPage = () => {
             <div
               ref={specsRef}
               onWheel={onSpecsWheel}
-              className="relative w-full max-w-4xl h-full overflow-auto bg-primary/95  border-l border-white/10 p-8"
+              className="relative w-fit max-w-3xl h-full overflow-auto bg-primary/95  border-l border-white/10 p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <button

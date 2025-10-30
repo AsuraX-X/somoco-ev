@@ -35,13 +35,23 @@ const AboutUsContent = () => {
         transition={{ duration: 0.6 }}
       >
         <p className="text-2xl sm:text-4xl font-family-cera-stencil">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis
+          Somoco Ghana Limited{" "}
         </p>
         <p className="text-sm sm:text-base">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut,
-          laboriosam. Totam perferendis non nisi debitis rem dolores et
-          obcaecati praesentium voluptas pariatur, nesciunt mollitia temporibus
-          dolorum numquam, itaque quas cupiditate.
+          Somoco Ghana Limited bringsover ten years of expertise as a leader in
+          Ghana's mobility sector. We have built our reputation a sa credible
+          partner by delivering an end-to-end mobility ecosystem, encompassing
+          local assembly, distribution, and robust aftersalesservice.
+        </p>
+        <p className="text-sm sm:text-base">
+          Our focus is on practical, eco-friendly transportation solutions
+          engineered for Ghana's specific urban and territorial challenges.
+        </p>
+        <p className="text-sm sm:text-base">
+          Through our Somoco EV division, we are advancing the nation's
+          sustainable future by integrating international EV technology with
+          local operations, making electric mobility a viable and efficient
+          choice for individuals and businesses.
         </p>
       </motion.div>
       <div className="grid grid-cols-1 bg-white/5 min-h-[60vh] md:h-screen sm:grid-cols-2">
@@ -72,10 +82,11 @@ const AboutUsContent = () => {
             Sustainability
           </h1>
           <p className="text-base sm:text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus iusto expedita accusamus, soluta labore culpa
-            similique, nam aut eius consequatur, eveniet minima. Ullam earum
-            doloremque esse sint iusto, excepturi unde.
+            Our dedication extends beyond launching electric vehicles. By
+            merging global EV technology with local assembly, we drastically cut
+            the carbon impact of both logistics and manufacturing. This local
+            strategy not only makes green transportation more affordable but
+            also boosts the local economy.
           </p>
           <motion.button
             whileHover={{
@@ -102,10 +113,11 @@ const AboutUsContent = () => {
             Careers
           </h1>
           <p className="text-base sm:text-xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Necessitatibus iusto expedita accusamus, soluta labore culpa
-            similique, nam aut eius consequatur, eveniet minima. Ullam earum
-            doloremque esse sint iusto, excepturi unde.
+            We're leading Ghana's transition to electric mobility, and your
+            expertise can make the difference. Whether you're innovating
+            technology, building partnerships, or reducing emissions, you'll
+            create lasting change. This is your chance to build a meaningful
+            career while powering sustainable progress acrossGhana.
           </p>
           <motion.button
             whileHover={{

@@ -45,7 +45,7 @@ function PaginationControls({
 import VehicleCard from "@/components/Products/VehicleCard";
 import { Search, X, Car, Plus } from "lucide-react";
 import { motion } from "motion/react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import React, { Suspense, useEffect, useState, useRef } from "react";
 
 interface Vehicle {
@@ -59,14 +59,35 @@ interface Vehicle {
 
 const ProductsPageContent = () => {
   const searchParams = useSearchParams();
-  const typeFromUrl = searchParams.get("type");
+  const router = useRouter();
+
+  // Helpers to read initial state from URL or localStorage
+  const getParamOrStorage = (key: string, fallback = "") => {
+    try {
+      const fromUrl = searchParams.get(key);
+      if (fromUrl !== null && fromUrl !== undefined) return fromUrl;
+      const fromStorage =
+        typeof window !== "undefined"
+          ? localStorage.getItem(`products:${key}`)
+          : null;
+      return fromStorage ?? fallback;
+    } catch (e) {
+      return fallback;
+    }
+  };
 
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState<string>(typeFromUrl || "");
-  const [selectedBrand, setSelectedBrand] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>(() =>
+    getParamOrStorage("q", "")
+  );
+  const [selectedType, setSelectedType] = useState<string>(() =>
+    getParamOrStorage("type", "")
+  );
+  const [selectedBrand, setSelectedBrand] = useState<string>(() =>
+    getParamOrStorage("brand", "")
+  );
   const [availableTypes, setAvailableTypes] = useState<string[]>([]);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -106,6 +127,98 @@ const ProductsPageContent = () => {
 
     fetchVehicles();
   }, []);
+
+  // Keep a ref for debouncing search updates to the URL/localStorage
+  const searchDebounceRef = useRef<number | null>(null);
+
+  const syncToUrlAndStorage = (params: {
+    q?: string;
+    type?: string;
+    brand?: string;
+    page?: number;
+  }) => {
+    try {
+      // update localStorage
+      if (typeof window !== "undefined") {
+        if (params.q !== undefined)
+          localStorage.setItem("products:q", params.q ?? "");
+        if (params.type !== undefined)
+          localStorage.setItem("products:type", params.type ?? "");
+        if (params.brand !== undefined)
+          localStorage.setItem("products:brand", params.brand ?? "");
+        if (params.page !== undefined)
+          localStorage.setItem("products:page", String(params.page ?? 1));
+      }
+
+      // update URL without reloading the page
+      const url = new URL(window.location.href);
+      const sp = url.searchParams;
+
+      if (params.q !== undefined) {
+        if (params.q) sp.set("q", params.q);
+        else sp.delete("q");
+      }
+      if (params.type !== undefined) {
+        if (params.type) sp.set("type", params.type);
+        else sp.delete("type");
+      }
+      if (params.brand !== undefined) {
+        if (params.brand) sp.set("brand", params.brand);
+        else sp.delete("brand");
+      }
+      if (params.page !== undefined) {
+        if (params.page && params.page > 1) sp.set("page", String(params.page));
+        else sp.delete("page");
+      }
+
+      const newUrl = `${url.pathname}${
+        sp.toString() ? `?${sp.toString()}` : ""
+      }`;
+      // use replace to avoid polluting history when filters change frequently
+      router.replace(newUrl);
+    } catch (e) {
+      // noop
+    }
+  };
+
+  // Sync searchQuery (debounced) to URL/localStorage
+  useEffect(() => {
+    if (searchDebounceRef.current)
+      window.clearTimeout(searchDebounceRef.current);
+    // debounce 400ms
+    // @ts-ignore - window.setTimeout returns number
+    searchDebounceRef.current = window.setTimeout(() => {
+      syncToUrlAndStorage({
+        q: searchQuery,
+        type: selectedType,
+        brand: selectedBrand,
+        page: 1,
+      });
+    }, 400) as unknown as number;
+
+    return () => {
+      if (searchDebounceRef.current)
+        window.clearTimeout(searchDebounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  // Sync selectedType and selectedBrand immediately when they change
+  useEffect(() => {
+    syncToUrlAndStorage({
+      type: selectedType,
+      brand: selectedBrand,
+      q: searchQuery,
+      page: 1,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedType, selectedBrand]);
+
+  // Sync page changes
+  useEffect(() => {
+    syncToUrlAndStorage({ page: currentPage });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   useEffect(() => {
     // Filter vehicles based on search query, selected type, and selected brand
@@ -273,45 +386,6 @@ const ProductsPageContent = () => {
             </p>
           </div>
 
-          {/* Active Filters Display */}
-          {(searchQuery || selectedType || selectedBrand) && (
-            <div className="mb-6 flex flex-wrap gap-2">
-              {searchQuery && (
-                <div className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
-                  Search: "{searchQuery}"
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="hover:text-white"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-              {selectedType && (
-                <div className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
-                  Type: {selectedType}
-                  <button
-                    onClick={() => setSelectedType("")}
-                    className="hover:text-white"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-              {selectedBrand && (
-                <div className="px-3 py-1 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
-                  Brand: {selectedBrand}
-                  <button
-                    onClick={() => setSelectedBrand("")}
-                    className="hover:text-white"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
           {/* Loading State */}
           {isLoading && (
             <div className="text-center h-screen py-20">
@@ -353,12 +427,52 @@ const ProductsPageContent = () => {
           {!isLoading && filteredVehicles.length > 0 && (
             <div className="min-h-screen">
               {/* Pagination controls - top */}
-              <PaginationControls
-                totalItems={filteredVehicles.length}
-                itemsPerPage={10}
-                currentPage={currentPage}
-                onPageChange={(p) => setCurrentPage(p)}
-              />
+              <div className="flex items-center justify-between  ">
+                {/* Active Filters Display */}
+                {(searchQuery || selectedType || selectedBrand) && (
+                  <div className="flex w-full flex-wrap gap-2">
+                    {searchQuery && (
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                        Search: "{searchQuery}"
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="hover:text-white"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                    {selectedType && (
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                        Type: {selectedType}
+                        <button
+                          onClick={() => setSelectedType("")}
+                          className="hover:text-white"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                    {selectedBrand && (
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                        Brand: {selectedBrand}
+                        <button
+                          onClick={() => setSelectedBrand("")}
+                          className="hover:text-white"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <PaginationControls
+                  totalItems={filteredVehicles.length}
+                  itemsPerPage={10}
+                  currentPage={currentPage}
+                  onPageChange={(p) => setCurrentPage(p)}
+                />
+              </div>
 
               <div className="grid grid-cols-1  md:grid-cols-2 lg: gap-6">
                 {filteredVehicles

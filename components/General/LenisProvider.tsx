@@ -17,12 +17,19 @@ const LenisScrollProvider = ({ children }: { children: ReactNode }) => {
 
     const opts: AddEventListenerOptions = { passive: false, capture: true };
 
-    const findHorizontalScrollable = (start: Element | null): HTMLElement | null => {
+    const findHorizontalScrollable = (
+      start: Element | null
+    ): HTMLElement | null => {
       let el = start as HTMLElement | null;
       while (el && el !== document.documentElement) {
         const style = getComputedStyle(el);
         const overflowX = style.overflowX;
-        if ((overflowX === "auto" || overflowX === "scroll" || overflowX === "overlay") && el.scrollWidth > el.clientWidth) {
+        if (
+          (overflowX === "auto" ||
+            overflowX === "scroll" ||
+            overflowX === "overlay") &&
+          el.scrollWidth > el.clientWidth
+        ) {
           return el;
         }
         el = el.parentElement;
@@ -35,7 +42,9 @@ const LenisScrollProvider = ({ children }: { children: ReactNode }) => {
         if (!e.shiftKey) return; // only handle Shift+wheel here
 
         const target = e.target as Element | null;
-        const scrollEl = findHorizontalScrollable(target) || (document.scrollingElement as HTMLElement | null);
+        const scrollEl =
+          findHorizontalScrollable(target) ||
+          (document.scrollingElement as HTMLElement | null);
         if (!scrollEl) return;
 
         // Perform horizontal scroll using the vertical wheel delta so behavior
@@ -52,7 +61,12 @@ const LenisScrollProvider = ({ children }: { children: ReactNode }) => {
     };
 
     window.addEventListener("wheel", handler, opts);
-    return () => window.removeEventListener("wheel", handler, opts as EventListenerOptions);
+    return () =>
+      window.removeEventListener(
+        "wheel",
+        handler,
+        opts as EventListenerOptions
+      );
   }, [pathname]);
 
   // Do not initialize Lenis on the Sanity Studio routes — it interferes with Studio's own scrolling.

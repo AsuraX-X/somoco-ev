@@ -28,7 +28,7 @@ function PaginationControls({
         >
           Prev
         </button>
-        <div className="text-sm text-white/80">
+        <div className="text-md text-white/80">
           {currentPage} / {totalPages}
         </div>
         <button
@@ -72,6 +72,8 @@ const ProductsPageContent = () => {
           : null;
       return fromStorage ?? fallback;
     } catch (e) {
+      console.error(e);
+
       return fallback;
     }
   };
@@ -177,6 +179,8 @@ const ProductsPageContent = () => {
       // use replace to avoid polluting history when filters change frequently
       router.replace(newUrl);
     } catch (e) {
+      console.error(e);
+
       // noop
     }
   };
@@ -268,14 +272,14 @@ const ProductsPageContent = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 sm:px-0 sm:pr-8 bg-primary text-white pt-24">
-      <div className="mb-12 mx-auto flex flex-col lg:flex-row gap-8">
+    <div className="min-h-screen px-6 md:px-0 md:pr-8 bg-primary text-white pt-24">
+      <div className="mb-12 mx-auto flex flex-col md:flex-row gap-8">
         {/* Side Panel */}
-        <aside className="w-full  sm:sticky top-18 sm:h-screen sm:max-w-80  sm:border-r border-white/10  sm:p-6 mb-8 ">
+        <aside className="w-full  md:sticky top-18 md:h-screen md:max-w-80  md:border-r border-white/10  md:p-6 mb-8 ">
           <h2 className="text-2xl font-bold mb-6">Products Overview</h2>
           {/* Search Input */}
           <div className="mb-2">
-            <label className="block text-sm font-semibold mb-2">Search</label>
+            <label className="block text-md font-semibold mb-2">Search</label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-5 h-5" />
               <input
@@ -298,7 +302,7 @@ const ProductsPageContent = () => {
           )}
           {/* Type Filter Section */}
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2">Models</label>
+            <label className="block text-md font-semibold mb-2">Models</label>
             <div className="flex flex-col gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -329,7 +333,7 @@ const ProductsPageContent = () => {
           </div>
           {/* Brand Filter Section */}
           <div className="pb-3 border-b border-secondary">
-            <label className="flex  justify-between text-sm font-semibold mb-2">
+            <label className="flex  justify-between text-md font-semibold mb-2">
               Brand
               <motion.button
                 onClick={() => setIsBrandOpen(!isBrandOpen)}
@@ -431,7 +435,7 @@ const ProductsPageContent = () => {
                 {(searchQuery || selectedType || selectedBrand) && (
                   <div className="flex w-full flex-wrap gap-2">
                     {searchQuery && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
                         Search: "{searchQuery}"
                         <button
                           onClick={() => setSearchQuery("")}
@@ -442,7 +446,7 @@ const ProductsPageContent = () => {
                       </div>
                     )}
                     {selectedType && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
                         Type: {selectedType}
                         <button
                           onClick={() => setSelectedType("")}
@@ -453,7 +457,7 @@ const ProductsPageContent = () => {
                       </div>
                     )}
                     {selectedBrand && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-sm flex items-center gap-2">
+                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
                         Brand: {selectedBrand}
                         <button
                           onClick={() => setSelectedBrand("")}
@@ -473,7 +477,7 @@ const ProductsPageContent = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1  md:grid-cols-2 lg: gap-6">
+              <div className="grid grid-cols-1  lg:grid-cols-2 gap-6">
                 {filteredVehicles
                   .slice((currentPage - 1) * 10, currentPage * 10)
                   .map((vehicle) => (

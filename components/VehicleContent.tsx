@@ -437,7 +437,9 @@ const VehicleDetailsPage = () => {
 
             <div className="flex h-130 overflow-x-scroll gap-4">
               {recommendations.map((rec) => (
-                <VehicleCard key={rec._id} vehicle={rec} />
+                <div key={rec._id} className="min-w-100">
+                  <VehicleCard vehicle={rec} />
+                </div>
               ))}
             </div>
           </div>

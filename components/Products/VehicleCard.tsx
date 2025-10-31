@@ -10,6 +10,8 @@ interface VehicleCardProps {
   vehicle: Vehicle;
 }
 const VehicleCard = ({ vehicle }: VehicleCardProps) => {
+  const MLink = motion.create(Link);
+
   const imageUrl = vehicle.images?.[0]
     ? urlFor(vehicle.images[0]).width(600).height(400).url()
     : "/placeholder-vehicle.jpg";
@@ -18,15 +20,47 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   const keyParams: { name: string; value: string }[] =
     vehicle.specifications?.keyParameters?.slice(0, 3) || [];
 
+  const saveScrollBeforeNav = () => {
+    try {
+      if (typeof window !== "undefined") {
+        // store current scroll position so we can restore it when returning
+        sessionStorage.setItem(
+          "products:scrollY",
+          String(window.scrollY || window.pageYOffset || 0)
+        );
+        // also persist current page (if any)
+        const p = localStorage.getItem("products:page");
+        if (p) localStorage.setItem("products:page", p);
+      }
+    } catch {
+      // noop
+    }
+  };
+
+  // Preserve the current query string when navigating so listing state is
+  // preserved in the URL (q/type/brand/page). This avoids relying solely on
+  // sessionStorage when users navigate back/forward or share links.
+  const currentSearch =
+    typeof window !== "undefined" ? window.location.search || "" : "";
+  const buildHref = (base: string) =>
+    currentSearch
+      ? base.includes("?")
+        ? `${base}&${currentSearch.slice(1)}`
+        : `${base}${currentSearch}`
+      : base;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/5 min-w-90 sm:min-w-100 rounded-xl overflow-hidden transition-all duration-300"
+      className="bg-white/5 rounded-xl w-full overflow-hidden transition-all duration-300"
     >
       <div className="relative h-64 w-full bg-white/10">
-        <Link href={`/vehicles/${vehicle._id}`}>
+        <Link
+          href={buildHref(`/vehicles/${vehicle._id}`)}
+          onClick={saveScrollBeforeNav}
+        >
           <Image
             src={imageUrl}
             alt={`${vehicle.brand} ${vehicle.name}`}
@@ -66,7 +100,24 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
           </div>
         )}
         <div className="flex gap-2">
-          <motion.button
+          <MLink
+            whileHover={{
+              backgroundColor: "#ffffff",
+              color: "#000000",
+            }}
+            whileTap={{
+              backgroundColor: "#cecece",
+              color: "#000000",
+              scale: 0.95,
+            }}
+            transition={{ ease: "linear", duration: 0.1 }}
+            className="w-full flex h-full justify-center items-center py-2 rounded-full border border-secondary text-secondary font-bold transition-colors"
+            href={buildHref(`/vehicles/${vehicle._id}`)}
+            onClick={saveScrollBeforeNav}
+          >
+            <button>View Details</button>
+          </MLink>
+          <MLink
             whileHover={{
               backgroundColor: "#ffffff",
               color: "#000000",
@@ -78,32 +129,11 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
             }}
             transition={{ ease: "linear", duration: 0.1 }}
             className="w-full flex justify-center items-center py-2 rounded-full border border-secondary text-secondary font-bold transition-colors"
+            href={buildHref(`/products/compare?first=${vehicle._id}`)}
+            onClick={saveScrollBeforeNav}
           >
-            <Link className="w-full h-full" href={`/vehicles/${vehicle._id}`}>
-              View Details
-            </Link>
-          </motion.button>
-
-          <motion.button
-            whileHover={{
-              backgroundColor: "#ffffff",
-              color: "#000000",
-            }}
-            whileTap={{
-              backgroundColor: "#cecece",
-              color: "#000000",
-              scale: 0.95,
-            }}
-            transition={{ ease: "linear", duration: 0.1 }}
-            className="w-full flex justify-center items-center py-2 rounded-full border border-secondary text-secondary font-bold transition-colors"
-          >
-            <Link
-              className="w-full h-full"
-              href={`/products/compare?first=${vehicle._id}`}
-            >
-              Compare
-            </Link>
-          </motion.button>
+            <button>Compare</button>
+          </MLink>
         </div>
       </div>
     </motion.div>

@@ -5,6 +5,7 @@ import Header from "@/components/General/Header";
 import Footer from "@/components/General/Footer";
 import ContactModalProvider from "@/components/General/ContactModalProvider";
 import LenisScrollProvider from "@/components/General/LenisProvider";
+import Script from "next/script";
 
 const ceraPro = localFont({
   src: [
@@ -89,6 +90,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ceraPro.variable} ${ceraStencil.variable}`}>
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-JEGMSYX4DR"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-JEGMSYX4DR');
+          `}
+        </Script>
+      </head>
       <body className={`${ceraPro.className} antialiased`}>
         <LenisScrollProvider>
           <ContactModalProvider>

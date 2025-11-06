@@ -3,7 +3,7 @@ export const GA_MEASUREMENT_ID: string = "G-JEGMSYX4DR";
 
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
+    gtag: (...args: unknown[]) => void;
   }
 }
 

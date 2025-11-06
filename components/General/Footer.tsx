@@ -83,7 +83,7 @@ const Footer = () => {
                 <Facebook />
               </motion.a>
               <motion.a
-                href="https://www.instagram.com/somocogh/"
+                href="https://www.instagram.com/somoco.ev/"
                 target="_blank"
                 whileHover={{ backgroundColor: "#ffffff", color: "#000000" }}
                 whileTap={{ opacity: 0.8 }}
@@ -93,7 +93,7 @@ const Footer = () => {
                 <Instagram />
               </motion.a>
               <motion.a
-                href="https://www.tiktok.com/@somocoghana"
+                href="https://www.tiktok.com/@somoco.ev"
                 target="_blank"
                 whileHover={{ backgroundColor: "#ffffff", color: "#000000" }}
                 onHoverStart={() => setT(true)}

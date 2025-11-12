@@ -168,14 +168,14 @@ const Header = () => {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-full mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
+                <div className="absolute divide-y divide-white/10  top-full mt-2 bg-primary border border-secondary/20 rounded-lg shadow-lg min-w-[200px]">
                   {isLoading ? (
                     <div className="px-4 py-2 text-white/60">Loading...</div>
                   ) : (
                     <>
                       <Link
                         href="/products"
-                        className="block px-4 py-2 hover:bg-secondary/10 transition-colors border-b border-white/10"
+                        className="block px-4 py-2 hover:bg-secondary/10 transition-colors"
                       >
                         All Products
                       </Link>

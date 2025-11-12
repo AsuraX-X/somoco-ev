@@ -58,8 +58,8 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/sustain.png"}
-              className="object-cover"
+              src={"/sustainability.jpg"}
+              className="object-cover object-left"
               fill
               alt="Sustain image"
             />
@@ -134,7 +134,7 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/careerI.png"}
+              src={"/career.jpg"}
               className="object-cover"
               fill
               alt="Career image"

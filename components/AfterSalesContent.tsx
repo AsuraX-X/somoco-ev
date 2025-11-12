@@ -13,7 +13,7 @@ const AfterSalesContent = () => {
         className="relative h-[60vh] md:h-screen overflow-hidden"
       >
         <Image
-          src="/service.png"
+          src="/service.jpg"
           alt="People Meeting"
           fill
           className="object-cover"

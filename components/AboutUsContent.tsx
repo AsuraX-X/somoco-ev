@@ -59,7 +59,7 @@ const AboutUsContent = () => {
           >
             <Image
               src={"/sustainability.jpg"}
-              className="object-cover object-left"
+              className="object-cover"
               fill
               alt="Sustain image"
             />

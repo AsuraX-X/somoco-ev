@@ -13,7 +13,7 @@ const AboutUsContent = () => {
         className="relative h-[60vh] md:h-screen overflow-hidden"
       >
         <Image
-          src="/company.png"
+          src="/company.jpg"
           alt="People Meeting"
           fill
           className="object-cover"
@@ -58,7 +58,7 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/sustainability.jpg"}
+              src={"/sustainability.png"}
               className="object-cover"
               fill
               alt="Sustain image"
@@ -134,8 +134,8 @@ const AboutUsContent = () => {
             transition={{ duration: 0.8 }}
           >
             <Image
-              src={"/career.jpg"}
-              className="object-cover"
+              src={"/career.png"}
+              className="object-cover object-left"
               fill
               alt="Career image"
             />

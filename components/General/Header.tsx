@@ -128,11 +128,11 @@ const Header = () => {
       {/* Desktop Menu */}
       <motion.div
         animate={{ backgroundColor: changeBg ? "#1a1a1a" : "#1a1a1a0" }}
-        className=" hidden sm:block text-white"
+        className=" hidden md:block text-white"
       >
         <div className="flex justify-between px-12 py-4">
           <Link className="flex-1" href={"/"}>
-            <div className="font-family-cera-stencil font-bold text-2xl gap-1 flex">
+            <div className="font-family-cera-stencil shrink-0 font-bold text-2xl gap-1 flex">
               <Image
                 unoptimized
                 src="/logo.svg"
@@ -140,7 +140,7 @@ const Header = () => {
                 width={40}
                 alt="Somoco Logo"
               />{" "}
-              <h1>SOMOCO EV</h1>
+              <h1 className="text-nowrap">SOMOCO EV</h1>
             </div>
           </Link>
           <div className="flex flex-1 justify-center items-center">
@@ -238,7 +238,7 @@ const Header = () => {
           backgroundColor:
             changeBg || isMobileMenuOpen ? "#1a1a1a" : "#1a1a1a0",
         }}
-        className="sm:hidden text-white"
+        className="md:hidden text-white"
       >
         <div className="flex justify-between items-center px-6 py-4">
           <Link href={"/"}>

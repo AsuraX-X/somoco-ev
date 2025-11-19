@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, MotionValue } from "motion/react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -17,7 +17,6 @@ interface VehicleCardProps {
   total: number;
   brand: string;
   name: string;
-  scrollX: MotionValue<number>;
   containerRef: React.RefObject<HTMLDivElement | null>;
   onClick: () => void;
 }
@@ -30,53 +29,29 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   total,
   brand,
   name,
-  scrollX,
-  containerRef,
   onClick,
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
   const imgUrl = urlFor(image).width(1200).height(800).url();
 
-  const xShift = useTransform(scrollX, () => {
-    const container = containerRef.current;
-    const card = cardRef.current;
-    if (!container || !card) return 0;
-
-    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
-    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-
-    const distance = cardCenter - containerCenter;
-    const maxShift = 80;
-    const normalized = Math.max(-1, Math.min(1, distance / 500));
-    return -normalized * maxShift;
-  });
-
   return (
-    <div
-      ref={cardRef}
-      className="relative shrink-0 w-[80vw] sm:w-[500px] h-[56vw] sm:h-[400px] rounded-xl overflow-hidden group cursor-pointer snap-center"
-      onClick={onClick}
-    >
-      <motion.div
-        style={{ x: xShift }}
-        className="absolute inset-0 will-change-transform"
+    <motion.div className="w-full min-w-140 relative h-full">
+      <div
+        onClick={onClick}
+        className="h-full w-full rounded-2xl"
       >
-        <div className="relative h-full w-full sm:w-[140%] sm:-left-[30%] rounded-2xl">
-          <Img
-            src={imgUrl}
-            alt={`${brand} ${name} - Image ${index + 1}`}
-            width={0}
-            height={0}
-            className="h-full w-full object-cover"
-            unoptimized
-          />
-        </div>
-      </motion.div>
-
+        <Img
+          src={imgUrl}
+          alt={`${brand} ${name} - Image ${index + 1}`}
+          width={0}
+          height={0}
+          className="h-full w-full object-contain"
+          unoptimized
+        />
+      </div>
       <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-bold">
         {(index % total) + 1} / {total}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -88,14 +63,12 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   setIsFullscreen,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollX } = useScroll({ container: containerRef });
   const [scrollWidth, setScrollWidth] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
   // display order: reverse the provided images array for the gallery view
   const ordered = React.useMemo(() => [...images].reverse(), [images]);
 
-  const doubled = isMobile ? ordered : [...ordered, ...ordered];
+  const doubled = [...ordered, ...ordered];
 
   useEffect(() => {
     const el = containerRef.current;
@@ -103,17 +76,6 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   }, [images]);
 
   useEffect(() => {
-    // detect mobile and update state
-    const check = () => setIsMobile(window.innerWidth < 640);
-    check();
-    window.addEventListener("resize", check);
-
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  useEffect(() => {
-    // only attach infinite-scroll reset when not on mobile
-    if (isMobile) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -128,14 +90,12 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 
     el.addEventListener("scroll", handleScroll, { passive: true });
     return () => el.removeEventListener("scroll", handleScroll);
-  }, [scrollWidth, isMobile]);
+  }, [scrollWidth]);
 
   return (
     <div
       ref={containerRef}
-      className={`w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative px-4 sm:px-0 ${
-        isMobile ? "snap-x snap-mandatory" : ""
-      }`}
+      className="w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative px-4 sm:px-0"
     >
       {doubled.map((image, index) => (
         <VehicleCard
@@ -145,7 +105,6 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
           total={ordered.length}
           brand={brand}
           name={name}
-          scrollX={scrollX}
           containerRef={containerRef}
           onClick={() => {
             // map the clicked (possibly doubled & reversed) index back to the original images array

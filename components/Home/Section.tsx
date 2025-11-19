@@ -14,7 +14,7 @@ const Section = ({
   spec2Value: string;
 }) => {
   return (
-    <div className="h-screen">
+    <div className="min-w-full h-screen">
       <div
         className="bg-cover bg-center h-full w-full text-white"
         style={{

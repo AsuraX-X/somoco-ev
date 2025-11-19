@@ -22,7 +22,7 @@ const Header = () => {
 
   const { scrollYProgress } = useScroll();
   useMotionValueEvent(scrollYProgress, "change", (i) => {
-    if (i > 0 && pathname !== "/") setChangeBg(true);
+    if (i > 0 || pathname === "/") setChangeBg(true);
     else setChangeBg(false);
   });
 
@@ -127,8 +127,8 @@ const Header = () => {
     <div className="fixed top-0 w-full z-100">
       {/* Desktop Menu */}
       <motion.div
-        animate={{ backgroundColor: changeBg ? "#1a1a1a" : "#1a1a1a0" }}
-        className=" hidden md:block text-white"
+        animate={{ backgroundColor: changeBg || pathname === "/" ? "#1a1a1a" : "#1a1a1a0" }}
+        className="hidden md:block text-white"
       >
         <div className="flex justify-between px-12 py-4">
           <Link className="flex-1" href={"/"}>

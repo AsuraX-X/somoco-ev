@@ -54,9 +54,9 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white/5 rounded-xl w-full overflow-hidden transition-all duration-300"
+      className="bg-linear-to-t h-full flex flex-col from-white/10 via-white/5 to-transparent rounded-xl w-full overflow-hidden"
     >
-      <div className="relative h-64 w-full bg-white/10">
+      <div className="relative h-64 shrink-0 w-full">
         <Link
           href={buildHref(`/vehicles/${vehicle._id}`)}
           onClick={saveScrollBeforeNav}
@@ -75,7 +75,8 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
           </div>
         )}
       </div>
-      <div className="p-6">
+      <div className="p-6 h-full flex flex-col justify-between">
+        <div>
         <h3 className="text-xl font-bold text-white font-family-cera-stencil mb-2">
           {vehicle.brand} {vehicle.name}
         </h3>
@@ -98,7 +99,8 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
               ))}
             </ul>
           </div>
-        )}
+          )}
+          </div>
         <div className="flex gap-2">
           <MLink
             whileHover={{

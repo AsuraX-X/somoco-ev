@@ -127,7 +127,10 @@ const Header = () => {
     <div className="fixed top-0 w-full z-100">
       {/* Desktop Menu */}
       <motion.div
-        animate={{ backgroundColor: changeBg || pathname === "/" ? "#1a1a1a" : "#1a1a1a0" }}
+        animate={{
+          backgroundColor:
+            changeBg || pathname === "/" ? "#001014" : "#0010140",
+        }}
         className="hidden md:block text-white"
       >
         <div className="flex justify-between px-12 py-4">
@@ -236,7 +239,7 @@ const Header = () => {
       <motion.div
         animate={{
           backgroundColor:
-            changeBg || isMobileMenuOpen ? "#1a1a1a" : "#1a1a1a0",
+            changeBg || isMobileMenuOpen ? "#001014" : "#0010140",
         }}
         className="md:hidden text-white"
       >

@@ -21,18 +21,19 @@ const Hero = () => {
 
   return (
     <section
-      className="w-full relative flex items-end justify-center h-screen mt-[74px] overflow-hidden group cursor-pointer"
+      className="w-screen aspect-video sticky top-[74px] -z-1 flex justify-center h-screen overflow-hidden group cursor-pointer"
       onClick={togglePlayPause}
     >
       <video
         ref={videoRef}
+        src="/Tang.mp4"
         autoPlay
         muted
         loop
         playsInline
-        className="w-full absolute h-full object-cover"
+        className="w-full h-full object-cover object-center"
       >
-        <source src="/Tang.mp4" type="video/mp4" />
+        {/* <source src="/Tang.mp4" type="video/mp4" /> */}
       </video>
       <div className="absolute inset-0 bg-black/10"></div>
 
@@ -66,22 +67,6 @@ const Hero = () => {
           </AnimatePresence>
         </div>
       </div>
-      <motion.button
-        whileHover={{
-          backgroundColor: "#ffffff",
-          color: "#000000",
-        }}
-        whileTap={{
-          backgroundColor: "#cecece",
-          color: "#000000",
-        }}
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ ease: "easeInOut" }}
-        className="border-secondary mb-30 backdrop-blur-xs text-2xl z-1 shadow-2xs cursor-pointer border rounded-full px-8 py-2"
-      >
-        Find Your Car{" "}
-      </motion.button>
     </section>
   );
 };

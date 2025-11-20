@@ -42,7 +42,7 @@ function PaginationControls({
     </div>
   );
 }
-import VehicleCard from "@/components/Products/VehicleCard";
+import VehicleCard from "@/components/General/VehicleCard";
 import { Search, X, Car, Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useSearchParams, useRouter } from "next/navigation";

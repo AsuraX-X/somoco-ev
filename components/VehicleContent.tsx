@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
-import VehicleCard from "@/components/Products/VehicleCard";
+import VehicleCard from "@/components/General/VehicleCard";
 import { urlFor } from "@/sanity/lib/image";
 import ParameterSection from "@/components/Products/Parameters";
 import { useContactModal } from "@/components/General/ContactModalProvider";
@@ -437,9 +437,7 @@ const VehicleDetailsPage = () => {
 
             <div className="flex h-130 overflow-x-scroll gap-4">
               {recommendations.map((rec) => (
-                <div key={rec._id} className="min-w-100">
-                  <VehicleCard vehicle={rec} />
-                </div>
+                <VehicleCard key={rec._id} vehicle={rec} />
               ))}
             </div>
           </div>

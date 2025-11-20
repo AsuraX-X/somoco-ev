@@ -34,11 +34,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const imgUrl = urlFor(image).width(1200).height(800).url();
 
   return (
-    <motion.div className="w-full min-w-140 relative h-full">
-      <div
-        onClick={onClick}
-        className="h-full w-full rounded-2xl"
-      >
+    <motion.div className="w-full max-w-120 shrink-0 relative h-full">
+      <div onClick={onClick} className="h-full w-full rounded-2xl">
         <Img
           src={imgUrl}
           alt={`${brand} ${name} - Image ${index + 1}`}
@@ -95,7 +92,7 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full mb-12 overflow-x-auto flex gap-6 rounded-2xl hide-scrollbar relative px-4 sm:px-0"
+      className="w-full flex mb-12 overflow-x-scroll gap-6 rounded-2xl hide-scrollbar"
     >
       {doubled.map((image, index) => (
         <VehicleCard

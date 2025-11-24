@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const vehicles = await client.fetch(
-      `*[_type == "event"] | order(_createdAt desc)`
+      `*[_type == "event" && disabled != true] | order(_createdAt desc)`
     );
 
     return NextResponse.json({

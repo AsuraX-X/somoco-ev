@@ -1,5 +1,12 @@
 "use client";
 
+import VehicleCard from "@/components/General/VehicleCard";
+import { Search, X, Car, Plus } from "lucide-react";
+import { motion } from "motion/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import React, { Suspense, useEffect, useState, useRef } from "react";
+import type { Vehicle } from "@/types/vehicle";
+
 type PaginationProps = {
   totalItems: number;
   itemsPerPage: number;
@@ -41,20 +48,6 @@ function PaginationControls({
       </div>
     </div>
   );
-}
-import VehicleCard from "@/components/General/VehicleCard";
-import { Search, X, Car, Plus } from "lucide-react";
-import { motion } from "motion/react";
-import { useSearchParams, useRouter } from "next/navigation";
-import React, { Suspense, useEffect, useState, useRef } from "react";
-
-interface Vehicle {
-  _id: string;
-  brand: string;
-  name: string;
-  type: string;
-  description?: string;
-  images?: string[]; // Array of image URLs
 }
 
 const ProductsPageContent = () => {
@@ -230,8 +223,8 @@ const ProductsPageContent = () => {
     if (searchQuery) {
       filtered = filtered.filter(
         (vehicle) =>
-          vehicle.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          vehicle.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          vehicle.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          vehicle.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           vehicle.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           vehicle.description?.toLowerCase().includes(searchQuery.toLowerCase())
       );

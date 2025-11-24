@@ -1,15 +1,14 @@
 "use client";
 
-import { ArrowLeft, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
 import VehicleCard from "@/components/General/VehicleCard";
 import { urlFor } from "@/sanity/lib/image";
-import ParameterSection from "@/components/Products/Parameters";
 import { useContactModal } from "@/components/General/ContactModalProvider";
 
 import type { Vehicle } from "@/types/vehicle";
@@ -20,28 +19,55 @@ const VehicleDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isSpecsOpen, setIsSpecsOpen] = useState(false);
+  // No overlay: download specs PDF instead
   const [recommendations, setRecommendations] = useState<Vehicle[]>([]);
   const { open: openContact } = useContactModal();
 
-  // Ref + wheel handler for the specs modal so inner scrolling is handled
-  // locally and not hijacked by any page-level smooth scroller (e.g. Lenis).
-  const specsRef = useRef<HTMLDivElement | null>(null);
+  // Helper that resolves Sanity file ref to a CDN URL
+  const getFileUrl = (file?: Vehicle["document"]) => {
+    if (!file?.asset) return null;
 
-  const onSpecsWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
-    const el = specsRef.current;
-    if (!el) return;
-    const delta = e.deltaY;
-    const atTop = el.scrollTop === 0;
-    const atBottom =
-      Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
+    const ref = file.asset._ref;
+    // ref may be like "file-<id>-pdf" — fallback to safe parsing
+    if (!ref || typeof ref !== "string") return null;
+    const parts = ref.split("-");
+    if (parts.length < 3) return null;
+    const id = parts[1];
+    const ext = parts[parts.length - 1];
 
-    // If we're scrolling inside the panel (not trying to bubble to the page),
-    // stop propagation so the panel handles the scroll.
-    if ((delta < 0 && !atTop) || (delta > 0 && !atBottom)) {
-      e.stopPropagation();
+    const pid = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+    const ds = process.env.NEXT_PUBLIC_SANITY_DATASET;
+    if (!pid || !ds) return null;
+
+    return `https://cdn.sanity.io/files/${pid}/${ds}/${id}.${ext}`;
+  };
+
+  const downloadDocument = () => {
+    if (!vehicle?.document) {
+      // no file — redirect user to contact modal as fallback
+      openContact();
+      return;
     }
-  }, []);
+
+    const url = getFileUrl(vehicle.document);
+    if (!url) {
+      openContact();
+      return;
+    }
+
+    // Create an anchor and click it to open/download the PDF
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    // try to set a filename for download — may be ignored cross-origin
+    const name =
+      vehicle.document.title || `${vehicle.brand}-${vehicle.name}-specs.pdf`;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
 
   useEffect(() => {
     const fetchVehicle = async () => {
@@ -155,66 +181,57 @@ const VehicleDetailsPage = () => {
     );
   }
 
-  const parameters = [
-    {
-      name: "Key Parameters",
-      param: vehicle.specifications?.keyParameters,
-    },
-    {
-      name: "Body Parameters",
-      param: vehicle.specifications?.bodyParameters,
-    },
-    {
-      name: "Motor Parameters",
-      param: vehicle.specifications?.motorParameters,
-    },
-    {
-      name: "Wheel & Brake Parameters",
-      param: vehicle.specifications?.wheelBrakeParameters,
-    },
-    {
-      name: "Key Configurations",
-      param: vehicle.specifications?.keyConfigurations,
-    },
-  ];
+  // const parameters = [
+  //   {
+  //     name: "Key Parameters",
+  //     param: vehicle.specifications?.keyParameters,
+  //   },
+  //   {
+  //     name: "Body Parameters",
+  //     param: vehicle.specifications?.bodyParameters,
+  //   },
+  //   {
+  //     name: "Motor Parameters",
+  //     param: vehicle.specifications?.motorParameters,
+  //   },
+  //   {
+  //     name: "Wheel & Brake Parameters",
+  //     param: vehicle.specifications?.wheelBrakeParameters,
+  //   },
+  //   {
+  //     name: "Key Configurations",
+  //     param: vehicle.specifications?.keyConfigurations,
+  //   },
+  // ];
 
   return (
     <div className="min-h-screen bg-primary text-white pt-20 pb-8 ">
       {/* Full-bleed hero (first uploaded image) */}
       {vehicle && vehicle.images && vehicle.images.length > 0 && (
-        <div className="w-full">
-          <div className="relative w-full h-80 md:h-[480px] mb-8 overflow-hidden">
-            <Image
-              src={urlFor(vehicle.images[vehicle.images.length - 1])
-                .width(2000)
-                .height(900)
-                .url()}
-              alt={`${vehicle.brand} ${vehicle.name}`}
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
-
-            {/* Back button on top-left of hero */}
-            <div className="absolute left-4 top-4 z-30">
-              <Link href="/products">
-                <motion.button
-                  whileHover={{ x: -5 }}
-                  whileTap={{ opacity: 0.8 }}
-                  className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
-                >
-                  <ArrowLeft size={18} />
-                  <span className="text-sm">Back</span>
-                </motion.button>
-              </Link>
-            </div>
+        <div className="relative w-full bg-linear-to-b from-white/8 to-transparent h-80 md:h-[480px] mb-8">
+          <Image
+            src={urlFor(vehicle.images[1]).width(900).height(900).url()}
+            alt={`${vehicle.brand} ${vehicle.name}`}
+            fill
+            className="object-contain "
+          />
+          {/* Back button on top-left of hero */}
+          <div className="absolute left-4 top-4 z-30">
+            <Link href="/products">
+              <motion.button
+                whileHover={{ x: -5 }}
+                whileTap={{ opacity: 0.8 }}
+                className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
+              >
+                <ArrowLeft size={18} />
+                <span className="text-sm">Back</span>
+              </motion.button>
+            </Link>
           </div>
         </div>
       )}
 
-      <div className="max-w-7xl px-4 sm:px-8 lg:px-16 pb-10 mx-auto">
-        {/* Back Button is shown on the hero above */}
-        {/* Vehicle Header (shown under hero) */}
+      <div className="pb-10 mx-auto">
         <div className="mb-8">
           <div className="flex flex-col items-center justify-center gap-3 mb-4">
             <h1 className="text-5xl font-bold font-family-cera-stencil">
@@ -227,53 +244,55 @@ const VehicleDetailsPage = () => {
             )}
           </div>
           {vehicle.description && (
-            <p className="text-xl mx-auto text-center text-white/70 max-w-3xl">
+            <p className="sm:text-xl px-4 text-sm mx-auto text-center text-white/70 max-w-3xl">
               {vehicle.description}
             </p>
           )}
         </div>
-        {/* Image Gallery - Scrollable with Parallax */}
         {/* Key parameters + secondary image section */}
-        <div className="grid grid-cols-1 max-w-5xl mx-auto lg:grid-cols-2 gap-8 mb-8 items-center">
-          <div>
-            <div className="space-y-3">
-              {vehicle.specifications?.keyParameters &&
-              vehicle.specifications.keyParameters.length > 0 ? (
-                vehicle.specifications.keyParameters.slice(0, 3).map((p, i) => (
-                  <div
-                    key={i}
-                    className="flex flex-col items-start p-4 rounded-xl"
-                  >
-                    <div className="text-white text-6xl">{p.value}</div>
-                    <div className="text-secondary font-bold">{p.name}</div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-white/60">No key parameters available.</p>
-              )}
+        <div className=" bg-linear-to-t px-8 md:px-20 pb-10 from-white/10 to-transparent gap-8 mb-8 items-center">
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+            <div className="w-full h-full">
+              <div className="h-full flex flex-col items-center md:items-start justify-center">
+                {vehicle.specifications?.keyParameters &&
+                vehicle.specifications.keyParameters.length > 0 ? (
+                  vehicle.specifications.keyParameters
+                    .slice(0, 3)
+                    .map((p, i) => (
+                      <div
+                        key={i}
+                        className="flex flex-col items-center md:items-start p-4 rounded-xl"
+                      >
+                        <div className="text-white text-6xl">{p.value}</div>
+                        <div className="text-secondary font-bold">{p.name}</div>
+                      </div>
+                    ))
+                ) : (
+                  <p className="text-white/60">No key parameters available.</p>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="w-full">
-            <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden">
-              <Image
-                src={
-                  vehicle.images && vehicle.images.length > 1
-                    ? urlFor(vehicle.images[1]).width(1600).height(900).url()
-                    : vehicle.images && vehicle.images.length > 0
-                    ? urlFor(vehicle.images[0]).width(1600).height(900).url()
-                    : "/placeholder-vehicle.jpg"
-                }
-                alt={`${vehicle.brand} ${vehicle.name} secondary`}
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
+            <div className="w-full flex items-center justify-center h-full">
+              <div className="relative w-full h-64 sm:h-96">
+                <Image
+                  src={
+                    vehicle.images && vehicle.images.length > 1
+                      ? urlFor(vehicle.images[1]).width(1600).height(900).url()
+                      : vehicle.images && vehicle.images.length > 0
+                      ? urlFor(vehicle.images[0]).width(1600).height(900).url()
+                      : "/placeholder-vehicle.jpg"
+                  }
+                  alt={`${vehicle.brand} ${vehicle.name} secondary`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
-          <div className="w-full mb-8">
+          <div className="w-fit mx-auto pt-12">
             <motion.button
-              onClick={() => setIsSpecsOpen(true)}
+              onClick={downloadDocument}
               whileHover={{
                 scale: 1.02,
                 backgroundColor: "#ffffff",
@@ -281,56 +300,22 @@ const VehicleDetailsPage = () => {
               }}
               whileTap={{ scale: 0.98, backgroundColor: "#cecece" }}
               className="px-6 py-3 rounded-full text-secondary border border-secondary font-bold "
+              disabled={!vehicle.document}
             >
-              Technical Specs
+              {vehicle.document ? "Download Specs" : "Request Specs"}
             </motion.button>
           </div>
         </div>
-        <VehicleGallery
-          images={vehicle.images || []}
-          brand={vehicle.brand}
-          name={vehicle.name}
-          setCurrentImageIndex={setCurrentImageIndex}
-          setIsFullscreen={setIsFullscreen}
-        />
-        {/* Technical Specs Modal Overlay */}
-        {isSpecsOpen && vehicle.specifications && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-300 backdrop-blur-2xl flex items-start justify-end overflow-auto"
-            onClick={() => setIsSpecsOpen(false)}
-          >
-            <div
-              ref={specsRef}
-              onWheel={onSpecsWheel}
-              className="relative w-fit max-w-3xl h-full overflow-auto bg-primary/95  border-l border-white/10 p-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setIsSpecsOpen(false)}
-                className="absolute right-4 top-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-              >
-                <X />
-              </button>
-
-              <h2 className="text-4xl font-bold font-family-cera-stencil mb-6">
-                Specifications
-              </h2>
-
-              <div className="space-y-6">
-                {parameters.map((param, i) => (
-                  <ParameterSection
-                    key={i}
-                    title={param.name}
-                    parameters={param.param}
-                  />
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
+        <div className="py-10">
+          <VehicleGallery
+            images={vehicle.images || []}
+            brand={vehicle.brand || "Vehicle"}
+            name={vehicle.name || ""}
+            setCurrentImageIndex={setCurrentImageIndex}
+            setIsFullscreen={setIsFullscreen}
+          />
+        </div>
+        {/* Technical Specs are now downloadable; the overlay has been removed. */}
         {/* Fullscreen Image Modal */}
         {isFullscreen && vehicle.images && (
           <motion.div
@@ -407,41 +392,53 @@ const VehicleDetailsPage = () => {
             </div>
           </motion.div>
         )}
-        {/* Contact CTA */}
-        <div className="mt-12 bg-white/5 rounded-2xl p-8">
-          <h3 className="text-3xl font-bold font-family-cera-stencil mb-4">
-            Interested in this vehicle?
-          </h3>
-          <p className="text-white mb-6">
-            Contact us for more information, pricing, and availability.
-          </p>
-          <motion.button
-            onClick={() => openContact()}
-            whileHover={{
-              scale: 1.02,
-              backgroundColor: "#ffffff",
-              color: "#000000",
-            }}
-            whileTap={{ scale: 0.95, backgroundClip: "#cecece" }}
-            className="px-8 py-3 cursor-pointer rounded-full border border-secondary text-secondary font-bold"
-          >
-            Contact Us
-          </motion.button>
-        </div>
-        {/* Recommendations */}
-        {recommendations && recommendations.length > 0 && (
-          <div className="mt-12">
-            <h3 className="text-3xl font-bold font-family-cera-stencil mb-6">
-              More {vehicle?.type} vehicles you might like
+        <div className="mx-4 md:mx-20 ">
+          {/* Contact CTA */}
+          <div className="mt-12 bg-white/5 rounded-2xl p-8">
+            <h3 className="text-3xl font-bold font-family-cera-stencil mb-4">
+              Interested in this vehicle?
             </h3>
-
-            <div className="flex h-130 overflow-x-scroll gap-4">
-              {recommendations.map((rec) => (
-                <VehicleCard key={rec._id} vehicle={rec} />
-              ))}
-            </div>
+            <p className="text-white mb-6">
+              Contact us for more information, pricing, and availability.
+            </p>
+            <motion.button
+              onClick={() => openContact()}
+              whileHover={{
+                scale: 1.02,
+                backgroundColor: "#ffffff",
+                color: "#000000",
+              }}
+              whileTap={{ scale: 0.95, backgroundClip: "#cecece" }}
+              className="px-8 py-3 cursor-pointer rounded-full border border-secondary text-secondary font-bold"
+            >
+              Contact Us
+            </motion.button>
           </div>
-        )}
+          {/* Recommendations */}
+          {recommendations && recommendations.length > 0 && (
+            <div className="mt-12">
+              <h3 className="text-3xl font-bold font-family-cera-stencil mb-6">
+                More {vehicle?.type} vehicles you might like
+              </h3>
+
+              <div
+                tabIndex={0}
+                className="flex gap-4 py-8 overflow-auto hide-scrollbar focus:outline-none"
+                role="region"
+                aria-label="Vehicles carousel"
+              >
+                {recommendations.map((rec) => (
+                  <div
+                    key={rec._id}
+                    className="shrink-0 w-full sm:w-[70vw] md:w-[50vw] lg:w-[35vw] xl:w-[28vw]"
+                  >
+                    <VehicleCard vehicle={rec} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

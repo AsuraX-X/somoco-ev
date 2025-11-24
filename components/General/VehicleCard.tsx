@@ -17,8 +17,12 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
     : "/placeholder-vehicle.jpg";
 
   // Get first three key parameters if available
-  const keyParams: { name: string; value: string }[] =
-    vehicle.specifications?.keyParameters?.slice(0, 3) || [];
+  const keyParams = (
+    vehicle.specifications?.keyParameters?.filter(
+      (p): p is { name: string; value: string; _key: string } =>
+        p.name !== undefined && p.value !== undefined
+    ) || []
+  ).slice(0, 3);
 
   const saveScrollBeforeNav = () => {
     try {
@@ -77,30 +81,30 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
       </div>
       <div className="p-6 h-full flex flex-col justify-between">
         <div>
-        <h3 className="text-xl font-bold text-white font-family-cera-stencil mb-2">
-          {vehicle.brand} {vehicle.name}
-        </h3>
-        {vehicle.description && (
-          <p className="text-white/70 text-sm line-clamp-2 mb-2">
-            {vehicle.description}
-          </p>
-        )}
-        {/* Key Parameters */}
-        {keyParams.length > 0 && (
-          <div className="mb-4">
-            <ul className="text-white/80 text-xs space-y-1">
-              {keyParams.map((param, idx) => (
-                <li key={idx}>
-                  <span className="font-semibold text-secondary">
-                    {param.name}:
-                  </span>{" "}
-                  {param.value}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <h3 className="text-xl font-bold text-white font-family-cera-stencil mb-2">
+            {vehicle.brand} {vehicle.name}
+          </h3>
+          {vehicle.description && (
+            <p className="text-white/70 text-sm line-clamp-2 mb-2">
+              {vehicle.description}
+            </p>
           )}
-          </div>
+          {/* Key Parameters */}
+          {keyParams.length > 0 && (
+            <div className="mb-4">
+              <ul className="text-white/80 text-xs space-y-1">
+                {keyParams.map((param, idx) => (
+                  <li key={idx}>
+                    <span className="font-semibold text-secondary">
+                      {param.name}:
+                    </span>{" "}
+                    {param.value}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
         <div className="flex gap-2">
           <MLink
             whileHover={{

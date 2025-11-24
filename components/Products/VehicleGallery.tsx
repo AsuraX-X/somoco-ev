@@ -2,21 +2,24 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
+import type { Event } from "@/sanity.types";
+
+type SanityImage = NonNullable<Event["images"]>[number];
 
 interface VehicleGalleryProps {
-  images: string[];
-  brand: string;
-  name: string;
+  images: SanityImage[];
+  brand?: string;
+  name?: string;
   setCurrentImageIndex: (index: number) => void;
   setIsFullscreen: (isFullscreen: boolean) => void;
 }
 
 interface VehicleCardProps {
-  image: string;
+  image: SanityImage;
   index: number;
   total: number;
-  brand: string;
-  name: string;
+  brand?: string;
+  name?: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
   onClick: () => void;
 }

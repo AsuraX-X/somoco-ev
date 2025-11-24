@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import VehicleCard from "@/components/General/VehicleCard";
 import type { Vehicle } from "@/types/vehicle";
 import { motion } from "motion/react";
@@ -10,8 +10,6 @@ const VehiclesCarousel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("");
-  const containerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Fetch vehicles
   const fetchVehicles = useCallback(() => {
@@ -47,7 +45,11 @@ const VehiclesCarousel = () => {
 
   // Get unique vehicle types
   const vehicleTypes = Array.from(
-    new Set(vehicles.map((v) => v.type).filter(Boolean))
+    new Set(
+      vehicles
+        .map((v) => v.type)
+        .filter((type): type is string => Boolean(type))
+    )
   );
 
   // Filter vehicles based on selected type
@@ -133,18 +135,14 @@ const VehiclesCarousel = () => {
       <div className="relative w-full">
         {/* Carousel Container */}
         <div
-          ref={containerRef}
           tabIndex={0}
           className="flex gap-4 py-8 overflow-auto hide-scrollbar focus:outline-none"
           role="region"
           aria-label="Vehicles carousel"
         >
-          {filteredVehicles.map((vehicle, idx) => (
+          {filteredVehicles.map((vehicle) => (
             <div
               key={vehicle._id}
-              ref={(el) => {
-                itemRefs.current[idx] = el;
-              }}
               className="shrink-0 w-full sm:w-[70vw] md:w-[50vw] lg:w-[35vw] xl:w-[28vw]"
             >
               <VehicleCard vehicle={vehicle} />

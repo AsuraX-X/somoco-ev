@@ -133,7 +133,7 @@ const Header = () => {
         }}
         className="hidden md:block text-white"
       >
-        <div className="flex justify-between px-12 py-4">
+        <div className="flex items-center justify-between px-12 py-4">
           <Link className="flex-1" href={"/"}>
             <div className="font-family-cera-stencil shrink-0 font-bold text-2xl gap-1 flex">
               <Image

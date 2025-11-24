@@ -5,9 +5,12 @@ export async function GET(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const id = pathname.split("/").pop();
   try {
-    const vehicle = await client.fetch(`*[_type == "event" && _id == $id][0]`, {
-      id,
-    });
+    const vehicle = await client.fetch(
+      `*[_type == "event" && _id == $id && disabled != true][0]`,
+      {
+        id,
+      }
+    );
 
     if (!vehicle) {
       return NextResponse.json({ error: "Vehicle not found" }, { status: 404 });

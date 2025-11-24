@@ -1,8 +1,13 @@
 "use client";
-import { Parameter } from "@/types/vehicle";
 import { Plus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+
+type Parameter = {
+  name?: string;
+  value?: string;
+  _key: string;
+};
 
 const ParameterSection = ({
   title,

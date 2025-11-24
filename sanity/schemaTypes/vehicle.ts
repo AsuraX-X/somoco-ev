@@ -49,9 +49,31 @@ export const vehicle = defineType({
       type: "array",
       of: [{ type: "image" }],
     }),
+    // Single document (PDF) such as a spec sheet or brochure
+    defineField({
+      name: "document",
+      title: "Document",
+      type: "file",
+      options: { accept: "application/pdf" },
+      fields: [
+        defineField({ name: "title", type: "string", title: "Title" }),
+        defineField({
+          name: "description",
+          type: "text",
+          title: "Description",
+        }),
+      ],
+    }),
     defineField({
       name: "description",
       type: "string",
+    }),
+    defineField({
+      name: "disabled",
+      title: "Disabled",
+      type: "boolean",
+      description:
+        "If enabled, this vehicle will not appear in public listings",
     }),
 
     // Specifications Section

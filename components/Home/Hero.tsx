@@ -21,7 +21,7 @@ const Hero = () => {
 
   return (
     <section
-      className="w-screen aspect-video sticky top-[74px] -z-1 flex justify-center h-screen overflow-hidden group cursor-pointer"
+      className="w-screen aspect-video sticky top-[54px] sm-top-[74px] -z-1 flex justify-center h-screen overflow-hidden group cursor-pointer"
       onClick={togglePlayPause}
     >
       <video

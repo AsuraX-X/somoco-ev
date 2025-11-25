@@ -26,7 +26,7 @@ const Hero = () => {
     >
       <video
         ref={videoRef}
-        src="/Tang.mp4"
+        src="/yuanplus.mp4"
         autoPlay
         muted
         loop

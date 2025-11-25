@@ -27,7 +27,7 @@ const Home = () => {
                 transition: { duration: 0.3 },
               }}
               transition={{ ease: "easeInOut" }}
-              className="border-secondary mb-40  backdrop-blur-xs text-2xl z-1 shadow-2xs cursor-pointer border rounded-full px-8 py-2"
+              className="border-secondary mb-40  backdrop-blur-xs text-2xl z-1 shadow-2xs cursor-pointer border rounded-full px-8 py-2"                                                
             >
               Find Your Car
             </motion.button>

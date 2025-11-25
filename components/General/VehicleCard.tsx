@@ -12,8 +12,8 @@ interface VehicleCardProps {
 const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   const MLink = motion.create(Link);
 
-  const imageUrl = vehicle.images?.[0]
-    ? urlFor(vehicle.images[0]).width(600).height(400).url()
+  const imageUrl = vehicle.exteriorImages?.[0]
+    ? urlFor(vehicle.exteriorImages[0]).auto('format').quality(80).url()
     : "/placeholder-vehicle.jpg";
 
   // Get first three key parameters if available

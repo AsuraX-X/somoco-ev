@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
       name: body.name,
       type: body.type || "",
       description: body.description || "",
-      images: body.images || [],
+      exteriorImages: body.exteriorImages || [],
+      interiorImages: body.interiorImages || [],
       specifications: body.specifications || {
         keyParameters: [],
         bodyParameters: [],

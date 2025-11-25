@@ -11,11 +11,11 @@ import VehicleCard from "@/components/General/VehicleCard";
 import { urlFor } from "@/sanity/lib/image";
 import { useContactModal } from "@/components/General/ContactModalProvider";
 
-import type { Vehicle } from "@/types/vehicle";
+import type { Vehicle, VehicleWithImages } from "@/types/vehicle";
 
 const VehicleDetailsPage = () => {
   const params = useParams();
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [vehicle, setVehicle] = useState<VehicleWithImages | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -76,10 +76,20 @@ const VehicleDetailsPage = () => {
         const result = await response.json();
 
         if (result.success) {
-          // Reverse the images array so first uploaded is shown first
+          // Keep arrays in upload order — first uploaded should display first
+          const exterior = result.data.exteriorImages
+            ? [...result.data.exteriorImages]
+            : [];
+          const interior = result.data.interiorImages
+            ? [...result.data.interiorImages]
+            : [];
+
+          // Combined images: exterior first, then interior (upload order preserved)
           const vehicleData = {
             ...result.data,
-            images: result.data.images ? [...result.data.images].reverse() : [],
+            exteriorImages: exterior,
+            interiorImages: interior,
+            images: [...exterior, ...interior],
           };
           setVehicle(vehicleData);
         } else {
@@ -206,30 +216,44 @@ const VehicleDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-primary text-white pt-20 pb-8 ">
-      {/* Full-bleed hero (first uploaded image) */}
-      {vehicle && vehicle.images && vehicle.images.length > 0 && (
-        <div className="relative w-full bg-linear-to-b from-white/8 to-transparent h-80 md:h-[480px] mb-8">
-          <Image
-            src={urlFor(vehicle.images[1]).width(900).height(900).url()}
-            alt={`${vehicle.brand} ${vehicle.name}`}
-            fill
-            className="object-contain "
-          />
-          {/* Back button on top-left of hero */}
-          <div className="absolute left-4 top-4 z-30">
-            <Link href="/products">
-              <motion.button
-                whileHover={{ x: -5 }}
-                whileTap={{ opacity: 0.8 }}
-                className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
-              >
-                <ArrowLeft size={18} />
-                <span className="text-sm">Back</span>
-              </motion.button>
-            </Link>
+      {/* Full-bleed hero (first interior image, or first exterior if no interior) */}
+      {vehicle &&
+        ((vehicle.interiorImages && vehicle.interiorImages.length > 0) ||
+          (vehicle.exteriorImages && vehicle.exteriorImages.length > 0)) && (
+          <div className="relative w-screen  bg-linear-to-b from-white/8 to-transparent h-80 md:h-[480px] mb-8">
+            <Image
+              src={
+                vehicle.interiorImages && vehicle.interiorImages.length > 0
+                  ? urlFor(vehicle.interiorImages[0])
+                      .auto("format")
+                      .quality(80)
+                      .url()
+                  : vehicle.exteriorImages && vehicle.exteriorImages.length > 0
+                  ? urlFor(vehicle.exteriorImages[0])
+                      .auto("format")
+                      .quality(80)
+                      .url()
+                  : "/placeholder-vehicle.jpg"
+              }
+              alt={`${vehicle.brand} ${vehicle.name}`}
+              fill
+              className="object-cover "
+            />
+            {/* Back button on top-left of hero */}
+            <div className="absolute left-4 top-4 z-30">
+              <Link href="/products">
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  whileTap={{ opacity: 0.8 }}
+                  className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
+                >
+                  <ArrowLeft size={18} />
+                  <span className="text-sm">Back</span>
+                </motion.button>
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       <div className="pb-10 mx-auto">
         <div className="mb-8">
@@ -250,17 +274,25 @@ const VehicleDetailsPage = () => {
           )}
         </div>
         {/* Key parameters + secondary image section */}
-        <div className=" bg-linear-to-t px-8 md:px-20 pb-10 from-white/10 to-transparent gap-8 mb-8 items-center">
-          <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
+        <div className=" bg-linear-to-t px-8 md:px-20 pb-10 from-white/10 to-transparent mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
             <div className="w-full h-full">
               <div className="h-full flex flex-col items-center md:items-start justify-center">
                 {vehicle.specifications?.keyParameters &&
                 vehicle.specifications.keyParameters.length > 0 ? (
-                  vehicle.specifications.keyParameters
+                  // Filter out any parameter entries missing a name or value so we can map safely
+                  (
+                    vehicle.specifications.keyParameters.filter(
+                      (p): p is { name: string; value: string; _key: string } =>
+                        typeof p?.name === "string" &&
+                        typeof p?.value === "string" &&
+                        typeof (p as any)?._key === "string"
+                    ) || []
+                  )
                     .slice(0, 3)
                     .map((p, i) => (
                       <div
-                        key={i}
+                        key={p._key ?? i}
                         className="flex flex-col items-center md:items-start p-4 rounded-xl"
                       >
                         <div className="text-white text-6xl">{p.value}</div>
@@ -273,21 +305,26 @@ const VehicleDetailsPage = () => {
               </div>
             </div>
 
-            <div className="w-full flex items-center justify-center h-full">
-              <div className="relative w-full h-64 sm:h-96">
-                <Image
-                  src={
-                    vehicle.images && vehicle.images.length > 1
-                      ? urlFor(vehicle.images[1]).width(1600).height(900).url()
-                      : vehicle.images && vehicle.images.length > 0
-                      ? urlFor(vehicle.images[0]).width(1600).height(900).url()
-                      : "/placeholder-vehicle.jpg"
-                  }
-                  alt={`${vehicle.brand} ${vehicle.name} secondary`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+            <div className="w-full relative flex items-center justify-center h-full">
+              <Image
+                src={
+                  vehicle.exteriorImages && vehicle.exteriorImages.length > 0
+                    ? urlFor(vehicle.exteriorImages[0])
+                        .auto("format")
+                        .quality(80)
+                        .url()
+                    : vehicle.interiorImages &&
+                      vehicle.interiorImages.length > 0
+                    ? urlFor(vehicle.interiorImages[0])
+                        .auto("format")
+                        .quality(80)
+                        .url()
+                    : "/placeholder-vehicle.jpg"
+                }
+                alt={`${vehicle.brand} ${vehicle.name} secondary`}
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
           <div className="w-fit mx-auto pt-12">
@@ -308,7 +345,8 @@ const VehicleDetailsPage = () => {
         </div>
         <div className="py-10">
           <VehicleGallery
-            images={vehicle.images || []}
+            exteriorImages={vehicle.exteriorImages || []}
+            interiorImages={vehicle.interiorImages || []}
             brand={vehicle.brand || "Vehicle"}
             name={vehicle.name || ""}
             setCurrentImageIndex={setCurrentImageIndex}
@@ -317,7 +355,7 @@ const VehicleDetailsPage = () => {
         </div>
         {/* Technical Specs are now downloadable; the overlay has been removed. */}
         {/* Fullscreen Image Modal */}
-        {isFullscreen && vehicle.images && (
+        {isFullscreen && vehicle.images && vehicle.images.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -352,8 +390,8 @@ const VehicleDetailsPage = () => {
               >
                 <Image
                   src={urlFor(vehicle.images[currentImageIndex])
-                    .width(1920)
-                    .height(1080)
+                    .auto("format")
+                    .quality(90)
                     .url()}
                   alt={`${vehicle.brand} ${vehicle.name}`}
                   fill

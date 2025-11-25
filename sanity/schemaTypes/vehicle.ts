@@ -45,7 +45,14 @@ export const vehicle = defineType({
       type: "string",
     }),
     defineField({
-      name: "images",
+      name: "exteriorImages",
+      title: "Exterior Images",
+      type: "array",
+      of: [{ type: "image" }],
+    }),
+    defineField({
+      name: "interiorImages",
+      title: "Interior Images",
       type: "array",
       of: [{ type: "image" }],
     }),

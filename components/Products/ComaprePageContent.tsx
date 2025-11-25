@@ -11,10 +11,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "@/sanity/lib/image";
+import type { Vehicle } from "@/types/vehicle";
 
 interface Parameter {
-  name: string;
-  value: string;
+  name?: string;
+  value?: string;
+  _key: string;
 }
 
 interface Specifications {
@@ -24,16 +26,6 @@ interface Specifications {
   motorParameters?: Parameter[];
   wheelBrakeParameters?: Parameter[];
   keyConfigurations?: Parameter[];
-}
-
-interface Vehicle {
-  _id: string;
-  brand: string;
-  name: string;
-  type: string;
-  description?: string;
-  images?: string[];
-  specifications?: Specifications;
 }
 
 const parameterSections = [
@@ -135,11 +127,8 @@ function ComparePageContent() {
                 <div className="relative flex-1 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
-                      firstVehicle.images?.[0]
-                        ? urlFor(firstVehicle.images[0])
-                            .width(800)
-                            .height(600)
-                            .url()
+                      firstVehicle.exteriorImages?.[0]
+                        ? urlFor(firstVehicle.exteriorImages[0]).auto('format').quality(80).url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${firstVehicle.brand} ${firstVehicle.name}`}
@@ -202,11 +191,8 @@ function ComparePageContent() {
                 <div className="relative flex-1 w-full mb-4 rounded overflow-hidden">
                   <Image
                     src={
-                      secondVehicle.images?.[0]
-                        ? urlFor(secondVehicle.images[0])
-                            .width(800)
-                            .height(600)
-                            .url()
+                      secondVehicle.exteriorImages?.[0]
+                        ? urlFor(secondVehicle.exteriorImages[0]).auto('format').quality(80).url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${secondVehicle.brand} ${secondVehicle.name}`}

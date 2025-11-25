@@ -16,7 +16,7 @@ export async function generateMetadata(props: unknown): Promise<Metadata> {
 
   try {
     const vehicle = await client.fetch(
-      `*[_type == "event" && _id == $id][0]{name, brand, description, images[0]}`,
+      `*[_type == "event" && _id == $id][0]{name, brand, description, exteriorImages[0]}`,
       { id }
     );
 
@@ -46,9 +46,9 @@ export async function generateMetadata(props: unknown): Promise<Metadata> {
       title,
       description,
       // Optionally include Open Graph image if available
-      openGraph: vehicle.images?.[0]
+      openGraph: vehicle.exteriorImages?.[0]
         ? {
-            images: [vehicle.images[0]],
+            images: [vehicle.exteriorImages[0]],
             title,
             description,
           }

@@ -4,10 +4,11 @@ import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
 import type { Event } from "@/sanity.types";
 
-type SanityImage = NonNullable<Event["images"]>[number];
+type SanityImage = NonNullable<Event["exteriorImages"]>[number];
 
 interface VehicleGalleryProps {
-  images: SanityImage[];
+  exteriorImages: SanityImage[];
+  interiorImages: SanityImage[];
   brand?: string;
   name?: string;
   setCurrentImageIndex: (index: number) => void;
@@ -34,7 +35,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   name,
   onClick,
 }) => {
-  const imgUrl = urlFor(image).width(1200).height(800).url();
+  const imgUrl = urlFor(image).auto('format').quality(80).url();
 
   return (
     <motion.div className="w-full max-w-120 shrink-0 relative h-full">
@@ -56,7 +57,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 };
 
 const VehicleGallery: React.FC<VehicleGalleryProps> = ({
-  images,
+  exteriorImages,
+  interiorImages,
   brand,
   name,
   setCurrentImageIndex,
@@ -64,16 +66,29 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollWidth, setScrollWidth] = useState(0);
+  const [filter, setFilter] = useState<"all" | "exterior" | "interior">("all");
 
-  // display order: reverse the provided images array for the gallery view
-  const ordered = React.useMemo(() => [...images].reverse(), [images]);
+  // Filter images based on current filter (arrays are already supplied in display order)
+  const filteredImages = React.useMemo(() => {
+    switch (filter) {
+      case "exterior":
+        return exteriorImages || [];
+      case "interior":
+        return interiorImages || [];
+      default:
+        return [...(exteriorImages || []), ...(interiorImages || [])];
+    }
+  }, [exteriorImages, interiorImages, filter]);
+
+  // display order: use the filteredImages as-is (exterior first when combining)
+  const ordered = React.useMemo(() => filteredImages, [filteredImages]);
 
   const doubled = [...ordered, ...ordered];
 
   useEffect(() => {
     const el = containerRef.current;
     if (el) setScrollWidth(el.scrollWidth);
-  }, [images]);
+  }, [filteredImages]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -93,10 +108,69 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   }, [scrollWidth]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full flex mb-12 overflow-x-scroll gap-6 rounded-2xl hide-scrollbar"
-    >
+    <>
+      {/* Filter buttons */}
+      <div className="flex justify-center gap-4 mb-6">
+        <motion.button
+          whileHover={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+          }}
+          whileTap={{
+            backgroundColor: "#cecece",
+            color: "#000000",
+          }}
+          animate={{
+            backgroundColor: filter === "all" ? "#ffffff" : "#001014",
+            color: filter === "all" ? "#000000" : "#ffffff",
+          }}
+          onClick={() => setFilter("all")}
+          className="border-secondary cursor-pointer border rounded-full px-4 py-2"
+        >
+          All
+        </motion.button>
+        <motion.button
+          whileHover={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+          }}
+          whileTap={{
+            backgroundColor: "#cecece",
+            color: "#000000",
+          }}
+          animate={{
+            backgroundColor: filter === "exterior" ? "#ffffff" : "#001014",
+            color: filter === "exterior" ? "#000000" : "#ffffff",
+          }}
+          onClick={() => setFilter("exterior")}
+          className="border-secondary cursor-pointer border rounded-full px-4 py-2"
+        >
+          Exterior
+        </motion.button>
+        <motion.button
+          whileHover={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+          }}
+          whileTap={{
+            backgroundColor: "#cecece",
+            color: "#000000",
+          }}
+          animate={{
+            backgroundColor: filter === "interior" ? "#ffffff" : "#001014",
+            color: filter === "interior" ? "#000000" : "#ffffff",
+          }}
+          onClick={() => setFilter("interior")}
+          className="border-secondary cursor-pointer border rounded-full px-4 py-2"
+        >
+          Interior
+        </motion.button>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="w-full flex mb-12 overflow-x-scroll gap-6 rounded-2xl hide-scrollbar"
+      >
       {doubled.map((image, index) => (
         <VehicleCard
           key={`${index}-${image}`}
@@ -107,17 +181,30 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
           name={name}
           containerRef={containerRef}
           onClick={() => {
-            // map the clicked (possibly doubled & reversed) index back to the original images array
-            const len = images.length || ordered.length;
+            // map the clicked index back to the original combined array
+            const len = filteredImages.length;
             if (len === 0) return;
             const orderedIndex = index % ordered.length;
-            const originalIndex = Math.max(0, len - 1 - orderedIndex);
+            
+            let originalIndex = 0;
+            if (filter === "all") {
+              // all: ordered == filteredImages -> [ext1, ext2, int1, int2]
+              originalIndex = orderedIndex;
+            } else if (filter === "exterior") {
+              // exterior: filteredImages == exteriorImages, so orderedIndex maps directly to exterior index
+              originalIndex = orderedIndex;
+            } else if (filter === "interior") {
+              // interior: filteredImages == interiorImages; in combined images interior starts after exterior
+              originalIndex = (exteriorImages?.length || 0) + orderedIndex;
+            }
+            
             setCurrentImageIndex(originalIndex);
             setIsFullscreen(true);
           }}
         />
       ))}
     </div>
+    </>
   );
 };
 

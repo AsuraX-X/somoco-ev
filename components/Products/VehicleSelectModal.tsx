@@ -3,19 +3,7 @@ import React, { useState, useRef, useCallback } from "react";
 import type { ImageProps, StaticImageData } from "next/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { Search, X, Plus } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-
-interface Vehicle {
-  _id: string;
-  brand: string;
-  name: string;
-  type: string;
-  description?: string;
-  images?: string[];
-  specifications?: {
-    keyParameters?: { name: string; value: string }[];
-  };
-}
+import type { Vehicle } from "@/types/vehicle";
 
 interface VehicleSelectModalProps {
   vehicles: Vehicle[];
@@ -296,11 +284,8 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                           <div className="relative w-full h-32 mb-2">
                             <Image
                               src={
-                                v.images?.[0]
-                                  ? (urlFor(v.images[0])
-                                      .width(300)
-                                      .height(200)
-                                      .url() as unknown as string)
+                                v.exteriorImages?.[0]
+                                  ? (urlFor(v.exteriorImages[0]).auto('format').quality(80).url() as unknown as string)
                                   : "/placeholder-vehicle.jpg"
                               }
                               alt={`${v.brand} ${v.name}`}

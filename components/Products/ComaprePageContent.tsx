@@ -136,7 +136,7 @@ function ComparePageContent() {
                     }
                     alt={`${firstVehicle.brand} ${firstVehicle.name}`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     unoptimized={true}
                   />
                 </div>
@@ -203,7 +203,7 @@ function ComparePageContent() {
                     }
                     alt={`${secondVehicle.brand} ${secondVehicle.name}`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     unoptimized={true}
                   />
                 </div>

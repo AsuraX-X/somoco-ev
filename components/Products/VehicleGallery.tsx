@@ -35,7 +35,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   name,
   onClick,
 }) => {
-  const imgUrl = urlFor(image).auto('format').quality(80).url();
+  const imgUrl = urlFor(image).auto("format").quality(80).url();
 
   return (
     <motion.div className="w-full max-w-120 shrink-0 relative h-full">
@@ -171,39 +171,39 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
         ref={containerRef}
         className="w-full flex mb-12 overflow-x-scroll gap-6 rounded-2xl hide-scrollbar"
       >
-      {doubled.map((image, index) => (
-        <VehicleCard
-          key={`${index}-${image}`}
-          image={image}
-          index={index}
-          total={ordered.length}
-          brand={brand}
-          name={name}
-          containerRef={containerRef}
-          onClick={() => {
-            // map the clicked index back to the original combined array
-            const len = filteredImages.length;
-            if (len === 0) return;
-            const orderedIndex = index % ordered.length;
-            
-            let originalIndex = 0;
-            if (filter === "all") {
-              // all: ordered == filteredImages -> [ext1, ext2, int1, int2]
-              originalIndex = orderedIndex;
-            } else if (filter === "exterior") {
-              // exterior: filteredImages == exteriorImages, so orderedIndex maps directly to exterior index
-              originalIndex = orderedIndex;
-            } else if (filter === "interior") {
-              // interior: filteredImages == interiorImages; in combined images interior starts after exterior
-              originalIndex = (exteriorImages?.length || 0) + orderedIndex;
-            }
-            
-            setCurrentImageIndex(originalIndex);
-            setIsFullscreen(true);
-          }}
-        />
-      ))}
-    </div>
+        {doubled.map((image, index) => (
+          <VehicleCard
+            key={`${index}-${image}`}
+            image={image}
+            index={index}
+            total={ordered.length}
+            brand={brand}
+            name={name}
+            containerRef={containerRef}
+            onClick={() => {
+              // map the clicked index back to the original combined array
+              const len = filteredImages.length;
+              if (len === 0) return;
+              const orderedIndex = index % ordered.length;
+
+              let originalIndex = 0;
+              if (filter === "all") {
+                // all: ordered == filteredImages -> [ext1, ext2, int1, int2]
+                originalIndex = orderedIndex;
+              } else if (filter === "exterior") {
+                // exterior: filteredImages == exteriorImages, so orderedIndex maps directly to exterior index
+                originalIndex = orderedIndex;
+              } else if (filter === "interior") {
+                // interior: filteredImages == interiorImages; in combined images interior starts after exterior
+                originalIndex = (exteriorImages?.length || 0) + orderedIndex;
+              }
+
+              setCurrentImageIndex(originalIndex);
+              setIsFullscreen(true);
+            }}
+          />
+        ))}
+      </div>
     </>
   );
 };

@@ -285,7 +285,10 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                             <Image
                               src={
                                 v.exteriorImages?.[0]
-                                  ? (urlFor(v.exteriorImages[0]).auto('format').quality(80).url() as unknown as string)
+                                  ? (urlFor(v.exteriorImages[0])
+                                      .auto("format")
+                                      .quality(80)
+                                      .url() as unknown as string)
                                   : "/placeholder-vehicle.jpg"
                               }
                               alt={`${v.brand} ${v.name}`}

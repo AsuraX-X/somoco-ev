@@ -128,7 +128,10 @@ function ComparePageContent() {
                   <Image
                     src={
                       firstVehicle.exteriorImages?.[0]
-                        ? urlFor(firstVehicle.exteriorImages[0]).auto('format').quality(80).url()
+                        ? urlFor(firstVehicle.exteriorImages[0])
+                            .auto("format")
+                            .quality(80)
+                            .url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${firstVehicle.brand} ${firstVehicle.name}`}
@@ -192,7 +195,10 @@ function ComparePageContent() {
                   <Image
                     src={
                       secondVehicle.exteriorImages?.[0]
-                        ? urlFor(secondVehicle.exteriorImages[0]).auto('format').quality(80).url()
+                        ? urlFor(secondVehicle.exteriorImages[0])
+                            .auto("format")
+                            .quality(80)
+                            .url()
                         : "/placeholder-vehicle.jpg"
                     }
                     alt={`${secondVehicle.brand} ${secondVehicle.name}`}

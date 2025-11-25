@@ -13,7 +13,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
   const MLink = motion.create(Link);
 
   const imageUrl = vehicle.exteriorImages?.[0]
-    ? urlFor(vehicle.exteriorImages[0]).auto('format').quality(80).url()
+    ? urlFor(vehicle.exteriorImages[0]).auto("format").quality(80).url()
     : "/placeholder-vehicle.jpg";
 
   // Get first three key parameters if available

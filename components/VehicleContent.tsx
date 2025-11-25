@@ -286,7 +286,7 @@ const VehicleDetailsPage = () => {
                       (p): p is { name: string; value: string; _key: string } =>
                         typeof p?.name === "string" &&
                         typeof p?.value === "string" &&
-                        typeof (p as any)?._key === "string"
+                        typeof p._key === "string"
                     ) || []
                   )
                     .slice(0, 3)

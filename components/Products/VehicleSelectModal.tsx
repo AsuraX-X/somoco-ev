@@ -4,6 +4,7 @@ import type { ImageProps, StaticImageData } from "next/image";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { Search, X, Plus } from "lucide-react";
 import type { Vehicle } from "@/types/vehicle";
+import { AnimatePresence, motion } from "motion/react";
 
 interface VehicleSelectModalProps {
   vehicles: Vehicle[];
@@ -58,8 +59,8 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   if (searchQuery) {
     filtered = filtered.filter(
       (v) =>
-        v.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        v.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        v.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        v.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         v.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         v.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -81,11 +82,11 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   // Lazy import for next/image and urlFor
   // Lazy dynamic import without require - provide safe fallbacks until loaded
   // Define a narrow type for the sanity image builder result we use
-  interface SanityImageUrlBuilder {
-    width: (n: number) => SanityImageUrlBuilder;
-    height: (n: number) => SanityImageUrlBuilder;
-    url: () => string;
-  }
+  // Derive the exact builder return type from our urlFor helper to stay
+  // in sync with the Sanity builder without importing internal library types.
+  type SanityImageUrlBuilder = ReturnType<
+    typeof import("@/sanity/lib/image").urlFor
+  >;
 
   // Fallback image component (named to satisfy react/display-name lint rule)
   const FallbackImage: React.FC<Partial<ImageProps>> = (props) => {
@@ -105,11 +106,19 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
   );
   const [urlFor, setUrlFor] = useState<
     (s: SanityImageSource) => SanityImageUrlBuilder
-  >((s) => ({
-    width: () => ({} as SanityImageUrlBuilder),
-    height: () => ({} as SanityImageUrlBuilder),
-    url: () => String(s) || "",
-  }));
+  >(
+    (s) =>
+      // Provide a minimal fallback builder surface; cast via unknown so the
+      // runtime implementation imported later can safely replace this without
+      // TypeScript complaining about the incomplete shape.
+      ({
+        width: () => ({} as SanityImageUrlBuilder),
+        height: () => ({} as SanityImageUrlBuilder),
+        auto: () => ({} as SanityImageUrlBuilder),
+        quality: () => ({} as SanityImageUrlBuilder),
+        url: () => String(s) || "",
+      } as unknown as SanityImageUrlBuilder)
+  );
 
   React.useEffect(() => {
     let mounted = true;
@@ -186,7 +195,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       type="radio"
                       name="type"
                       checked={selectedType === type}
-                      onChange={() => setSelectedType(type)}
+                      onChange={() => type && setSelectedType(type)}
                       className="accent-primary/70 size-4"
                     />
                     <span>{type}</span>
@@ -230,7 +239,7 @@ const VehicleSelectModal: React.FC<VehicleSelectModalProps> = ({
                       type="radio"
                       name="brand"
                       checked={selectedBrand === brand}
-                      onChange={() => setSelectedBrand(brand)}
+                      onChange={() => brand && setSelectedBrand(brand)}
                       className="accent-primary/70 size-4"
                     />
                     <span>{brand}</span>

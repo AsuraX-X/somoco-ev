@@ -3,8 +3,7 @@
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
 import VehicleCard from "@/components/General/VehicleCard";
@@ -15,6 +14,7 @@ import type { Vehicle, VehicleWithImages } from "@/types/vehicle";
 
 const VehicleDetailsPage = () => {
   const params = useParams();
+  const router = useRouter();
   const [vehicle, setVehicle] = useState<VehicleWithImages | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -181,11 +181,13 @@ const VehicleDetailsPage = () => {
       <div className="min-h-screen bg-primary text-white pt-24 pb-16 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-4">Vehicle not found</h2>
-          <Link href="/products">
-            <button className="px-6 py-3 rounded-full bg-secondary text-white font-bold hover:bg-secondary-dark transition-colors">
-              Back to Products
-            </button>
-          </Link>
+          <motion.button
+            onClick={() => router.back()}
+            whileHover={{ color: "#000000", background: "#ffffff" }}
+            className="px-6 py-3 rounded-full border text-white font-bold transition-colors"
+          >
+            Return
+          </motion.button>
         </div>
       </div>
     );
@@ -241,16 +243,15 @@ const VehicleDetailsPage = () => {
             />
             {/* Back button on top-left of hero */}
             <div className="absolute left-4 top-4 z-30">
-              <Link href="/products">
-                <motion.button
-                  whileHover={{ x: -5 }}
-                  whileTap={{ opacity: 0.8 }}
-                  className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
-                >
-                  <ArrowLeft size={18} />
-                  <span className="text-sm">Back</span>
-                </motion.button>
-              </Link>
+              <motion.button
+                onClick={() => router.back()}
+                whileHover={{ x: -5 }}
+                whileTap={{ opacity: 0.8 }}
+                className="flex items-center gap-2 text-white/90 hover:text-secondary bg-black/30 backdrop-blur-md px-3 py-2 rounded-full transition-colors"
+              >
+                <ArrowLeft size={18} />
+                <span className="text-sm">Back</span>
+              </motion.button>
             </div>
           </div>
         )}

@@ -69,7 +69,7 @@ const VehicleCard = ({ vehicle }: VehicleCardProps) => {
             src={imageUrl}
             alt={`${vehicle.brand} ${vehicle.name}`}
             fill
-            className="object-cover"
+            className="object-contain"
             unoptimized={imageUrl.includes("placeholder")}
           />
         </Link>

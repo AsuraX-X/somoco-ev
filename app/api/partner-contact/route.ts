@@ -16,13 +16,15 @@ export async function POST(request: Request) {
     }
 
     const data = await resend.emails.send({
-      from: "Somoco EV <onboarding@resend.dev>",
-      // to: partnerEmail,
-      to: "kiba741@gmail.com",
+      from: "info@somocoev.com",
+      to: partnerEmail,
       replyTo: email,
       subject: `New Finance Inquiry from ${name} via Somoco EV`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="margin-bottom: 20px;">
+            <img src="https://somoco-ev.vercel.app/logo.svg" alt="Somoco EV" height="40" style="height: 40px;" />
+          </div>
           <h2 style="color: #00c950;">New Asset Finance Inquiry</h2>
           <p style="color: #666;">This inquiry was submitted through the Somoco EV website.</p>
           
@@ -54,6 +56,9 @@ export async function POST(request: Request) {
       subject: `[Copy] Finance Inquiry to ${partnerName} from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="margin-bottom: 20px;">
+            <img src="https://somocoev.com/logo.svg" alt="Somoco EV" height="40" style="height: 40px;" />
+          </div>
           <h2 style="color: #00c950;">Finance Inquiry Copy</h2>
           <p style="color: #666;">A customer has submitted an inquiry to <strong>${partnerName}</strong>.</p>
           

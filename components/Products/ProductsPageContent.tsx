@@ -54,34 +54,17 @@ const ProductsPageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Helpers to read initial state from URL or localStorage
-  const getParamOrStorage = (key: string, fallback = "") => {
-    try {
-      const fromUrl = searchParams.get(key);
-      if (fromUrl !== null && fromUrl !== undefined) return fromUrl;
-      const fromStorage =
-        typeof window !== "undefined"
-          ? localStorage.getItem(`products:${key}`)
-          : null;
-      return fromStorage ?? fallback;
-    } catch (e) {
-      console.error(e);
-
-      return fallback;
-    }
-  };
-
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchQuery, setSearchQuery] = useState<string>(() =>
-    getParamOrStorage("q", "")
+  const [searchQuery, setSearchQuery] = useState<string>(
+    () => searchParams.get("q") ?? ""
   );
-  const [selectedType, setSelectedType] = useState<string>(() =>
-    getParamOrStorage("type", "")
+  const [selectedType, setSelectedType] = useState<string>(
+    () => searchParams.get("type") ?? ""
   );
-  const [selectedBrand, setSelectedBrand] = useState<string>(() =>
-    getParamOrStorage("brand", "")
+  const [selectedBrand, setSelectedBrand] = useState<string>(
+    () => searchParams.get("brand") ?? ""
   );
   const [availableTypes, setAvailableTypes] = useState<string[]>([]);
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
@@ -123,29 +106,16 @@ const ProductsPageContent = () => {
     fetchVehicles();
   }, []);
 
-  // Keep a ref for debouncing search updates to the URL/localStorage
+  // Keep a ref for debouncing search updates to the URL
   const searchDebounceRef = useRef<number | null>(null);
 
-  const syncToUrlAndStorage = (params: {
+  const syncToUrl = (params: {
     q?: string;
     type?: string;
     brand?: string;
     page?: number;
   }) => {
     try {
-      // update localStorage
-      if (typeof window !== "undefined") {
-        if (params.q !== undefined)
-          localStorage.setItem("products:q", params.q ?? "");
-        if (params.type !== undefined)
-          localStorage.setItem("products:type", params.type ?? "");
-        if (params.brand !== undefined)
-          localStorage.setItem("products:brand", params.brand ?? "");
-        if (params.page !== undefined)
-          localStorage.setItem("products:page", String(params.page ?? 1));
-      }
-
-      // update URL without reloading the page
       const url = new URL(window.location.href);
       const sp = url.searchParams;
 
@@ -178,13 +148,13 @@ const ProductsPageContent = () => {
     }
   };
 
-  // Sync searchQuery (debounced) to URL/localStorage
+  // Sync searchQuery (debounced) to URL
   useEffect(() => {
     if (searchDebounceRef.current)
       window.clearTimeout(searchDebounceRef.current);
     // debounce 400ms
     searchDebounceRef.current = window.setTimeout(() => {
-      syncToUrlAndStorage({
+      syncToUrl({
         q: searchQuery,
         type: selectedType,
         brand: selectedBrand,
@@ -201,7 +171,7 @@ const ProductsPageContent = () => {
 
   // Sync selectedType and selectedBrand immediately when they change
   useEffect(() => {
-    syncToUrlAndStorage({
+    syncToUrl({
       type: selectedType,
       brand: selectedBrand,
       q: searchQuery,
@@ -212,7 +182,7 @@ const ProductsPageContent = () => {
 
   // Sync page changes
   useEffect(() => {
-    syncToUrlAndStorage({ page: currentPage });
+    syncToUrl({ page: currentPage });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 

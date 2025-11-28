@@ -147,12 +147,6 @@ const Header = () => {
             </div>
           </Link>
           <div className="flex flex-1 gap-4 justify-center items-center">
-            {pathname !== "/" && (
-              <Link className=" flex items-center justify-center" href={"/"}>
-                <button className="cursor-pointer">Home</button>
-              </Link>
-            )}
-
             {/* Products Dropdown */}
 
             <div
@@ -206,12 +200,12 @@ const Header = () => {
             >
               <button className="cursor-pointer">Aftersales Care</button>
             </Link>
-            <button
+            {/* <button
               className="flex justify-center items-center  cursor-pointer"
               onClick={() => openPartners()}
             >
               Finance
-            </button>
+            </button> */}
             <Link
               className="flex justify-center items-center "
               href={"/about-us"}
@@ -352,7 +346,7 @@ const Header = () => {
                 </div>
               </Link>
             </div>
-            <div className="py-2">
+            {/* <div className="py-2">
               <button
                 className="w-full text-left cursor-pointer"
                 onClick={() => {
@@ -362,7 +356,7 @@ const Header = () => {
               >
                 Finance
               </button>
-            </div>
+            </div> */}
             <div className="py-2">
               <Link
                 href={"/about-us"}

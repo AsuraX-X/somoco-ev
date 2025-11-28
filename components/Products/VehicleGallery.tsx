@@ -38,21 +38,21 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const imgUrl = urlFor(image).auto("format").quality(80).url();
 
   return (
-    <motion.div className="w-full max-w-120 shrink-0 relative h-full">
-      <div onClick={onClick} className="h-full w-full rounded-2xl">
+    <div className="w-full max-w-120 shrink-0  relative h-full">
+      <div onClick={onClick} className="h-full w-full">
         <Img
           src={imgUrl}
           alt={`${brand} ${name} - Image ${index + 1}`}
           width={0}
           height={0}
-          className="h-full w-full object-contain"
+          className="h-full object-center w-full object-cover"
           unoptimized
         />
       </div>
       <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-bold">
         {(index % total) + 1} / {total}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -72,18 +72,18 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   const filteredImages = React.useMemo(() => {
     switch (filter) {
       case "exterior":
-        return exteriorImages || [];
+        return (exteriorImages || []).slice(1);
       case "interior":
         return interiorImages || [];
       default:
-        return [...(exteriorImages || []), ...(interiorImages || [])];
+        return [...(exteriorImages || []).slice(1), ...(interiorImages || [])];
     }
   }, [exteriorImages, interiorImages, filter]);
 
   // display order: use the filteredImages as-is (exterior first when combining)
   const ordered = React.useMemo(() => filteredImages, [filteredImages]);
 
-  const doubled = [...ordered, ...ordered];
+  const imagesToDisplay = ordered.length <= 2 ? ordered : [...ordered, ...ordered];
 
   useEffect(() => {
     const el = containerRef.current;
@@ -92,7 +92,7 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || ordered.length <= 2) return;
 
     const handleScroll = () => {
       const totalWidth = el.scrollWidth / 2;
@@ -105,7 +105,7 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 
     el.addEventListener("scroll", handleScroll, { passive: true });
     return () => el.removeEventListener("scroll", handleScroll);
-  }, [scrollWidth]);
+  }, [ordered]);
 
   return (
     <>
@@ -169,9 +169,9 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
 
       <div
         ref={containerRef}
-        className="w-full flex mb-12 overflow-x-scroll gap-6 rounded-2xl hide-scrollbar"
+        className="w-full h-65 flex mb-12 overflow-x-scroll items-center overflow-hidden gap-6 rounded-2xl hide-scrollbar"
       >
-        {doubled.map((image, index) => (
+        {imagesToDisplay.map((image, index) => (
           <VehicleCard
             key={`${index}-${image}`}
             image={image}

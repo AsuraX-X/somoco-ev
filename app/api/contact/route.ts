@@ -8,12 +8,15 @@ export async function POST(request: Request) {
     const { name, email, phone, city, region, message } = await request.json();
 
     const data = await resend.emails.send({
-      from: "Somoco EV Contact <onboarding@resend.dev>",
-      to: "kiba741@gmail.com",
+      from: "info@somocoev.com",
+      to: "marketing1@somotex.com",
       replyTo: email,
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="margin-bottom: 20px;">
+            <img src="https://somoco-ev.vercel.app/logo.svg" alt="Somoco EV" height="40" style="height: 40px;" />
+          </div>
           <h2 style="color: #00c950;">New Contact Form Submission</h2>
           
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState, useRef } from "react";
-import { useContactModal } from "./ContactModalProvider";
+import { useModal } from "./ContactModalProvider";
 
 const Header = () => {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const { open: openContact } = useContactModal();
+  const { openContact, openPartners } = useModal();
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
 
@@ -146,12 +146,9 @@ const Header = () => {
               <h1 className="text-nowrap">SOMOCO EV</h1>
             </div>
           </Link>
-          <div className="flex flex-1 justify-center items-center">
+          <div className="flex flex-1 gap-4 justify-center items-center">
             {pathname !== "/" && (
-              <Link
-                className="w-30 flex items-center justify-center"
-                href={"/"}
-              >
+              <Link className=" flex items-center justify-center" href={"/"}>
                 <button className="cursor-pointer">Home</button>
               </Link>
             )}
@@ -159,7 +156,7 @@ const Header = () => {
             {/* Products Dropdown */}
 
             <div
-              className="relative w-30 flex justify-center items-center"
+              className="relative  flex justify-center items-center"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -204,13 +201,19 @@ const Header = () => {
             </div>
 
             <Link
-              className="flex justify-center items-center w-30"
+              className="flex justify-center items-center "
               href={"/aftersales"}
             >
               <button className="cursor-pointer">Aftersales Care</button>
             </Link>
+            <button
+              className="flex justify-center items-center  cursor-pointer"
+              onClick={() => openPartners()}
+            >
+              Finance
+            </button>
             <Link
-              className="flex justify-center items-center w-30"
+              className="flex justify-center items-center "
               href={"/about-us"}
             >
               <button className="cursor-pointer">About Us</button>
@@ -348,6 +351,17 @@ const Header = () => {
                   Aftersales Care
                 </div>
               </Link>
+            </div>
+            <div className="py-2">
+              <button
+                className="w-full text-left cursor-pointer"
+                onClick={() => {
+                  openPartners();
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Finance
+              </button>
             </div>
             <div className="py-2">
               <Link

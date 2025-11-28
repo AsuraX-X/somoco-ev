@@ -11,7 +11,7 @@ const Ready = () => {
   const chars = text.split("");
 
   return (
-    <div className="h-screen bg-primary/40 w-full relative flex flex-col items-center justify-center gap-6 md:gap-8">
+    <div className="h-screen bg-primary/40 w-full relative flex flex-col items-center justify-center gap-6 text-center md:gap-8">
       <Image
         src="/inner.png"
         alt="Ready to Drive Electric"
@@ -19,7 +19,7 @@ const Ready = () => {
         fill
         className="object-cover -z-1"
       />
-      <h1 className="text-6xl font-family-cera-stencil capitalize">
+      <h1 className="sm:text-6xl text-5xl font-family-cera-stencil capitalize">
         {chars.map((char, index) => (
           <motion.span
             animate={{ opacity: [1, 0, 1] }}

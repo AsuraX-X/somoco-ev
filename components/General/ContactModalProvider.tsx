@@ -2,38 +2,76 @@
 import React, { createContext, useContext, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import ContactForm from "./ContactForm";
+import PartnerContactForm from "../Partner/PartnerContactForm";
+import PartnersList from "../Partner/PartnersList";
 import { X } from "lucide-react";
+import { Partner } from "@/lib/partners";
 
-type ContactContextType = {
-  isOpen: boolean;
-  open: () => void;
+type ModalType = "contact" | "partners" | "partner-contact" | null;
+
+type ModalContextType = {
+  activeModal: ModalType;
+  selectedPartner: Partner | null;
+  openContact: () => void;
+  openPartners: () => void;
+  openPartnerContact: (partner: Partner) => void;
   close: () => void;
 };
 
-const ContactContext = createContext<ContactContextType | undefined>(
-  undefined
-);
+const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export const useContactModal = () => {
-  const ctx = useContext(ContactContext);
-  if (!ctx) throw new Error("useContactModal must be used within ContactProvider");
+export const useModal = () => {
+  const ctx = useContext(ModalContext);
+  if (!ctx) throw new Error("useModal must be used within ModalProvider");
   return ctx;
 };
 
-export const ContactModalProvider: React.FC<{ children: React.ReactNode }> = ({
+export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
+  const [selectedPartner, setSelectedPartner] = useState<Partner | null>(null);
 
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+  const openContact = () => {
+    setActiveModal("contact");
+    setSelectedPartner(null);
+  };
+
+  const openPartners = () => {
+    setActiveModal("partners");
+    setSelectedPartner(null);
+  };
+
+  const openPartnerContact = (partner: Partner) => {
+    setSelectedPartner(partner);
+    setActiveModal("partner-contact");
+  };
+
+  const close = () => {
+    setActiveModal(null);
+    setSelectedPartner(null);
+  };
+
+  const handleBackToPartners = () => {
+    setActiveModal("partners");
+    setSelectedPartner(null);
+  };
 
   return (
-    <ContactContext.Provider value={{ isOpen, open, close }}>
+    <ModalContext.Provider
+      value={{
+        activeModal,
+        selectedPartner,
+        openContact,
+        openPartners,
+        openPartnerContact,
+        close,
+      }}
+    >
       {children}
 
       <AnimatePresence>
-        {isOpen && (
+        {activeModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -48,19 +86,47 @@ export const ContactModalProvider: React.FC<{ children: React.ReactNode }> = ({
               <button
                 onClick={close}
                 className="absolute right-4 top-4 bg-white/10 hover:bg-white/20 text-white p-2 rounded-full"
-                aria-label="Close contact form"
+                aria-label="Close modal"
               >
                 <X />
               </button>
 
-              <h2 className="text-3xl font-bold mb-4 font-family-cera-stencil">Contact Us</h2>
-              <ContactForm />
+              {activeModal === "contact" && (
+                <>
+                  <h2 className="text-3xl font-bold mb-4 font-family-cera-stencil">
+                    Contact Us
+                  </h2>
+                  <ContactForm />
+                </>
+              )}
+
+              {activeModal === "partners" && (
+                <PartnersList onSelectPartner={openPartnerContact} />
+              )}
+
+              {activeModal === "partner-contact" && selectedPartner && (
+                <PartnerContactForm
+                  partner={selectedPartner}
+                  onBack={handleBackToPartners}
+                />
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </ContactContext.Provider>
+    </ModalContext.Provider>
   );
 };
 
-export default ContactModalProvider;
+// Keep backward compatibility
+export const useContactModal = () => {
+  const { openContact, activeModal, close } = useModal();
+  return {
+    isOpen: activeModal === "contact",
+    open: openContact,
+    close,
+  };
+};
+
+export const ContactModalProvider = ModalProvider;
+export default ModalProvider;

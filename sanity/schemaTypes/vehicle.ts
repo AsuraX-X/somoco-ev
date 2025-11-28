@@ -128,4 +128,18 @@ export const vehicle = defineType({
       ],
     }),
   ],
+  preview: {
+    select: {
+      title: "name",
+      brand: "brand",
+      media: "exteriorImages.0",
+      disabled: "disabled",
+    },
+    prepare({ title, brand, media, disabled }) {
+      return {
+        title: disabled ? `${brand} ${title} (Disabled)` : `${brand} ${title}`,
+        media,
+      };
+    },
+  },
 });

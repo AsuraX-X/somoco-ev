@@ -83,7 +83,8 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   // display order: use the filteredImages as-is (exterior first when combining)
   const ordered = React.useMemo(() => filteredImages, [filteredImages]);
 
-  const imagesToDisplay = ordered.length <= 2 ? ordered : [...ordered, ...ordered];
+  const imagesToDisplay =
+    ordered.length <= 2 ? ordered : [...ordered, ...ordered];
 
   useEffect(() => {
     const el = containerRef.current;

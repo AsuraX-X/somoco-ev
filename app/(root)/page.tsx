@@ -1,4 +1,4 @@
-import FinanceSection from "@/components/Home/FinanceSection";
+// import FinanceSection from "@/components/Home/FinanceSection";
 import Hero from "@/components/Home/Hero";
 import Ready from "@/components/Home/Ready";
 import Why from "@/components/Home/Why";

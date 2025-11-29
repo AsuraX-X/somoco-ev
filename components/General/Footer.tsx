@@ -30,7 +30,7 @@ const Footer = () => {
             <p className="text-sm text-white/70 max-w-sm">
               Distribution, Sales and Aftersales Care.
             </p>
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex flex-col gap-4 mt-2">
               <a
                 href="tel:+233540105131"
                 className="flex items-center gap-2 text-white/80 hover:text-white"

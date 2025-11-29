@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/lib/image";
@@ -50,7 +50,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         />
       </div>
       <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm font-bold">
-        {(index % total) + 1} / {total}
+        {index + 1} / {total}
       </div>
     </div>
   );
@@ -65,7 +65,6 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   setIsFullscreen,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollWidth, setScrollWidth] = useState(0);
   const [filter, setFilter] = useState<"all" | "exterior" | "interior">("all");
 
   // Filter images based on current filter (arrays are already supplied in display order)
@@ -83,30 +82,7 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   // display order: use the filteredImages as-is (exterior first when combining)
   const ordered = React.useMemo(() => filteredImages, [filteredImages]);
 
-  const imagesToDisplay =
-    ordered.length <= 2 ? ordered : [...ordered, ...ordered];
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (el) setScrollWidth(el.scrollWidth);
-  }, [filteredImages]);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || ordered.length <= 2) return;
-
-    const handleScroll = () => {
-      const totalWidth = el.scrollWidth / 2;
-      if (el.scrollLeft >= totalWidth) {
-        el.scrollLeft -= totalWidth;
-      } else if (el.scrollLeft <= 0) {
-        el.scrollLeft += totalWidth;
-      }
-    };
-
-    el.addEventListener("scroll", handleScroll, { passive: true });
-    return () => el.removeEventListener("scroll", handleScroll);
-  }, [ordered]);
+  const imagesToDisplay = ordered;
 
   return (
     <>
@@ -185,7 +161,7 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
               // map the clicked index back to the original combined array
               const len = filteredImages.length;
               if (len === 0) return;
-              const orderedIndex = index % ordered.length;
+              const orderedIndex = index;
 
               let originalIndex = 0;
               if (filter === "all") {

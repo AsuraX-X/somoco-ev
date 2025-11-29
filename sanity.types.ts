@@ -13,15 +13,27 @@
  */
 
 // Source: schema.json
-export type AdminCredentials = {
+export type Partner = {
   _id: string;
-  _type: "adminCredentials";
+  _type: "partner";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  passwordHash?: string;
-  passwordHashB64?: string;
-  updatedAt?: string;
+  name?: string;
+  logo?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  email?: string;
+  disabled?: boolean;
 };
 
 export type Event = {
@@ -73,6 +85,7 @@ export type Event = {
   };
   description?: string;
   disabled?: boolean;
+  ranking?: number;
   specifications?: {
     keyParameters?: Array<{
       name?: string;
@@ -225,5 +238,5 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = AdminCredentials | Event | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Partner | Event | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;

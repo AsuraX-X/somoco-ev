@@ -78,12 +78,12 @@ const ProductsPageContent = () => {
         const response = await fetch("/api/vehicles");
         const result = await response.json();
         let vehicleData = result.data || [];
-        // Sort vehicles alphabetically by name (case-insensitive)
-        vehicleData = vehicleData.sort((a: Vehicle, b: Vehicle) =>
-          String(a.brand).localeCompare(String(b.brand), undefined, {
-            sensitivity: "base",
-          })
-        );
+        // Sort vehicles by ranking (lower numbers first)
+        vehicleData = vehicleData.sort((a: Vehicle, b: Vehicle) => {
+          const aRanking = a.ranking ?? Infinity; // Vehicles without ranking go to the end
+          const bRanking = b.ranking ?? Infinity;
+          return aRanking - bRanking;
+        });
         setVehicles(vehicleData);
 
         // Extract unique types

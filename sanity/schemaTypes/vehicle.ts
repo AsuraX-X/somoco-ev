@@ -82,7 +82,12 @@ export const vehicle = defineType({
       description:
         "If enabled, this vehicle will not appear in public listings",
     }),
-
+    defineField({
+      name: "ranking",
+      title: "Ranking",
+      type: "number",
+      description: "Ranking for ordering vehicles (lower numbers appear first)",
+    }),
     // Specifications Section
     defineField({
       name: "specifications",

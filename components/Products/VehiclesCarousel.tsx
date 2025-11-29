@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import VehicleCard from "@/components/General/VehicleCard";
 import type { Vehicle } from "@/types/vehicle";
 import { motion } from "motion/react";
@@ -10,6 +10,7 @@ const VehiclesCarousel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("");
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   // Fetch vehicles
   const fetchVehicles = useCallback(() => {
@@ -57,9 +58,17 @@ const VehiclesCarousel = () => {
     ? vehicles.filter((v) => v.type === filter)
     : vehicles;
 
+  // Sort vehicles by ranking (lower numbers first)
+  const sortedVehicles = [...filteredVehicles].sort((a, b) => {
+    const aRanking = a.ranking ?? Infinity; // Vehicles without ranking go to the end
+    const bRanking = b.ranking ?? Infinity;
+    return aRanking - bRanking;
+  });
+
   if (loading) {
     return (
       <div className="flex gap-8 overflow-auto">
+        <div className="h-[530px] w-[390px] shrink-0 bg-white/20 rounded-lg animate-pulse " />
         <div className="h-[530px] w-[390px] shrink-0 bg-white/20 rounded-lg animate-pulse " />
         <div className="h-[530px] w-[390px] shrink-0 bg-white/20 rounded-lg animate-pulse " />
         <div className="h-[530px] w-[390px] shrink-0 bg-white/20 rounded-lg animate-pulse " />
@@ -135,12 +144,13 @@ const VehiclesCarousel = () => {
       <div className="relative w-full">
         {/* Carousel Container */}
         <div
+          ref={carouselRef}
           tabIndex={0}
           className="flex gap-4 py-8 overflow-auto hide-scrollbar focus:outline-none"
           role="region"
           aria-label="Vehicles carousel"
         >
-          {filteredVehicles.map((vehicle) => (
+          {sortedVehicles.map((vehicle) => (
             <div
               key={vehicle._id}
               className="shrink-0 w-full sm:w-[70vw] md:w-[50vw] lg:w-[35vw] xl:w-[28vw]"
@@ -149,6 +159,41 @@ const VehiclesCarousel = () => {
             </div>
           ))}
         </div>
+
+        {/* Mobile Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{
+            opacity: [0, 1, 1, 1, 1, 1, 1, 1, 0],
+          }}
+          transition={{ duration: 3 }}
+          className="sm:hidden absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center gap-1 pointer-events-none"
+        >
+          <motion.div
+            animate={{ x: [0, 8, 0] }}
+            transition={{
+              duration: 1.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="bg-secondary/80 backdrop-blur-sm rounded-full p-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-primary"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

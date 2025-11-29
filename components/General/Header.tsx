@@ -16,7 +16,7 @@ const Header = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [changeBg, setChangeBg] = useState(false);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
-  const { openContact, openPartners } = useModal();
+  const { openContact } = useModal();
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const mobileToggleRef = useRef<HTMLButtonElement | null>(null);
 

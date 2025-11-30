@@ -393,68 +393,77 @@ const ProductsPageContent = () => {
           {!isLoading && filteredVehicles.length > 0 && (
             <div className="min-h-screen">
               {/* Pagination controls - top */}
-              <div className="flex items-center justify-between  ">
-                {/* Active Filters Display */}
-                {(searchQuery || selectedType || selectedBrand) && (
-                  <div className="flex w-full flex-wrap gap-2">
-                    {searchQuery && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
-                        Search: "{searchQuery}"
-                        <button
-                          onClick={() => setSearchQuery("")}
-                          className="hover:text-white"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
-                    {selectedType && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
-                        Type: {selectedType}
-                        <button
-                          onClick={() => setSelectedType("")}
-                          className="hover:text-white"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
-                    {selectedBrand && (
-                      <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
-                        Brand: {selectedBrand}
-                        <button
-                          onClick={() => setSelectedBrand("")}
-                          className="hover:text-white"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-                <PaginationControls
-                  totalItems={filteredVehicles.length}
-                  itemsPerPage={10}
-                  currentPage={currentPage}
-                  onPageChange={(p) => setCurrentPage(p)}
-                />
-              </div>
+              {filteredVehicles.length > 10 && (
+                <div className="flex items-center justify-between  ">
+                  {/* Active Filters Display */}
+                  {(searchQuery || selectedType || selectedBrand) && (
+                    <div className="flex w-full flex-wrap gap-2">
+                      {searchQuery && (
+                        <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
+                          Search: "{searchQuery}"
+                          <button
+                            onClick={() => setSearchQuery("")}
+                            className="hover:text-white"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                      {selectedType && (
+                        <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
+                          Type: {selectedType}
+                          <button
+                            onClick={() => setSelectedType("")}
+                            className="hover:text-white"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                      {selectedBrand && (
+                        <div className="px-3 py-2 rounded-full bg-secondary/20 text-secondary text-md flex items-center gap-2">
+                          Brand: {selectedBrand}
+                          <button
+                            onClick={() => setSelectedBrand("")}
+                            className="hover:text-white"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <PaginationControls
+                    totalItems={filteredVehicles.length}
+                    itemsPerPage={10}
+                    currentPage={currentPage}
+                    onPageChange={(p) => setCurrentPage(p)}
+                  />
+                </div>
+              )}
 
               <div className="grid grid-cols-1  lg:grid-cols-2 gap-6">
                 {filteredVehicles
-                  .slice((currentPage - 1) * 10, currentPage * 10)
+                  .slice(
+                    filteredVehicles.length > 10 ? (currentPage - 1) * 10 : 0,
+                    filteredVehicles.length > 10
+                      ? currentPage * 10
+                      : filteredVehicles.length
+                  )
                   .map((vehicle) => (
                     <VehicleCard key={vehicle._id} vehicle={vehicle} />
                   ))}
               </div>
 
               {/* Pagination controls - bottom */}
-              <PaginationControls
-                totalItems={filteredVehicles.length}
-                itemsPerPage={10}
-                currentPage={currentPage}
-                onPageChange={(p) => setCurrentPage(p)}
-              />
+              {filteredVehicles.length > 10 && (
+                <PaginationControls
+                  totalItems={filteredVehicles.length}
+                  itemsPerPage={10}
+                  currentPage={currentPage}
+                  onPageChange={(p) => setCurrentPage(p)}
+                />
+              )}
             </div>
           )}
         </main>

@@ -84,12 +84,12 @@ const VehicleDetailsPage = () => {
             ? [...result.data.interiorImages]
             : [];
 
-          // Combined images: exterior first, then interior (upload order preserved)
+          // Combined images: exterior (excluding first which is used as hero), then interior
           const vehicleData = {
             ...result.data,
             exteriorImages: exterior,
             interiorImages: interior,
-            images: [...exterior, ...interior],
+            images: [...exterior.slice(1), ...interior],
           };
           setVehicle(vehicleData);
         } else {

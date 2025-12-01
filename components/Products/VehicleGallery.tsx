@@ -158,21 +158,21 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
             name={name}
             containerRef={containerRef}
             onClick={() => {
-              // map the clicked index back to the original combined array
+              // map the clicked index back to the combined array (which also excludes first exterior)
+              // Both gallery and fullscreen now exclude the first exterior image
               const len = filteredImages.length;
               if (len === 0) return;
-              const orderedIndex = index;
 
               let originalIndex = 0;
               if (filter === "all") {
-                // all: ordered == filteredImages -> [ext1, ext2, int1, int2]
-                originalIndex = orderedIndex;
+                // all: filteredImages == [ext.slice(1), int], matches fullscreen images
+                originalIndex = index;
               } else if (filter === "exterior") {
-                // exterior: filteredImages == exteriorImages, so orderedIndex maps directly to exterior index
-                originalIndex = orderedIndex;
+                // exterior: filteredImages == exteriorImages.slice(1), maps directly
+                originalIndex = index;
               } else if (filter === "interior") {
-                // interior: filteredImages == interiorImages; in combined images interior starts after exterior
-                originalIndex = (exteriorImages?.length || 0) + orderedIndex;
+                // interior: filteredImages == interiorImages; in combined images interior starts after exterior.slice(1)
+                originalIndex = Math.max(0, (exteriorImages?.length || 1) - 1) + index;
               }
 
               setCurrentImageIndex(originalIndex);

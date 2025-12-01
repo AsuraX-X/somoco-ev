@@ -108,9 +108,9 @@ export default function RootLayout({
       <body className={`${ceraPro.className} antialiased`}>
         <LenisScrollProvider>
           <ContactModalProvider>
-            {/* <Header /> */}
+            <Header />
             {children}
-            {/* <Footer /> */}
+            <Footer />
           </ContactModalProvider>
         </LenisScrollProvider>
       </body>

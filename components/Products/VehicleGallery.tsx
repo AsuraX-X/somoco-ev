@@ -172,7 +172,8 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
                 originalIndex = index;
               } else if (filter === "interior") {
                 // interior: filteredImages == interiorImages; in combined images interior starts after exterior.slice(1)
-                originalIndex = Math.max(0, (exteriorImages?.length || 1) - 1) + index;
+                originalIndex =
+                  Math.max(0, (exteriorImages?.length || 1) - 1) + index;
               }
 
               setCurrentImageIndex(originalIndex);

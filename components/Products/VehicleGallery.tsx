@@ -11,8 +11,6 @@ interface VehicleGalleryProps {
   interiorImages: SanityImage[];
   brand?: string;
   name?: string;
-  setCurrentImageIndex: (index: number) => void;
-  setIsFullscreen: (isFullscreen: boolean) => void;
 }
 
 interface VehicleCardProps {
@@ -22,7 +20,6 @@ interface VehicleCardProps {
   brand?: string;
   name?: string;
   containerRef: React.RefObject<HTMLDivElement | null>;
-  onClick: () => void;
 }
 
 const Img = motion.create(Image);
@@ -33,13 +30,12 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   total,
   brand,
   name,
-  onClick,
 }) => {
   const imgUrl = urlFor(image).auto("format").quality(80).url();
 
   return (
     <div className="w-full max-w-120 shrink-0  relative h-full">
-      <div onClick={onClick} className="h-full w-full">
+      <div className="h-full w-full">
         <Img
           src={imgUrl}
           alt={`${brand} ${name} - Image ${index + 1}`}
@@ -61,8 +57,6 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
   interiorImages,
   brand,
   name,
-  setCurrentImageIndex,
-  setIsFullscreen,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<"all" | "exterior" | "interior">("all");
@@ -157,28 +151,6 @@ const VehicleGallery: React.FC<VehicleGalleryProps> = ({
             brand={brand}
             name={name}
             containerRef={containerRef}
-            onClick={() => {
-              // map the clicked index back to the combined array (which also excludes first exterior)
-              // Both gallery and fullscreen now exclude the first exterior image
-              const len = filteredImages.length;
-              if (len === 0) return;
-
-              let originalIndex = 0;
-              if (filter === "all") {
-                // all: filteredImages == [ext.slice(1), int], matches fullscreen images
-                originalIndex = index;
-              } else if (filter === "exterior") {
-                // exterior: filteredImages == exteriorImages.slice(1), maps directly
-                originalIndex = index;
-              } else if (filter === "interior") {
-                // interior: filteredImages == interiorImages; in combined images interior starts after exterior.slice(1)
-                originalIndex =
-                  Math.max(0, (exteriorImages?.length || 1) - 1) + index;
-              }
-
-              setCurrentImageIndex(originalIndex);
-              setIsFullscreen(true);
-            }}
           />
         ))}
       </div>

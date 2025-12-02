@@ -17,8 +17,6 @@ const VehicleDetailsPage = () => {
   const router = useRouter();
   const [vehicle, setVehicle] = useState<VehicleWithImages | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   // No overlay: download specs PDF instead
   const [recommendations, setRecommendations] = useState<Vehicle[]>([]);
   const { open: openContact } = useContactModal();
@@ -140,22 +138,6 @@ const VehicleDetailsPage = () => {
 
     fetchRecommendations();
   }, [vehicle]);
-
-  const nextImage = () => {
-    if (vehicle?.images && vehicle.images.length > 0) {
-      setCurrentImageIndex((prev) =>
-        prev === vehicle.images!.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const prevImage = () => {
-    if (vehicle?.images && vehicle.images.length > 0) {
-      setCurrentImageIndex((prev) =>
-        prev === 0 ? vehicle.images!.length - 1 : prev - 1
-      );
-    }
-  };
 
   if (isLoading) {
     return (
@@ -350,87 +332,11 @@ const VehicleDetailsPage = () => {
             interiorImages={vehicle.interiorImages || []}
             brand={vehicle.brand || "Vehicle"}
             name={vehicle.name || ""}
-            setCurrentImageIndex={setCurrentImageIndex}
-            setIsFullscreen={setIsFullscreen}
           />
         </div>
         {/* Technical Specs are now downloadable; the overlay has been removed. */}
         {/* Fullscreen Image Modal */}
-        {isFullscreen && vehicle.images && vehicle.images.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-200 bg-black/95 backdrop-blur-lg flex items-center justify-center"
-            onClick={() => setIsFullscreen(false)}
-          >
-            <button
-              onClick={() => setIsFullscreen(false)}
-              className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-colors z-10"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
 
-            <div className="relative w-full h-full flex items-center justify-center p-8">
-              <motion.div
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1 }}
-                className="relative w-full h-full max-w-7xl"
-              >
-                <Image
-                  src={urlFor(vehicle.images[currentImageIndex])
-                    .auto("format")
-                    .quality(90)
-                    .url()}
-                  alt={`${vehicle.brand} ${vehicle.name}`}
-                  fill
-                  className="object-contain"
-                />
-              </motion.div>
-
-              {/* Navigation in fullscreen */}
-              {vehicle.images.length > 1 && (
-                <>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      prevImage();
-                    }}
-                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-colors"
-                  >
-                    <ChevronLeft size={32} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      nextImage();
-                    }}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-colors"
-                  >
-                    <ChevronRight size={32} />
-                  </button>
-
-                  {/* Image counter */}
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full text-white font-bold">
-                    {currentImageIndex + 1} / {vehicle.images.length}
-                  </div>
-                </>
-              )}
-            </div>
-          </motion.div>
-        )}
         <div className="mx-4 md:mx-20 ">
           {/* Contact CTA */}
           <div className="mt-12 bg-white/5 rounded-2xl p-8">

@@ -31,19 +31,20 @@ const Footer = () => {
               Distribution, Sales and Aftersales Care.
             </p>
             <div className="flex flex-col gap-4 mt-2">
-              <div className="flex">
-                <Phone size={18} />{" "}
+              <div className="flex gap-2 items-center1">
+                <Phone size={18} />
                 <a
                   href="tel:+233540105131"
                   className="flex items-center gap-2 text-white/80 hover:text-white"
                 >
                   <span className="text-sm">+233 540 105 131</span>
                 </a>
+                <span>|</span>
                 <a
                   href="tel:+233531033489"
                   className="flex items-center gap-2 text-white/80 hover:text-white"
                 >
-                  <span className="text-sm"> | +233 531 033 489</span>
+                  <span className="text-sm">+233 531 033 489</span>
                 </a>
               </div>
               <a

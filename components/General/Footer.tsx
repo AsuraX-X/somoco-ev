@@ -11,11 +11,7 @@ const Footer = () => {
   const pathname = usePathname();
   const [t, setT] = useState(false);
   // Hide footer on studio and admin routes
-  if (
-    !pathname ||
-    pathname.startsWith("/studio") ||
-    pathname.includes("/admin")
-  ) {
+  if (!pathname || pathname.startsWith("/studio")) {
     return null;
   }
 

@@ -115,11 +115,7 @@ const Header = () => {
   }, []);
 
   // Hide header on admin and studio routes
-  if (
-    !pathname ||
-    pathname.includes("/admin") ||
-    pathname.startsWith("/studio")
-  ) {
+  if (!pathname || pathname.startsWith("/studio")) {
     return null;
   }
 

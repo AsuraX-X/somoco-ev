@@ -38,7 +38,7 @@ const AboutUsContent = () => {
           Somoco Ghana Limited{" "}
         </p>
         <p className="  text-sm sm:text-base">
-          Somoco Ghana Limited, as subsidiary of the Mohinani Group brings over
+          Somoco Ghana Limited, a subsidiary of the Mohinani Group brings over
           ten years of expertise as a leader in Ghana's mobility sector. We have
           built our reputation as a credible partner by delivering an end-to-end
           mobility ecosystem, encompassing local assembly, distribution, and
@@ -51,7 +51,7 @@ const AboutUsContent = () => {
           anyone who comes into contact with our solutions either directly or
           indirectly.
         </p>
-        <p className="  text-sm sm:text-base">
+        <p className=" text-sm sm:text-base">
           Our focus is on practical, eco-friendly transportation solutions
           engineered for Ghana's specific urban and territorial challenges.
         </p>
@@ -119,7 +119,7 @@ const AboutUsContent = () => {
             expertise can make the difference. Whether you're innovating
             technology, building partnerships, or reducing emissions, you'll
             create lasting change. This is your chance to build a meaningful
-            career while powering sustainable progress acrossGhana.
+            career while powering sustainable progress across Ghana.
           </p>
           <motion.button
             whileHover={{

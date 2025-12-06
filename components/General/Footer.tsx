@@ -27,7 +27,7 @@ const Footer = () => {
               Distribution, Sales and Aftersales Care.
             </p>
             <div className="flex flex-col gap-4 mt-2">
-              <div className="flex gap-2 items-center1">
+              <div className="flex gap-2 items-center">
                 <Phone size={18} />
                 <a
                   href="tel:+233540105131"
@@ -44,11 +44,11 @@ const Footer = () => {
                 </a>
               </div>
               <a
-                href="mailto:marketing1@somotex.com"
+                href="mailto:info@somocoev.com"
                 className="flex items-center gap-2 text-white/80 hover:text-white"
               >
                 <Mail size={18} />{" "}
-                <span className="text-sm">marketing1@somotex.com</span>
+                <span className="text-sm">info@somocoev.com</span>
               </a>
             </div>
           </div>

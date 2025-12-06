@@ -81,12 +81,12 @@ const AfterSalesContent = () => {
             Battery and Charging
           </h1>
           <p>
-            We believe your electric vehicle isa long-term investment in a
+            We believe your electric vehicle is a long-term investment in a
             sustainable future. Your battery's health is greatly influenced by
-            how you charge it. Think of it like a smartphone –small, regular
-            top-ups are better than constantly draining it to zero. You EV comes
+            how you charge it. Think of it like a smartphone – small, regular
+            top-ups are better than constantly draining it to zero. Your EV comes
             with advanced Battery Management System (BMS) technology that
-            actively works to protect and optimize your battery. By partnering
+            actively works to protect and optimize your battery. By pairing
             these smart systems with simple charging habits, you maximize your
             range, protect your investment, and ensure a reliable drive for
             years to come.
@@ -117,7 +117,7 @@ const AfterSalesContent = () => {
           </h1>
           <p>
             Routine maintenance ensures your EV operates at its best. Our
-            certified technicians use authentic partsand adhere to manufacturer
+            certified technicians use authentic parts and adhere to manufacturer
             guide lines to service your sedan or SUV, guaranteeing reliability
             and durability. We offer Battery health diagnostics and monitoring,
             Optimization of charging systems, Battery replacement and upgrade

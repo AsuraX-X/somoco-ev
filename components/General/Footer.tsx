@@ -2,12 +2,13 @@
 import { Facebook, Instagram, Linkedin, Mail, Phone } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
-import { useContactModal } from "./ContactModalProvider";
+import { useModal } from "./ContactModalProvider";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const Footer = () => {
-  const { open } = useContactModal();
+  const { openContact } = useModal();
+
   const pathname = usePathname();
   const [t, setT] = useState(false);
   // Hide footer on studio and admin routes
@@ -63,7 +64,7 @@ const Footer = () => {
                 About Us
               </Link>
               <button
-                onClick={() => open()}
+                onClick={() => openContact()}
                 className="hover:text-white text-left"
               >
                 Contact

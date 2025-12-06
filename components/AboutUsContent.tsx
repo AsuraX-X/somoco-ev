@@ -1,8 +1,11 @@
 "use client";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { useModal } from "./General/ContactModalProvider";
 
 const AboutUsContent = () => {
+  const { openContact } = useModal();
+
   return (
     <div className=" w-full mx-auto overflow-x-hidden">
       {/* Hero Section */}
@@ -97,6 +100,7 @@ const AboutUsContent = () => {
               scale: 1.02,
             }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => openContact()}
             className="w-fit border px-6 rounded-full py-4"
           >
             Discover
@@ -128,6 +132,7 @@ const AboutUsContent = () => {
               scale: 1.02,
             }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => openContact()}
             className="w-fit border px-6 rounded-full py-4"
           >
             Discover

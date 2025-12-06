@@ -118,15 +118,5 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Keep backward compatibility
-export const useContactModal = () => {
-  const { openContact, activeModal, close } = useModal();
-  return {
-    isOpen: activeModal === "contact",
-    open: openContact,
-    close,
-  };
-};
-
 export const ContactModalProvider = ModalProvider;
 export default ModalProvider;

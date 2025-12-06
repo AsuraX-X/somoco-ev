@@ -1,8 +1,11 @@
 "use client";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { useModal } from "./General/ContactModalProvider";
 
 const AfterSalesContent = () => {
+  const { openContact } = useModal();
+
   return (
     <div className="overflow-x-hidden w-full mx-auto">
       {/* Hero Section */}
@@ -84,8 +87,8 @@ const AfterSalesContent = () => {
             We believe your electric vehicle is a long-term investment in a
             sustainable future. Your battery's health is greatly influenced by
             how you charge it. Think of it like a smartphone – small, regular
-            top-ups are better than constantly draining it to zero. Your EV comes
-            with advanced Battery Management System (BMS) technology that
+            top-ups are better than constantly draining it to zero. Your EV
+            comes with advanced Battery Management System (BMS) technology that
             actively works to protect and optimize your battery. By pairing
             these smart systems with simple charging habits, you maximize your
             range, protect your investment, and ensure a reliable drive for
@@ -98,6 +101,7 @@ const AfterSalesContent = () => {
               scale: 1.02,
             }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => openContact()}
             className="w-fit border px-6 rounded-full py-4"
           >
             Discover
@@ -130,6 +134,7 @@ const AfterSalesContent = () => {
               scale: 1.02,
             }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => openContact()}
             className="w-fit border px-6 rounded-full py-4"
           >
             Discover

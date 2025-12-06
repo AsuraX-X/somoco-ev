@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -8,9 +8,9 @@ import React, { useEffect, useState } from "react";
 import VehicleGallery from "@/components/Products/VehicleGallery";
 import VehicleCard from "@/components/General/VehicleCard";
 import { urlFor } from "@/sanity/lib/image";
-import { useContactModal } from "@/components/General/ContactModalProvider";
 
 import type { Vehicle, VehicleWithImages } from "@/types/vehicle";
+import { useModal } from "./General/ContactModalProvider";
 
 const VehicleDetailsPage = () => {
   const params = useParams();
@@ -19,7 +19,7 @@ const VehicleDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   // No overlay: download specs PDF instead
   const [recommendations, setRecommendations] = useState<Vehicle[]>([]);
-  const { open: openContact } = useContactModal();
+  const { openContact } = useModal();
 
   // Helper that resolves Sanity file ref to a CDN URL
   const getFileUrl = (file?: Vehicle["document"]) => {

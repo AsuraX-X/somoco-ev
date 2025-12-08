@@ -1,8 +1,8 @@
 import AfterSalesContent from "@/components/AfterSalesContent";
 
 export const metadata = {
-  title: "Aftersales Care — SOMOCO EV",
-  description: "Aftersales services, maintenance and support from SOMOCO EV.",
+  title: "Aftersales Care — Somoco EV",
+  description: "Aftersales services, maintenance and support from Somoco EV.",
 };
 
 const Aftersales = () => {

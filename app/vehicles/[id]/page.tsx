@@ -22,7 +22,7 @@ export async function generateMetadata(props: unknown): Promise<Metadata> {
 
     if (!vehicle) {
       return {
-        title: "Vehicle Details — SOMOCO EV",
+        title: "Vehicle Details — Somoco EV",
         description:
           "Technical specifications and images for the selected vehicle.",
       };
@@ -33,8 +33,8 @@ export async function generateMetadata(props: unknown): Promise<Metadata> {
     if (vehicle.name) titleParts.push(vehicle.name);
     const title =
       titleParts.length > 0
-        ? `${titleParts.join(" ")} — SOMOCO EV`
-        : "Vehicle Details — SOMOCO EV";
+        ? `${titleParts.join(" ")} — Somoco EV`
+        : "Vehicle Details — Somoco EV";
 
     const description = vehicle.description
       ? vehicle.description
@@ -60,7 +60,7 @@ export async function generateMetadata(props: unknown): Promise<Metadata> {
     // On error, return defaults so the page still has usable metadata
     console.error("generateMetadata error for vehicle", id, error);
     return {
-      title: "Vehicle Details — SOMOCO EV",
+      title: "Vehicle Details — Somoco EV",
       description:
         "Technical specifications and images for the selected vehicle.",
     };

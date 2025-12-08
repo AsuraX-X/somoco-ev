@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "About Us — SOMOCO EV",
+  title: "About Us — Somoco EV",
   description:
-    "Learn about SOMOCO EV, our mission, sustainability and careers.",
+    "Learn about Somoco EV, our mission, sustainability and careers.",
 };
 
 import AboutUsContent from "@/components/AboutUsContent";

@@ -89,7 +89,7 @@ const ProductsPageContent = () => {
         // Extract unique types
         const types = [
           ...new Set(vehicleData.map((v: Vehicle) => v.type).filter(Boolean)),
-        ];
+        ].sort();
         setAvailableTypes(types as string[]);
         // Extract unique brands
         const brands = [

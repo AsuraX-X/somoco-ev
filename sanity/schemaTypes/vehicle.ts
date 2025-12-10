@@ -62,14 +62,6 @@ export const vehicle = defineType({
       title: "Document",
       type: "file",
       options: { accept: "application/pdf" },
-      fields: [
-        defineField({ name: "title", type: "string", title: "Title" }),
-        defineField({
-          name: "description",
-          type: "text",
-          title: "Description",
-        }),
-      ],
     }),
     defineField({
       name: "description",

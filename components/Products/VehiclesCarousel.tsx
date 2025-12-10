@@ -44,14 +44,12 @@ const VehiclesCarousel = () => {
     fetchVehicles();
   }, [fetchVehicles]);
 
-  // Get unique vehicle types
-  const vehicleTypes = Array.from(
-    new Set(
-      vehicles
-        .map((v) => v.type)
-        .filter((type): type is string => Boolean(type))
-    )
+  // Get unique vehicle types in specific order
+  const desiredOrder = ["Sedan", "SUV", "Hatchback", "MPV"];
+  const vehicleTypesSet = new Set(
+    vehicles.map((v) => v.type).filter((type): type is string => Boolean(type))
   );
+  const vehicleTypes = desiredOrder.filter((type) => vehicleTypesSet.has(type));
 
   // Filter vehicles based on selected type
   const filteredVehicles = filter

@@ -6,7 +6,7 @@ import Why from "@/components/Home/Why";
 export const metadata = {
   title: "Somoco EV — Home",
   description:
-    "Somoco EV — Electric vehicles, products and company information.",
+    "Somoco EV, sustainable electric vehicles and charging solutions — explore vehicle models and technical specifications from our wide range.",
 };
 
 const Home = () => {
